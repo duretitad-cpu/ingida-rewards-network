@@ -10,7 +10,7 @@ import {
   Linkedin,
   Music2,
 } from "lucide-react";
-import skylineCream from "@/assets/skyline_cream_on_white.png.asset.json";
+import skylineNeon from "@/assets/skyline-neon.webp.asset.json";
 import appPhones from "@/assets/ingida-wallet-navy.jpg";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { Button } from "@/components/ui/button";
@@ -308,9 +308,12 @@ function How({ t }: { t: Copy }) {
     return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); cancelAnimationFrame(raf); };
   }, []);
   return (
-    <section id="how" ref={ref} className="how-section how-cream">
+    <section id="how" ref={ref} className="how-section how-neon">
       <div className="skyline-stage" aria-hidden="true">
-        <img className="addis-skyline" src={skylineCream.url} alt="" loading="lazy" />
+        <img className="addis-skyline" src={skylineNeon.url} alt="" loading="lazy" />
+        <span className="neon-pin" style={{ left: "31%", top: "18%" }}>Dukamo <em>+120 pts</em></span>
+        <span className="neon-pin" style={{ left: "68%", top: "38%" }}>Kuriftu <em>+85 pts</em></span>
+        <span className="neon-pin" style={{ left: "50%", top: "68%" }}>Fresh Corner <em>3 offers nearby</em></span>
       </div>
       <div className="how-inner reveal-up">
         <p className="eyebrow">{t.howEyebrow}</p>

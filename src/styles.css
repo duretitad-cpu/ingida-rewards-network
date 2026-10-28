@@ -493,3 +493,16 @@ body .eyebrow, body [class*="tracking-"] { letter-spacing: 0; }
   .how-section .skyline-stage .addis-skyline { width: 190%; max-width: none;
     transform: translateX(calc(-8% - var(--p) * 30%)) translateY(calc((1 - var(--p)) * 30px)); }
 }
+
+/* Neon navy "Spend. Earn & Redeem." section */
+section.how-section.how-neon { background: var(--navy-deep); color: var(--primary-foreground); }
+.how-section.how-neon .how-title { font-size: clamp(40px, 7vw, 80px); line-height: 1.1; }
+.how-section.how-neon .how-steps p { color: color-mix(in oklch, var(--primary-foreground) 70%, transparent); }
+.how-section.how-neon .how-steps li { border-top: 1px solid color-mix(in oklch, var(--primary-foreground) 18%, transparent); padding-top: 18px; }
+.how-section.how-neon .skyline-stage { position: relative; }
+.how-section.how-neon .skyline-stage .addis-skyline { mask-image: linear-gradient(180deg, transparent, var(--navy-deep) 22%); }
+.neon-pin { position: absolute; z-index: 2; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px 5px 22px; border-radius: 999px; font-size: 11px; white-space: nowrap;
+  background: color-mix(in oklch, var(--navy-deep) 80%, transparent); border: 1px solid color-mix(in oklch, var(--primary-foreground) 22%, transparent); color: var(--primary-foreground); transform: translateX(-50%); }
+.neon-pin::before { content: ""; position: absolute; left: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+.neon-pin em { font-style: normal; color: var(--gold); }
+@media (max-width: 640px) { .neon-pin { font-size: 9px; padding: 3px 8px 3px 18px; } }
