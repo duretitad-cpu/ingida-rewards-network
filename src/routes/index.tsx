@@ -11,7 +11,7 @@ import {
   Music2,
 } from "lucide-react";
 import skylineNeon from "@/assets/skyline-navy-glow.jpg";
-import appPhones from "@/assets/ingida-wallet-navy-v2.jpg";
+import appPhones from "@/assets/ingida-wallet-navy.jpg";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { Button } from "@/components/ui/button";
 import { useServerFn } from "@tanstack/react-start";
