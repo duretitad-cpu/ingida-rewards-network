@@ -506,3 +506,38 @@ section.how-section.how-neon { background: var(--navy-deep); color: var(--primar
 .neon-pin::before { content: ""; position: absolute; left: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px var(--gold); }
 .neon-pin em { font-style: normal; color: var(--gold); }
 @media (max-width: 640px) { .neon-pin { font-size: 9px; padding: 3px 8px 3px 18px; } }
+
+/* ===== Oct refresh ===== */
+.wallet-feature-copy .hero-logo { width: 160px; margin-bottom: 28px; }
+.wallet-feature-copy h2 { margin-top: 14px; }
+.wallet-feature-copy .hero-cta { margin-top: 26px; }
+.wallet-feature-labels { margin-top: 18px; font-size: 15px; }
+.hospitality-hero > .network-ribbon { background: var(--background); color: var(--navy-deep); border-top: 0; }
+.network-ribbon-title { font-family: var(--font-editorial); font-size: 26px; line-height: 1.25; }
+.network-ribbon-title span:last-child { color: var(--gold); font-style: italic; }
+.network-ribbon .network-icon { color: var(--navy-deep); }
+.network-categories { gap: 4px; max-width: 460px; justify-self: center; width: 100%; }
+.how-section.how-neon .how-steps li { border-top: 0; padding-top: 0; }
+.how-steps h3 { display: flex; align-items: baseline; gap: 10px; font-family: var(--font-editorial); font-weight: 400; font-size: 24px; margin-top: 0; }
+.how-steps h3 .how-step-n { font-family: var(--font-editorial); font-size: 24px; }
+.how-section.how-neon .skyline-stage { -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 90%, transparent 100%); mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 90%, transparent 100%); padding-top: 40px; }
+.how-section.how-neon .skyline-stage .addis-skyline { mask-image: none; }
+.neon-pin { transform: translate(-50%, 0); box-shadow: 0 6px 20px -6px color-mix(in oklch, var(--gold) 45%, transparent); animation: skyline-float 6s ease-in-out infinite; }
+.neon-pin::after { content: ""; position: absolute; left: 50%; top: 100%; width: 1px; height: 28px; background: linear-gradient(180deg, var(--gold), transparent); }
+.early-access { background: var(--background); color: var(--navy-deep); }
+.early-access input { color: var(--navy-deep); border-color: color-mix(in oklch, var(--navy-deep) 30%, transparent); }
+.early-access input::placeholder { color: color-mix(in oklch, var(--navy-deep) 60%, transparent); }
+.early-access label span.block { color: color-mix(in oklch, var(--navy-deep) 80%, transparent); border-color: color-mix(in oklch, var(--navy-deep) 30%, transparent); }
+.early-access .peer:checked + span.block { color: var(--gold); border-color: var(--gold); }
+.early-access .invite-submit:hover { color: var(--background); }
+@media (max-width: 639px) {
+  .wallet-feature-copy .hero-logo { width: 135px; margin-bottom: 22px; }
+  .wallet-feature-labels { font-size: 14px; }
+  .network-ribbon-title { font-size: 22px; }
+  .how-steps { text-align: center; }
+  .how-steps h3 { justify-content: center; font-size: 22px; }
+  .neon-pin::after { height: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .neon-pin { animation: none; } }
+.how-section.how-neon .skyline-stage { -webkit-mask-image: none; mask-image: none; padding-top: 56px; }
+.how-section.how-neon .skyline-stage .addis-skyline { -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 45%, #000 88%, transparent 100%), linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(180deg, transparent 0%, #000 45%, #000 88%, transparent 100%), linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); -webkit-mask-composite: source-in; mask-composite: intersect; }
