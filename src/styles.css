@@ -541,3 +541,20 @@ section.how-section.how-neon { background: var(--navy-deep); color: var(--primar
 @media (prefers-reduced-motion: reduce) { .neon-pin { animation: none; } }
 .how-section.how-neon .skyline-stage { -webkit-mask-image: none; mask-image: none; padding-top: 56px; }
 .how-section.how-neon .skyline-stage .addis-skyline { -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 45%, #000 88%, transparent 100%), linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(180deg, transparent 0%, #000 45%, #000 88%, transparent 100%), linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); -webkit-mask-composite: source-in; mask-composite: intersect; }
+/* ===== Oct refresh 2 ===== */
+.neon-pin { animation: none !important; font-family: var(--font-editorial); }
+.how-steps h3 { font-family: var(--font-editorial); font-size: 26px; }
+.how-steps p { font-family: var(--font-sans); }
+.network-categories { transform: translateX(28px); }
+.hospitality-hero > .network-ribbon { border: 0; margin-top: 0; }
+.network-ribbon-inner { padding-block: 20px 8px; }
+#portals { padding-block: 8px 24px; }
+#portals a { border-top: 0; padding-top: 0; }
+.brand-interlude { padding-block: 8px 20px; }
+.early-access { padding-block: 32px 64px; }
+html[lang="am"] h1, html[lang="am"] h2, html[lang="am"] h3, html[lang="am"] .network-ribbon-title, html[lang="am"] .how-title { font-weight: 700; }
+@media (max-width: 639px) {
+  .network-categories { transform: translateX(10px); }
+  .neon-pin { font-size: 8.5px; }
+  .early-access { padding-block: 24px 48px; }
+}
