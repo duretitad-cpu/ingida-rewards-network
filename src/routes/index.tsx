@@ -10,7 +10,7 @@ import {
   Linkedin,
   Music2,
 } from "lucide-react";
-import skylineNeon from "@/assets/skyline-neon.webp.asset.json";
+import skylineNeon from "@/assets/skyline-navy-glow.jpg";
 import appPhones from "@/assets/ingida-wallet-navy.jpg";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { Button } from "@/components/ui/button";
@@ -41,7 +41,7 @@ const copy = {
   en: {
     tagline: "Guest",
     heroHeadline: null,
-    ctaJoin: "Request an invitation",
+    ctaJoin: "Request Invitation",
     howEyebrow: "Membership",
     howTitle: "Spend. Earn & Redeem.",
     howBody:
@@ -244,13 +244,13 @@ function ImageStrip({ t }: { t: Copy }) {
       <div className="wallet-feature-inner">
         <div className="wallet-feature-copy">
           <h1 aria-label="ingida"><IngidaLogo className="hero-logo" /></h1>
-          <p className="eyebrow moment-line">{t === copy.en ? <>Capture this <span>#Ingidamoment</span></> : <span className="moment-tag">#ingidaMoment</span>}</p>
-          <h2>{t === copy.en ? <>More than a wallet.<br /><em>A lifestyle.</em></> : <span className="am-hero-title">እንግዳ ቆይታ</span>}</h2>
+          <p className="eyebrow moment-line">{t === copy.en ? <>CAPTURE THIS <span>#INGIDAMOMENT</span></> : <span className="moment-tag">#ክቡርእንግዳ</span>}</p>
+          <h2>{t === copy.en ? <>More than a Wallet.<br /><em>A Lifestyle.</em></> : <span className="am-hero-title">እንግዳ ቆይታ</span>}</h2>
           <Button asChild variant="ghost" className="hero-cta h-12 rounded-none border border-gold/60 px-6 text-sm font-medium text-primary-foreground hover:bg-gold hover:text-navy-deep">
             <a href="#waitlist" className="group">{t.ctaJoin}<span aria-hidden className="transition-transform group-hover:translate-x-1">→</span></a>
           </Button>
           <div className="wallet-feature-labels">
-            {t === copy.en ? <><span>Loyalty network.</span><span>Rewards wallet.</span></> : <span>ልዩ የእንግዳ ቆይታ እና አጋር ኔትወርክ</span>}
+            {t === copy.en ? <><span>Loyalty Network.</span><span>Rewards Wallet.</span></> : <span>ልዩ የእንግዳ ቆይታ እና አጋር ኔትወርክ</span>}
           </div>
         </div>
         <figure className="app-showcase">
@@ -266,7 +266,7 @@ function Network({ t }: { t: Copy }) {
     <section id="network" className="network-ribbon">
       <div className="network-ribbon-inner">
         <h2 className="network-ribbon-title">
-          {t === copy.en ? <><span>Ethiopian hospitality.</span><span>Rewarded.</span></> : <span>በሽልማት የታጀበ እንግዳ አቀባበል</span>}
+          {t === copy.en ? <><span>Your Digital Wallet.</span><span>Rewarded.</span></> : <span>በሽልማት የታጀበ እንግዳ አቀባበል</span>}
         </h2>
         <ul className="network-categories">
           {t.cats.map((c) => {
@@ -276,7 +276,7 @@ function Network({ t }: { t: Copy }) {
                 key={c.name}
                 className="network-category"
               >
-                <Icon className="network-icon text-gold" strokeWidth={1.4} aria-hidden />
+                <Icon className="network-icon" strokeWidth={1.4} aria-hidden />
                 <h3>
                   {c.name}
                 </h3>
@@ -310,10 +310,10 @@ function How({ t }: { t: Copy }) {
   return (
     <section id="how" ref={ref} className="how-section how-neon">
       <div className="skyline-stage" aria-hidden="true">
-        <img className="addis-skyline" src={skylineNeon.url} alt="" loading="lazy" />
-        <span className="neon-pin" style={{ left: "31%", top: "18%" }}>Dukamo <em>+120 pts</em></span>
-        <span className="neon-pin" style={{ left: "68%", top: "38%" }}>Kuriftu <em>+85 pts</em></span>
-        <span className="neon-pin" style={{ left: "50%", top: "68%" }}>Fresh Corner <em>3 offers nearby</em></span>
+        <img className="addis-skyline" src={skylineNeon} alt="" loading="lazy" />
+        <span className="neon-pin" style={{ left: "20%", top: "8%" }}>Dukamo <em>+120 pts</em></span>
+        <span className="neon-pin" style={{ left: "80%", top: "4%" }}>Kuriftu <em>+85 pts</em></span>
+        <span className="neon-pin" style={{ left: "52%", top: "16%" }}>Fresh Corner <em>3 offers nearby</em></span>
       </div>
       <div className="how-inner reveal-up">
         <p className="eyebrow">{t.howEyebrow}</p>
@@ -323,8 +323,7 @@ function How({ t }: { t: Copy }) {
         <ol className="how-steps">
           {t.steps.map((s) => (
             <li key={s.n}>
-              <span className="how-step-n">{s.n}</span>
-              <h3>{s.t}</h3>
+              <h3><span className="how-step-n">{s.n}</span>{s.t}</h3>
               <p>{s.d}</p>
             </li>
           ))}
