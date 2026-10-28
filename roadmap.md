@@ -1,0 +1,11 @@
+# Website refresh
+- [ ] Apply brand-guide typography and supplied Amharic copy; simplify the three steps.
+- [ ] Match phone image background to navy, redraw photo-inspired skyline and add blue logo/icon interlude; verify layouts.
+- [x] Simplify top showcase, relocate logo and invitation button, and update network wording.
+- [x] Unify typography, white membership background, navy showcase, icon sizing and page proportions; verify desktop and mobile.
+- [x] Remove top photo, move welcome to blue and refine mobile proportions.
+- [x] Apply supplied brand typography and early-access photo overlay (DM Sans until licensed TT Drugs files supplied).
+- [x] Store waitlist in an exportable Cloud CRM list.
+- [ ] Send waitlist owner updates to home@ingida.com (requires verified email domain).
+- [x] Optimize Ethiopia, hospitality, merchants, tourism and rewards search metadata without unverified financial claims.
+- [x] Verify mobile layout and a real waitlist submission.
