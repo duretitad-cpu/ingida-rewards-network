@@ -11,7 +11,7 @@ import {
   Music2,
 } from "lucide-react";
 import skylineNeon from "@/assets/skyline-navy-glow.jpg";
-import appPhones from "@/assets/ingida-wallet-navy.jpg";
+import appPhones from "@/assets/ingida-wallet-navy-v2.jpg";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { Button } from "@/components/ui/button";
 import { useServerFn } from "@tanstack/react-start";
@@ -311,9 +311,11 @@ function How({ t }: { t: Copy }) {
     <section id="how" ref={ref} className="how-section how-neon">
       <div className="skyline-stage" aria-hidden="true">
         <img className="addis-skyline" src={skylineNeon} alt="" loading="lazy" />
-        <span className="neon-pin" style={{ left: "20%", top: "8%" }}>Dukamo <em>+120 pts</em></span>
-        <span className="neon-pin" style={{ left: "80%", top: "4%" }}>Kuriftu <em>+85 pts</em></span>
-        <span className="neon-pin" style={{ left: "52%", top: "16%" }}>Fresh Corner <em>3 offers nearby</em></span>
+        <span className="neon-pin" style={{ left: "29%", top: "30%" }}>Cathedral Dine <em>+120 pts</em></span>
+        <span className="neon-pin" style={{ left: "60%", top: "40%" }}>Stadium Access <em>+200 pts</em></span>
+        <span className="neon-pin" style={{ left: "45%", top: "6%" }}>Skyline Stay <em>+350 pts</em></span>
+        <span className="neon-pin" style={{ left: "74%", top: "26%" }}>Africa Hall Tours <em>+90 pts</em></span>
+        <span className="neon-pin" style={{ left: "88%", top: "10%" }}>Lion of Judah <em>+150 pts</em></span>
       </div>
       <div className="how-inner reveal-up">
         <p className="eyebrow">{t.howEyebrow}</p>
@@ -323,7 +325,7 @@ function How({ t }: { t: Copy }) {
         <ol className="how-steps">
           {t.steps.map((s) => (
             <li key={s.n}>
-              <h3><span className="how-step-n">{s.n}</span>{s.t}</h3>
+              <h3>{s.t}</h3>
               <p>{s.d}</p>
             </li>
           ))}
