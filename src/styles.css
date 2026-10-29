@@ -501,11 +501,12 @@ section.how-section.how-neon { background: var(--navy-deep); color: var(--primar
 .how-section.how-neon .how-steps li { border-top: 1px solid color-mix(in oklch, var(--primary-foreground) 18%, transparent); padding-top: 18px; }
 .how-section.how-neon .skyline-stage { position: relative; }
 .how-section.how-neon .skyline-stage .addis-skyline { mask-image: linear-gradient(180deg, transparent, var(--navy-deep) 22%); }
-.neon-pin { position: absolute; z-index: 2; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px 5px 22px; border-radius: 999px; font-size: 11px; white-space: nowrap;
-  background: color-mix(in oklch, var(--navy-deep) 80%, transparent); border: 1px solid color-mix(in oklch, var(--primary-foreground) 22%, transparent); color: var(--primary-foreground); transform: translateX(-50%); }
-.neon-pin::before { content: ""; position: absolute; left: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px var(--gold); }
-.neon-pin em { font-style: normal; color: var(--gold); }
-@media (max-width: 640px) { .neon-pin { font-size: 9px; padding: 3px 8px 3px 18px; } }
+.neon-pin { position: absolute; z-index: 2; display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; white-space: nowrap;
+  background: rgb(255 255 255 / 0.08); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgb(255 255 255 / 0.28); color: var(--primary-foreground); transform: translateX(-50%); box-shadow: 0 12px 32px -14px rgb(0 0 0 / 0.5); }
+.neon-pin::before { content: ""; position: relative; left: auto; width: 5px; height: 5px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px rgb(255 255 255 / 0.9); flex: none; }
+.neon-pin em { font-style: normal; color: rgb(255 255 255 / 0.72); letter-spacing: 0.03em; }
+@media (max-width: 640px) { .neon-pin { font-size: 8.5px; padding: 4px 10px; gap: 6px; } }
 
 /* ===== Oct refresh ===== */
 .wallet-feature-copy .hero-logo { width: 160px; margin-bottom: 28px; }
@@ -522,8 +523,8 @@ section.how-section.how-neon { background: var(--navy-deep); color: var(--primar
 .how-steps h3 .how-step-n { font-family: var(--font-editorial); font-size: 24px; }
 .how-section.how-neon .skyline-stage { -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 90%, transparent 100%); mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 90%, transparent 100%); padding-top: 40px; }
 .how-section.how-neon .skyline-stage .addis-skyline { mask-image: none; }
-.neon-pin { transform: translate(-50%, 0); box-shadow: 0 6px 20px -6px color-mix(in oklch, var(--gold) 45%, transparent); animation: skyline-float 6s ease-in-out infinite; }
-.neon-pin::after { content: ""; position: absolute; left: 50%; top: 100%; width: 1px; height: 28px; background: linear-gradient(180deg, var(--gold), transparent); }
+.neon-pin { transform: translate(-50%, 0); }
+.neon-pin::after { content: ""; position: absolute; left: 50%; top: calc(100% + 4px); width: 1px; height: 24px; background: linear-gradient(180deg, rgb(255 255 255 / 0.55), transparent); }
 .early-access { background: var(--background); color: var(--navy-deep); }
 .early-access input { color: var(--navy-deep); border-color: color-mix(in oklch, var(--navy-deep) 30%, transparent); }
 .early-access input::placeholder { color: color-mix(in oklch, var(--navy-deep) 60%, transparent); }
