@@ -10,7 +10,7 @@ import {
   Linkedin,
   Music2,
 } from "lucide-react";
-import skylineNeon from "@/assets/skyline-navy-glow.jpg";
+import skylineWhite from "@/assets/skyline-navy-white.jpg";
 import appPhones from "@/assets/ingida-wallet-navy.jpg";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { Button } from "@/components/ui/button";
@@ -310,12 +310,12 @@ function How({ t }: { t: Copy }) {
   return (
     <section id="how" ref={ref} className="how-section how-neon">
       <div className="skyline-stage" aria-hidden="true">
-        <img className="addis-skyline" src={skylineNeon} alt="" loading="lazy" />
-        <span className="neon-pin" style={{ left: "29%", top: "30%" }}>Cathedral Dine <em>+120 pts</em></span>
-        <span className="neon-pin" style={{ left: "60%", top: "40%" }}>Stadium Access <em>+200 pts</em></span>
-        <span className="neon-pin" style={{ left: "45%", top: "6%" }}>Skyline Stay <em>+350 pts</em></span>
-        <span className="neon-pin" style={{ left: "74%", top: "26%" }}>Africa Hall Tours <em>+90 pts</em></span>
-        <span className="neon-pin" style={{ left: "88%", top: "10%" }}>Lion of Judah <em>+150 pts</em></span>
+        <img className="addis-skyline" src={skylineWhite} alt="" loading="lazy" />
+        <span className="neon-pin pin-stay" style={{ left: "30%", top: "14%" }}>Skyline Stay <em>+350 pts</em></span>
+        <span className="neon-pin pin-cathedral" style={{ left: "22%", top: "40%" }}>Cathedral Dine <em>+120 pts</em></span>
+        <span className="neon-pin pin-stadium" style={{ left: "58.5%", top: "71%" }}>Stadium Access <em>+200 pts</em></span>
+        <span className="neon-pin pin-hall" style={{ left: "72%", top: "30%" }}>Africa Hall Tours <em>+90 pts</em></span>
+        <span className="neon-pin pin-lion" style={{ left: "86%", top: "26%" }}>Lion of Judah <em>+150 pts</em></span>
       </div>
       <div className="how-inner reveal-up">
         <p className="eyebrow">{t.howEyebrow}</p>
