@@ -313,7 +313,7 @@ function How({ t }: { t: Copy }) {
         <img className="addis-skyline" src={skylineWhite} alt="" loading="lazy" />
         <span className="neon-pin pin-stay" style={{ left: "30%", top: "14%" }}>Skyline Stay <em>+350 pts</em></span>
         <span className="neon-pin pin-cathedral" style={{ left: "22%", top: "40%" }}>Cathedral Dine <em>+120 pts</em></span>
-        <span className="neon-pin pin-stadium" style={{ left: "61.5%", top: "63%" }}>Stadium Access <em>+200 pts</em></span>
+        <span className="neon-pin pin-stadium" style={{ left: "61.5%", top: "67%" }}>Stadium Access <em>+200 pts</em></span>
         <span className="neon-pin pin-hall" style={{ left: "72%", top: "30%" }}>Africa Hall Tours <em>+90 pts</em></span>
         <span className="neon-pin pin-lion" style={{ left: "86%", top: "26%" }}>Lion of Judah <em>+150 pts</em></span>
       </div>
