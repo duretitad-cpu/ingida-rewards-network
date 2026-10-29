@@ -503,7 +503,13 @@ section.how-section.how-neon { background: var(--navy-deep); color: var(--primar
 .how-section.how-neon .skyline-stage .addis-skyline { opacity: 1; transform: none; object-position: center bottom; will-change: auto; }
 .how-section.how-neon .skyline-stage .addis-skyline { mask-image: none; }
 @media (max-width: 639px) {
-  .how-section.how-neon .skyline-stage .addis-skyline { position: relative; inset: auto; width: 100%; height: auto; object-fit: initial; }
+  .how-section.how-neon .skyline-stage { height: 330px; }
+  .how-section.how-neon .skyline-stage .addis-skyline { position: absolute; inset: auto 0 0 0; width: 100%; height: auto; object-fit: initial; }
+  .pin-stay { left: 50% !important; top: 5% !important; }
+  .pin-cathedral { left: 27% !important; top: 26% !important; }
+  .pin-stadium { left: 76% !important; top: 26% !important; }
+  .pin-hall { left: 27% !important; top: 46% !important; }
+  .pin-lion { left: 76% !important; top: 46% !important; }
 }
 .neon-pin { position: absolute; z-index: 2; display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; white-space: nowrap;
   background: rgb(255 255 255 / 0.08); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);

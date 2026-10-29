@@ -311,11 +311,11 @@ function How({ t }: { t: Copy }) {
     <section id="how" ref={ref} className="how-section how-neon">
       <div className="skyline-stage" aria-hidden="true">
         <img className="addis-skyline" src={skylineWhite} alt="" loading="lazy" />
-        <span className="neon-pin" style={{ left: "21%", top: "35%" }}>Cathedral Dine <em>+120 pts</em></span>
-        <span className="neon-pin" style={{ left: "30%", top: "14%" }}>Skyline Stay <em>+350 pts</em></span>
-        <span className="neon-pin" style={{ left: "61%", top: "47%" }}>Stadium Access <em>+200 pts</em></span>
-        <span className="neon-pin" style={{ left: "72%", top: "30%" }}>Africa Hall Tours <em>+90 pts</em></span>
-        <span className="neon-pin" style={{ left: "86%", top: "26%" }}>Lion of Judah <em>+150 pts</em></span>
+        <span className="neon-pin pin-stay" style={{ left: "30%", top: "14%" }}>Skyline Stay <em>+350 pts</em></span>
+        <span className="neon-pin pin-cathedral" style={{ left: "22%", top: "40%" }}>Cathedral Dine <em>+120 pts</em></span>
+        <span className="neon-pin pin-stadium" style={{ left: "61.5%", top: "57%" }}>Stadium Access <em>+200 pts</em></span>
+        <span className="neon-pin pin-hall" style={{ left: "72%", top: "30%" }}>Africa Hall Tours <em>+90 pts</em></span>
+        <span className="neon-pin pin-lion" style={{ left: "86%", top: "26%" }}>Lion of Judah <em>+150 pts</em></span>
       </div>
       <div className="how-inner reveal-up">
         <p className="eyebrow">{t.howEyebrow}</p>
