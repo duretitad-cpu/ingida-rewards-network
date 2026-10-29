@@ -246,9 +246,6 @@ function ImageStrip({ t }: { t: Copy }) {
           <h1 aria-label="ingida"><IngidaLogo className="hero-logo" /></h1>
           <p className="eyebrow moment-line">{t === copy.en ? <>CAPTURE THIS <span>#INGIDAMOMENT</span></> : <span className="moment-tag">#ክቡርእንግዳ</span>}</p>
           <h2>{t === copy.en ? <>More than a Wallet.<br /><em>A Lifestyle.</em></> : <span className="am-hero-title">እንግዳ ቆይታ</span>}</h2>
-          <Button asChild variant="ghost" className="hero-cta h-12 rounded-none border border-gold/60 px-6 text-sm font-medium text-primary-foreground hover:bg-gold hover:text-navy-deep">
-            <a href="#waitlist" className="group">{t.ctaJoin}<span aria-hidden className="transition-transform group-hover:translate-x-1">→</span></a>
-          </Button>
           <div className="wallet-feature-labels">
             {t === copy.en ? <><span>Loyalty Network.</span><span>Rewards Wallet.</span></> : <span>ልዩ የእንግዳ ቆይታ እና አጋር ኔትወርክ</span>}
           </div>
@@ -265,9 +262,6 @@ function Network({ t }: { t: Copy }) {
   return (
     <section id="network" className="network-ribbon">
       <div className="network-ribbon-inner">
-        <h2 className="network-ribbon-title">
-          {t === copy.en ? <><span>Your Digital Wallet.</span><span>Rewarded.</span></> : <span>በሽልማት የታጀበ እንግዳ አቀባበል</span>}
-        </h2>
         <ul className="network-categories">
           {t.cats.map((c) => {
             const Icon = c.icon;
@@ -322,6 +316,9 @@ function How({ t }: { t: Copy }) {
         <h2 className="how-title">
           {t === copy.en ? <><span className="italic text-gold">Spend.</span> Earn <span className="text-gold">&amp;</span> Redeem.</> : t.howTitle}
         </h2>
+        <Button asChild variant="secondary" className="invitation-cta h-12 rounded-none px-7 text-sm">
+          <a href="#waitlist">{t.ctaJoin}<span aria-hidden>→</span></a>
+        </Button>
         <ol className="how-steps">
           {t.steps.map((s) => (
             <li key={s.n}>
@@ -338,7 +335,7 @@ function How({ t }: { t: Copy }) {
 function Portals({ t }: { t: Copy }) {
   const [members, merchants] = t.portals;
   return (
-    <section id="portals" className="bg-navy-deep py-10 text-primary-foreground md:py-14">
+    <section id="portals" className="bg-background py-10 text-navy-deep md:py-14">
       <div className="mx-auto grid max-w-5xl gap-6 px-5 md:grid-cols-2 md:gap-10 md:px-8">
         <PortalRow p={members} />
         <PortalRow p={merchants} />
@@ -353,11 +350,11 @@ function PortalRow({ p }: { p: Copy["portals"][number] }) {
       href={p.href}
       target={p.href.startsWith("http") ? "_blank" : undefined}
       rel="noreferrer"
-      className="group block border-t border-primary-foreground/25 pt-5 text-center md:pt-6"
+      className="portal-row group block pt-5 text-center md:pt-6"
     >
       <div className="flex flex-col items-center gap-1.5">
         <p className="text-[9.5px] font-medium tracking-[0.28em] uppercase text-gold">{p.tag}</p>
-        <h3 className="font-serif text-[22px] italic leading-tight text-primary-foreground md:text-[28px]">
+        <h3 className="font-serif text-[22px] italic leading-tight text-navy-deep md:text-[28px]">
           {(() => {
             const parts = p.name.split(" ");
             const last = parts.pop() ?? "";
@@ -371,7 +368,7 @@ function PortalRow({ p }: { p: Copy["portals"][number] }) {
           })()}
         </h3>
 
-        <p className="max-w-md text-[12.5px] leading-relaxed text-primary-foreground/70">
+        <p className="max-w-md text-[12.5px] leading-relaxed text-muted-foreground">
           {p.desc}
         </p>
         <span
@@ -388,7 +385,7 @@ function PortalRow({ p }: { p: Copy["portals"][number] }) {
 function IconStrip() {
   const icons = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
   return (
-    <div className="brand-interlude bg-navy-deep text-primary-foreground" aria-label="ingida hospitality network">
+    <div className="brand-interlude bg-background text-navy-deep" aria-label="ingida hospitality network">
       <IngidaLogo className="interlude-logo" />
       <div className="interlude-icons" aria-hidden="true">
         {icons.map((Icon, i) => (
@@ -422,6 +419,7 @@ function renderWaitlistTitle(title: string) {
 }
 
 function Waitlist({ t }: { t: Copy }) {
+  const [role, setRole] = useState("member");
   const [state, setState] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState("");
   const saveRequest = useServerFn(submitWaitlist);
@@ -456,7 +454,9 @@ function Waitlist({ t }: { t: Copy }) {
             {t.waitlistEyebrow}
           </p>
           <h2 className="mt-3 font-serif text-[24px] leading-[1.1] md:text-[34px]">
-            {renderWaitlistTitle(t.waitlistTitle)}
+            {role === "member"
+              ? (t === copy.en ? <>Your Digital Wallet.<br /><em className="text-gold">Rewarded.</em></> : <>የእርስዎ ዲጂታል ዋሌት።<br /><span className="text-gold">በሽልማት የታጀበ።</span></>)
+              : renderWaitlistTitle(t.waitlistTitle)}
           </h2>
           {t.waitlistSub ? (
             <p className="mt-3 max-w-md text-[12.5px] leading-relaxed text-primary-foreground/70 md:text-[13.5px]">
@@ -478,7 +478,10 @@ function Waitlist({ t }: { t: Copy }) {
               <Field name="email" type="email" placeholder={t.emailPh} required />
               <Field name="phone" type="tel" placeholder={t.phonePh} required />
               <Field name="city" placeholder={t.cityPh} />
-              <div className="flex gap-2 pt-1">
+              <div className="flex gap-2 pt-1" onChange={(event) => {
+                const input = event.target;
+                if (input instanceof HTMLInputElement) setRole(input.value);
+              }}>
                 <RoleChip name="role" value="member" label={t.roleMember} defaultChecked />
                 <RoleChip name="role" value="merchant" label={t.roleMerchant} />
               </div>

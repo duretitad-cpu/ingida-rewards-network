@@ -1,4 +1,5 @@
 # Website refresh
+- [x] Resize the first logo, relocate the cream invitation button, switch portal and early-access colors, and tighten section gaps.
 - [ ] Apply brand-guide typography and supplied Amharic copy; simplify the three steps.
 - [ ] Match phone image background to navy, redraw photo-inspired skyline and add blue logo/icon interlude; verify layouts.
 - [x] Simplify top showcase, relocate logo and invitation button, and update network wording.
