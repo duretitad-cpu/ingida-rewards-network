@@ -19,7 +19,7 @@ import { submitWaitlist } from "@/lib/waitlist.functions";
 import { waitlistSchema } from "@/lib/waitlist-schema";
 
 const skylineLoop = "/Web.mp4";
-const skylinePoster = "/Visit.jpg";
+const skylinePoster = "/Web.mp4";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -46,7 +46,7 @@ const copy = {
     heroHeadline: null,
     ctaJoin: "Request Invitation",
     howEyebrow: "Capture this #ingidaMoment",
-    howTitle: "Spend. Earn & Redeem.",
+    howTitle: "2% Cashback in Points on Daily Spend.",
     howLead: "Spend Across the City with ingida",
     howBody: "",
     steps: [
@@ -58,7 +58,7 @@ const copy = {
       {
         tag: "Rewards App",
         name: "ingida Member",
-        desc: "Your Wallet, Your Metwork, Your Welcome",
+        desc: "Your Wallet, Your Network, Your Welcome",
         href: "https://reward-rhythm.lovable.app",
       },
       {
@@ -281,10 +281,10 @@ function ImageStrip({ t }: { t: Copy }) {
       <div className="wallet-feature-inner">
         <div className="wallet-feature-copy">
           <h1 aria-label="ingida"><IngidaLogo className="hero-logo" /></h1>
-          <p className="eyebrow moment-line">{t === copy.en ? <>CAPTURE THIS <span>#INGIDAMOMENT</span></> : <span className="moment-tag">#ክቡርእንግዳ</span>}</p>
+          <p className="eyebrow moment-line">{t === copy.en ? <>Build Lifestyle Wealth <span>on Daily Spend</span></> : <span className="moment-tag">#ክቡርእንግዳ</span>}</p>
           <h2>{t === copy.en ? <>More than a Wallet.<br /><em>A Lifestyle.</em></> : <span className="am-hero-title">እንግዳ ቆይታ</span>}</h2>
           <div className="wallet-feature-labels">
-            {t === copy.en ? <><span>Loyalty Network.</span><span>Rewards Wallet.</span></> : <span>ልዩ የእንግዳ ቆይታ እና አጋር ኔትወርክ</span>}
+            {t === copy.en ? <><span>Loyalty Network.</span><span>Rewards rWallet.</span></> : <span>ልዩ የእንግዳ ቆይታ እና አጋር ኔትወርክ</span>}
           </div>
         </div>
         <figure className="app-showcase">
