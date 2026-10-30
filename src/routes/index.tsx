@@ -223,8 +223,25 @@ function Hero({ t, lang, setLang }: { t: Copy; lang: Lang; setLang: (l: Lang) =>
     >
       <Nav lang={lang} setLang={setLang} />
       <ImageStrip t={t} />
+      <IconStrip />
       <Network t={t} />
     </section>
+  );
+}
+
+function IconStrip() {
+  const icons = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
+  return (
+    <div className="flex items-center justify-center gap-6 bg-navy-deep py-6 text-amber-100/80 md:gap-8">
+      {icons.map((Icon, i) => (
+        <Icon
+          key={i}
+          className="h-4 w-4 text-amber-100/75 transition-colors hover:text-gold md:h-5 md:w-5"
+          strokeWidth={1.4}
+          aria-hidden
+        />
+      ))}
+    </div>
   );
 }
 
