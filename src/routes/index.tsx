@@ -325,20 +325,19 @@ function Network({ t }: { t: Copy }) {
 }
 
 
-
 function How({ t }: { t: Copy }) {
   return (
     <section
       id="how"
-      className="how-section relative isolate w-full min-h-[850px] md:min-h-[1000px] overflow-hidden bg-white text-navy-deep"
+      className="how-section relative isolate w-full overflow-hidden bg-white text-navy-deep min-h-[760px] md:min-h-[850px]"
     >
-      {/* Skyline video at bottom */}
+      {/* Background skyline video */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[290px] sm:h-[340px] md:h-[52%] overflow-hidden z-0"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[300px] sm:h-[360px] md:h-[55%] overflow-hidden"
         aria-hidden="true"
       >
         <video
-          className="absolute inset-0 w-full h-full object-cover object-bottom opacity-40 md:opacity-45"
+          className="absolute inset-0 h-full w-full object-cover object-bottom opacity-65 md:opacity-70"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
@@ -348,52 +347,58 @@ function How({ t }: { t: Copy }) {
           preload="auto"
         />
 
-        {/* Fade into white */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/50 to-white/10" />
+        {/* Keep the upper content clean while revealing the skyline */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/35 to-white/5" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 mx-auto max-w-5xl px-6 sm:px-8 md:px-10 pt-20 sm:pt-24 md:pt-28 pb-[310px] sm:pb-[350px] md:pb-[420px]">
+      {/* Foreground content */}
+      <div className="relative z-10 mx-auto max-w-5xl px-6 sm:px-8 md:px-10 pt-12 sm:pt-16 md:pt-24 pb-[320px] sm:pb-[370px] md:pb-[390px]">
 
-        <div className="how-inner grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-12 md:gap-16 items-start">
+        <div className="how-inner how-split grid grid-cols-1 gap-8 sm:gap-10 md:grid-cols-2 md:gap-14 items-start">
 
-          {/* Headline */}
-          <div className="how-lead max-w-lg">
-            <p className="text-[9px] sm:text-[10px] font-medium tracking-[0.3em] uppercase text-gold">
+          {/* Left: Headline */}
+          <div className="how-lead text-center md:text-left">
+
+            <p className="text-[9px] md:text-[10px] font-medium tracking-[0.3em] uppercase text-gold">
               {t.howEyebrow}
             </p>
 
-            <h2 className="mt-3 font-serif text-[36px] leading-[1.08] sm:text-[42px] md:text-[48px] text-navy-deep">
+            <h2 className="mt-2 md:mt-3 mx-auto md:mx-0 max-w-md font-serif text-[32px] leading-[1.08] sm:text-[36px] md:text-[46px] text-navy-deep">
               {t.howLead}
             </h2>
 
-            <p className="mt-4 text-[13px] leading-relaxed text-navy-deep/75 sm:text-sm md:text-base max-w-sm">
+            <p className="mt-3 md:mt-4 mx-auto md:mx-0 max-w-sm text-[12px] leading-relaxed text-navy-deep/80 sm:text-sm md:text-base">
               {t.howTitle}
             </p>
+
           </div>
 
-          {/* Steps */}
+          {/* Right: Numbered steps */}
           <ol className="how-steps-list border-t border-navy-deep/20">
+
             {t.steps.map((s) => (
               <li
                 key={s.n}
-                className="grid grid-cols-[28px_1fr] sm:grid-cols-[32px_1fr] gap-3 border-b border-navy-deep/20 py-5 sm:py-6"
+                className="grid grid-cols-1 md:grid-cols-[32px_1fr] gap-1 md:gap-3 border-b border-navy-deep/20 py-4 sm:py-5 md:py-6 text-center md:text-left"
               >
-                <span className="pt-1 font-mono text-[10px] text-gold">
+
+                <span className="pt-0 md:pt-1 font-mono text-[9px] md:text-[10px] text-gold">
                   {s.n}
                 </span>
 
                 <div>
-                  <h3 className="font-serif text-[21px] sm:text-[23px] md:text-[24px] leading-snug text-navy-deep">
+                  <h3 className="font-serif text-[20px] leading-snug text-navy-deep sm:text-[22px] md:text-[24px]">
                     {s.t}
                   </h3>
 
-                  <p className="mt-1 text-[12px] sm:text-[13px] leading-relaxed text-navy-deep/70">
+                  <p className="mt-1 text-[11px] leading-relaxed text-navy-deep/75 sm:text-xs md:text-[13px]">
                     {s.d}
                   </p>
                 </div>
+
               </li>
             ))}
+
           </ol>
 
         </div>
@@ -401,6 +406,7 @@ function How({ t }: { t: Copy }) {
     </section>
   );
 }
+
 
 function CategoryIconBar() {
   const icons = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
