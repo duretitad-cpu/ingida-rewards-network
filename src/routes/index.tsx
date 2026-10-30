@@ -351,7 +351,7 @@ function How({ t }: { t: Copy }) {
 <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.05)_38%,rgba(255,255,255,0.35)_62%,rgba(255,255,255,0.82)_82%,#fff_100%)] md:hidden" />
 
 {/* Desktop: fade across the shorter full-width strip */}
-<div className="absolute inset-0 hidden bg-[linear-gradient(to_bottom,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.10)_35%,rgba(255,255,255,0.25)_60%,rgba(255,255,255,0.60)_100%)] md:block" />
+<div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.05)_38%,rgba(255,255,255,0.35)_62%,rgba(255,255,255,0.82)_82%,#fff_100%)] md:block" />
       </div>
 
       {/* Mobile layout */}
