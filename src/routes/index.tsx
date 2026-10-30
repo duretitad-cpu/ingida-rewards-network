@@ -330,7 +330,7 @@ function How({ t }: { t: Copy }) {
       {/* Background full-width skyline video */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <video
-          className="h-full w-full object-cover object-bottom opacity-10 md:opacity-8"
+          className="h-full w-full object-cover object-bottom opacity-70 md:opacity-70"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
