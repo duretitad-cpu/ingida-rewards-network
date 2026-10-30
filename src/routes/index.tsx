@@ -201,9 +201,8 @@ function Index() {
         <main className="editorial-content">
           <How t={t} />
         </main>
-        <Waitlist t={t} role={role} setRole={setRole} />
-
         <CategoryIconBar />
+        <Waitlist t={t} role={role} setRole={setRole} />
 
         <Portals t={t} role={role} />
         <Footer t={t} />
@@ -299,20 +298,20 @@ function Network({ t }: { t: Copy }) {
   return (
     <section
       id="network"
-      className="relative z-10 w-full border-t border-white/5 bg-white/[0.02] py-4"
+      className="relative z-10 w-full border-t border-white/5 bg-white/[0.02] py-5"
     >
-      <div className="mx-auto max-w-5xl px-6 md:px-8">
-        <ul className="flex flex-wrap items-center justify-start gap-4 text-left sm:gap-6 md:gap-8">
+      <div className="mx-auto max-w-5xl px-6 md:px-10">
+        <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 text-center md:justify-start md:gap-x-10">
           {t.cats.map((c) => {
             const Icon = c.icon;
             return (
-              <li key={c.name} className="group flex items-center gap-2">
+              <li key={c.name} className="group flex items-center gap-3">
                 <Icon
-                  className="h-1 w-1 text-amber-100/80 transition-colors group-hover:text-gold md:h-4.5 md:w-4.5"
-                  strokeWidth={1.4}
+                  className="h-6 w-6 shrink-0 text-amber-100/90 transition-colors group-hover:text-gold md:h-7 md:w-7"
+                  strokeWidth={1.5}
                   aria-hidden
                 />
-                <h3 className="text-[10px] font-medium uppercase tracking-wider text-amber-100/75 group-hover:text-amber-100 md:text-[11px]">
+                <h3 className="text-[12px] font-medium uppercase tracking-[0.14em] text-amber-100/90 transition-colors group-hover:text-amber-100 md:text-[14px]">
                   {c.name}
                 </h3>
               </li>
@@ -323,7 +322,6 @@ function Network({ t }: { t: Copy }) {
     </section>
   );
 }
-
 
 function How({ t }: { t: Copy }) {
   return (
@@ -354,7 +352,7 @@ function How({ t }: { t: Copy }) {
 <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.05)_38%,rgba(255,255,255,0.35)_62%,rgba(255,255,255,0.82)_82%,#fff_100%)] md:hidden" />
 
 {/* Desktop: fade across the shorter full-width strip */}
-<div className="absolute inset-0 hidden bg-[linear-gradient(to_bottom,rgba(255,255,255,0.02)_15%,rgba(255,255,255,0.12)_35%,rgba(255,255,255,0.45)_62%,rgba(255,255,255,0.85)_85%,#fff_100%)] md:block" />
+<div className="absolute inset-0 hidden bg-[linear-gradient(to_bottom,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.10)_35%,rgba(255,255,255,0.25)_60%,rgba(255,255,255,0.60)_100%)] md:block" />
       </div>
 
       {/* Mobile layout */}
