@@ -10,9 +10,9 @@ import {
   Linkedin,
   Music2,
 } from "lucide-react";
-const skylineWhite = { url: "/White Amharic copy.mp4" };
+const skylineWhite = { url: "/Web.mp4" };
 import appPhones from "@/assets/ingida-wallet-navy.jpg";
-const skylineLoop = { url: "/White Amharic copy.mp4.mp4" };
+const skylineLoop = { url: "/Web.mp4.mp4" };
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { Button } from "@/components/ui/button";
 import { useServerFn } from "@tanstack/react-start";
