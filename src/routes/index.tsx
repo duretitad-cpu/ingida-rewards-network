@@ -253,7 +253,6 @@ function Hero({ t, lang, setLang }: { t: Copy; lang: Lang; setLang: (l: Lang) =>
     >
       <Nav lang={lang} setLang={setLang} />
       <ImageStrip t={t} />
-      <Network t={t} />
     </section>
   );
 }
@@ -301,7 +300,7 @@ function Network({ t }: { t: Copy }) {
       className="relative z-10 w-full border-t border-white/5 bg-white/[0.02] py-5"
     >
       <div className="mx-auto max-w-5xl px-6 md:px-10">
-        <ul className="grid grid-cols-5 items-center gap-1 text-center">
+       <ul className="grid grid-cols-5 items-center gap-1 text-center">
   {t.cats.map((c) => {
     const Icon = c.icon;
     return (
