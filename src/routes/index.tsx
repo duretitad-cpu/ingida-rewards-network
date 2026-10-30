@@ -299,20 +299,20 @@ function Network({ t }: { t: Copy }) {
   return (
     <section
       id="network"
-      className="relative z-10 w-full border-t border-white/10 bg-gradient-to-b from-[#182642] to-[#111a2e] py-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12),0_12px_28px_-8px_rgba(0,0,0,0.5)]"
+      className="relative z-10 w-full border-t border-white/5 bg-white/[0.02] py-4"
     >
-      <div className="mx-auto max-w-4xl px-6">
-        <ul className="grid grid-cols-5 items-center justify-items-center gap-2 text-center md:gap-8">
+      <div className="mx-auto max-w-5xl px-6 md:px-8">
+        <ul className="flex flex-wrap items-center justify-start gap-4 text-left sm:gap-6 md:gap-8">
           {t.cats.map((c) => {
             const Icon = c.icon;
             return (
-              <li key={c.name} className="group flex flex-col items-center gap-2">
+              <li key={c.name} className="group flex items-center gap-2">
                 <Icon
-                  className="h-7 w-7 text-amber-100/90 transition-transform duration-200 group-hover:scale-110 group-hover:text-gold"
+                  className="h-4 w-4 text-amber-100/80 transition-colors group-hover:text-gold md:h-4.5 md:w-4.5"
                   strokeWidth={1.4}
                   aria-hidden
                 />
-                <h3 className="text-[11px] font-medium uppercase tracking-wider text-amber-100/80 group-hover:text-amber-100 md:text-[12px]">
+                <h3 className="text-[10px] font-medium uppercase tracking-wider text-amber-100/75 group-hover:text-amber-100 md:text-[11px]">
                   {c.name}
                 </h3>
               </li>
@@ -326,43 +326,11 @@ function Network({ t }: { t: Copy }) {
 
 function How({ t }: { t: Copy }) {
   return (
-    <section id="how" className="how-section how-white bg-white py-16 text-navy-deep md:py-20">
-      <div className="how-inner how-split mx-auto max-w-5xl px-6 md:px-8">
-        <div className="how-lead">
-          <p className="text-[10px] font-medium tracking-[0.3em] uppercase text-gold">
-            {t.howEyebrow}
-          </p>
-          <h2 className="mt-3 font-serif text-[34px] leading-[1.15] text-navy-deep md:text-[46px]">
-            {t.howLead}
-          </h2>
-          <p className="mt-3 text-sm text-navy-deep/70 md:text-base">
-            {t.howTitle}
-          </p>
-        </div>
-
-        <ol className="how-steps-list border-t border-navy-deep/15">
-          {t.steps.map((s) => (
-            <li
-              key={s.n}
-              className="grid grid-cols-[44px_1fr] gap-2 border-b border-navy-deep/15 py-5"
-            >
-              <span className="pt-1 font-mono text-xs text-gold">{s.n}</span>
-              <div>
-                <h3 className="font-serif text-[22px] leading-snug text-navy-deep md:text-[24px]">
-                  {s.t}
-                </h3>
-                <p className="mt-1 text-[13px] leading-relaxed text-navy-deep/70">
-                  {s.d}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
-
-      <div className="mx-auto mt-8 max-w-5xl px-6 md:mt-12 md:px-8" aria-hidden="true">
+    <section id="how" className="how-section relative w-full overflow-hidden bg-white text-navy-deep py-16 md:py-24">
+      {/* Background full-width skyline video */}
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <video
-          className="h-auto w-full rounded-sm object-cover shadow-sm"
+          className="h-full w-full object-cover object-bottom opacity-25 md:opacity-30"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
@@ -371,6 +339,44 @@ function How({ t }: { t: Copy }) {
           playsInline
           preload="metadata"
         />
+        {/* Soft wash ensuring crisp text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/85 to-white/70" />
+      </div>
+
+      {/* Foreground content overlay */}
+      <div className="relative z-10 mx-auto max-w-5xl px-6 md:px-8">
+        <div className="how-inner how-split grid gap-10 md:grid-cols-2 md:gap-14">
+          <div className="how-lead">
+            <p className="text-[10px] font-medium tracking-[0.3em] uppercase text-gold">
+              {t.howEyebrow}
+            </p>
+            <h2 className="mt-3 font-serif text-[34px] leading-[1.15] text-navy-deep md:text-[46px]">
+              {t.howLead}
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-navy-deep/80 md:text-base">
+              {t.howTitle}
+            </p>
+          </div>
+
+          <ol className="how-steps-list border-t border-navy-deep/15">
+            {t.steps.map((s) => (
+              <li
+                key={s.n}
+                className="grid grid-cols-[44px_1fr] gap-2 border-b border-navy-deep/15 py-5"
+              >
+                <span className="pt-1 font-mono text-xs text-gold">{s.n}</span>
+                <div>
+                  <h3 className="font-serif text-[22px] leading-snug text-navy-deep md:text-[24px]">
+                    {s.t}
+                  </h3>
+                  <p className="mt-1 text-[13px] leading-relaxed text-navy-deep/75">
+                    {s.d}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
     </section>
   );
@@ -379,12 +385,15 @@ function How({ t }: { t: Copy }) {
 function CategoryIconBar() {
   const icons = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
   return (
-    <div className="flex items-center justify-center gap-5 border-t border-border/40 bg-background py-4 text-muted-foreground" aria-hidden="true">
+    <div
+      className="flex items-center justify-center gap-6 border-t border-border/40 bg-background py-5 text-navy-deep md:gap-8"
+      aria-hidden="true"
+    >
       {icons.map((Icon, i) => (
         <Icon
           key={i}
-          className="h-4 w-4 text-muted-foreground/70 transition-colors hover:text-gold"
-          strokeWidth={1.5}
+          className="h-6 w-6 text-navy-deep/80 transition-transform duration-200 hover:scale-110 hover:text-gold md:h-7 md:w-7"
+          strokeWidth={1.4}
         />
       ))}
     </div>
@@ -512,40 +521,54 @@ function Waitlist({ t, role, setRole }: { t: Copy; role: Role; setRole: (role: R
               <p className="font-serif text-lg italic text-gold md:text-xl">{t.submitted}</p>
             </div>
           ) : (
-            <form onSubmit={onSubmit} className="space-y-3 text-left">
-              <div className="hidden" aria-hidden="true"><input name="website" tabIndex={-1} autoComplete="off" /></div>
-              <Field name="name" placeholder={t.namePh} required />
-              <Field name="phone" type="tel" placeholder={t.phonePh} required />
-              <Field name="email" type="email" placeholder={t.emailPh} required />
-              {role === "merchant" ? (
-                <Field name="business_name" placeholder={t.businessPh} required />
-              ) : (
-                <fieldset className="flex items-center gap-4 border-b border-primary-foreground/30 py-3">
-                  <legend className="sr-only">{t.alertsQ}</legend>
-                  <span aria-hidden className="flex-1 text-base text-primary-foreground/70">{t.alertsQ}</span>
-                  <AlertChip value="yes" label={t.yes} />
-                  <AlertChip value="no" label={t.no} />
-                </fieldset>
-              )}
-              <div className="flex gap-2 pt-1" onChangeCapture={(event) => {
-                const input = event.target;
-                if (input instanceof HTMLInputElement && input.name === "role") setRole(input.value as Role);
-              }}>
-                <RoleChip name="role" value="member" label={t.roleMember} defaultChecked />
-                <RoleChip name="role" value="merchant" label={t.roleMerchant} />
-              </div>
-              <div className="flex justify-center pt-1">
-                <Button
-                  type="submit"
-                  variant="ghost"
-                  disabled={state === "sending"}
-                  className="invite-submit group text-gold hover:bg-gold hover:text-navy-deep"
-                >
-                  {state === "sending" ? (t === copy.en ? "Sending…" : "በመላክ ላይ…") : t.submit} <span aria-hidden>→</span>
-                </Button>
-              </div>
-              {error && <p role="alert" className="text-center text-sm text-gold-soft">{error}</p>}
-            </form>
+           <form onSubmit={onSubmit} className="space-y-3 text-left">
+  <div className="hidden" aria-hidden="true">
+    <input name="website" tabIndex={-1} autoComplete="off" />
+  </div>
+
+  {/* 1. Member / Merchant selector as first item */}
+  <div
+    className="flex gap-2 pb-2"
+    onChangeCapture={(event) => {
+      const input = event.target;
+      if (input instanceof HTMLInputElement && input.name === "role") {
+        setRole(input.value as Role);
+      }
+    }}
+  >
+    <RoleChip name="role" value="member" label={t.roleMember} defaultChecked={role === "member"} />
+    <RoleChip name="role" value="merchant" label={t.roleMerchant} defaultChecked={role === "merchant"} />
+  </div>
+
+  {/* 2. Contact fields */}
+  <Field name="name" placeholder={t.namePh} required />
+  <Field name="phone" type="tel" placeholder={t.phonePh} required />
+  <Field name="email" type="email" placeholder={t.emailPh} required />
+
+  {/* 3. Conditional business name or alerts preference */}
+  {role === "merchant" ? (
+    <Field name="business_name" placeholder={t.businessPh} required />
+  ) : (
+    <fieldset className="flex items-center gap-4 border-b border-primary-foreground/30 py-3">
+      <legend className="sr-only">{t.alertsQ}</legend>
+      <span aria-hidden className="flex-1 text-base text-primary-foreground/70">{t.alertsQ}</span>
+      <AlertChip value="yes" label={t.yes} />
+      <AlertChip value="no" label={t.no} />
+    </fieldset>
+  )}
+
+  <div className="flex justify-center pt-2">
+    <Button
+      type="submit"
+      variant="ghost"
+      disabled={state === "sending"}
+      className="invite-submit group text-gold hover:bg-gold hover:text-navy-deep"
+    >
+      {state === "sending" ? (t === copy.en ? "Sending…" : "በመላክ ላይ…") : t.submit} <span aria-hidden>→</span>
+    </Button>
+  </div>
+  {error && <p role="alert" className="text-center text-sm text-gold-soft">{error}</p>}
+</form>
           )}
         </div>
       </div>
