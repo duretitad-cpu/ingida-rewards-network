@@ -329,15 +329,15 @@ function How({ t }: { t: Copy }) {
   return (
     <section
       id="how"
-      className="how-section relative isolate w-full overflow-hidden bg-white text-navy-deep min-h-[760px] md:min-h-[850px]"
+      className="how-section relative isolate w-full min-h-[1050px] md:min-h-[950px] overflow-hidden bg-white text-navy-deep"
     >
-      {/* Background skyline video */}
+      {/* Full-section skyline video */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[300px] sm:h-[360px] md:h-[55%] overflow-hidden"
+        className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
         aria-hidden="true"
       >
         <video
-          className="absolute inset-0 h-full w-full object-cover object-bottom opacity-65 md:opacity-70"
+          className="absolute inset-0 h-full w-full object-cover object-bottom opacity-100"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
@@ -347,66 +347,66 @@ function How({ t }: { t: Copy }) {
           preload="auto"
         />
 
-        {/* Keep the upper content clean while revealing the skyline */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/35 to-white/5" />
+        {/* Keep upper skyline visible, fade into white behind text */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/0 via-[65%] to-white" />
+
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent from-[45%] via-white/15 via-[65%] to-white" />
       </div>
 
-      {/* Foreground content */}
-      <div className="relative z-10 mx-auto max-w-5xl px-6 sm:px-8 md:px-10 pt-12 sm:pt-16 md:pt-24 pb-[320px] sm:pb-[370px] md:pb-[390px]">
+      {/* Bottom editorial text overlay */}
+      <div className="absolute inset-x-0 bottom-0 z-10">
+        <div className="mx-auto w-full max-w-[1440px] px-6 sm:px-8 md:px-[6.5%] pt-32 pb-12 md:pt-40 md:pb-20">
 
-        <div className="how-inner how-split grid grid-cols-1 gap-8 sm:gap-10 md:grid-cols-2 md:gap-14 items-start">
+          <div className="how-inner how-split grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr] gap-8 md:gap-16 items-start">
 
-          {/* Left: Headline */}
-          <div className="how-lead text-center md:text-left">
+            {/* Left headline */}
+            <div className="how-lead text-center md:text-left">
 
-            <p className="text-[9px] md:text-[10px] font-medium tracking-[0.3em] uppercase text-gold">
-              {t.howEyebrow}
-            </p>
+              <p className="text-[9px] md:text-[10px] font-medium tracking-[0.3em] uppercase text-gold">
+                {t.howEyebrow}
+              </p>
 
-            <h2 className="mt-2 md:mt-3 mx-auto md:mx-0 max-w-md font-serif text-[32px] leading-[1.08] sm:text-[36px] md:text-[46px] text-navy-deep">
-              {t.howLead}
-            </h2>
+              <h2 className="mt-2 md:mt-3 font-serif text-[32px] leading-[1.08] sm:text-[38px] md:text-[46px] text-navy-deep max-w-xl">
+                {t.howLead}
+              </h2>
 
-            <p className="mt-3 md:mt-4 mx-auto md:mx-0 max-w-sm text-[12px] leading-relaxed text-navy-deep/80 sm:text-sm md:text-base">
-              {t.howTitle}
-            </p>
+              <p className="mt-3 md:mt-4 text-[12px] leading-relaxed text-navy-deep/80 sm:text-sm md:text-base">
+                {t.howTitle}
+              </p>
 
+            </div>
+
+            {/* Right numbered steps */}
+            <ol className="how-steps-list border-t border-navy-deep/20">
+
+              {t.steps.map((s) => (
+                <li
+                  key={s.n}
+                  className="grid grid-cols-1 md:grid-cols-[32px_1fr] gap-1 md:gap-3 border-b border-navy-deep/20 py-4 md:py-5 text-center md:text-left"
+                >
+                  <span className="pt-0 md:pt-1 font-mono text-[9px] md:text-[10px] text-gold">
+                    {s.n}
+                  </span>
+
+                  <div>
+                    <h3 className="font-serif text-[20px] md:text-[24px] leading-snug text-navy-deep">
+                      {s.t}
+                    </h3>
+
+                    <p className="mt-1 text-[11px] md:text-[13px] leading-relaxed text-navy-deep/75">
+                      {s.d}
+                    </p>
+                  </div>
+                </li>
+              ))}
+
+            </ol>
           </div>
-
-          {/* Right: Numbered steps */}
-          <ol className="how-steps-list border-t border-navy-deep/20">
-
-            {t.steps.map((s) => (
-              <li
-                key={s.n}
-                className="grid grid-cols-1 md:grid-cols-[32px_1fr] gap-1 md:gap-3 border-b border-navy-deep/20 py-4 sm:py-5 md:py-6 text-center md:text-left"
-              >
-
-                <span className="pt-0 md:pt-1 font-mono text-[9px] md:text-[10px] text-gold">
-                  {s.n}
-                </span>
-
-                <div>
-                  <h3 className="font-serif text-[20px] leading-snug text-navy-deep sm:text-[22px] md:text-[24px]">
-                    {s.t}
-                  </h3>
-
-                  <p className="mt-1 text-[11px] leading-relaxed text-navy-deep/75 sm:text-xs md:text-[13px]">
-                    {s.d}
-                  </p>
-                </div>
-
-              </li>
-            ))}
-
-          </ol>
-
         </div>
       </div>
     </section>
   );
 }
-
 
 function CategoryIconBar() {
   const icons = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
