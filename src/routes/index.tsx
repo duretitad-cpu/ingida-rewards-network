@@ -10,7 +10,7 @@ import {
   Linkedin,
   Music2,
 } from "lucide-react";
-import skylineWhite from "@/assets/skyline-navy-white.jpg";
+const skylineWhite = { url: "/Web.mp4" };
 import appPhones from "@/assets/ingida-wallet-navy.jpg";
 const skylineLoop = { url: "/Web.mp4" };
 import { IngidaLogo } from "@/components/brand/ingida-logo";
