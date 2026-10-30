@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import skylineWhite from "@/assets/skyline-navy-white.jpg";
 import appPhones from "@/assets/ingida-wallet-navy.jpg";
-import skylineLoop from "@/assets/ingida-skyline-loop-navy.mp4.asset.json";
+const skylineLoop = { url: "/Web.mp4" };
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { Button } from "@/components/ui/button";
 import { useServerFn } from "@tanstack/react-start";
