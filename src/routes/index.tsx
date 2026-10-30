@@ -25,7 +25,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "ingida — Ethiopian Hospitality & Rewards Wallet" },
-      { name: "description", content: "Explore Addis Ababa and Ethiopia with ingida’s hospitality rewards network. Discover dining, stays, tourism and local merchants. Join the rewards wallet waitlist and unlock city-wide rewards." },
+      { name: "description", content: "Explore Addis Ababa and Ethiopia with ingida’s hospitality rewards network. Discover dining, stays, tourism and local merchants. Join the rewards wallet waitlist and start exploring more of Ethiopia." },
       { property: "og:title", content: "ingida — Ethiopian Hospitality & Rewards Wallet" },
       { property: "og:description", content: "Discover Ethiopia’s cities, dining, stays and local merchants with ingida. A hospitality network and rewards wallet, made in Addis Ababa." },
       { name: "twitter:title", content: "ingida — Ethiopian Hospitality & Rewards Wallet" },
@@ -291,13 +291,33 @@ function Network({ t }: { t: Copy }) {
 
 function How({ t }: { t: Copy }) {
   return (
-    <section id="how" className="how-section how-white bg-white text-navy-deep py-16 md:py-24">
-      <div className="how-inner how-split max-w-5xl mx-auto px-6 md:px-8">
+    <section
+      id="how"
+      className="relative overflow-hidden bg-white text-navy-deep py-16 md:py-24"
+    >
+      <div
+        className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+        aria-hidden="true"
+      >
+        <video
+          className="h-full w-full object-cover object-bottom opacity-20 md:opacity-25"
+          src={skylineLoop}
+          poster={skylinePoster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white/95" />
+      </div>
+
+      <div className="relative z-10 how-inner how-split mx-auto max-w-5xl px-6 md:px-8">
         <div className="how-lead">
           <p className="text-[10px] font-medium tracking-[0.3em] uppercase text-gold">
             {t.howEyebrow}
           </p>
-          <h2 className="font-serif text-[34px] md:text-[46px] leading-[1.15] text-navy-deep mt-3">
+          <h2 className="mt-3 font-serif text-[34px] leading-[1.15] text-navy-deep md:text-[46px]">
             {t.howLead}
           </h2>
         </div>
@@ -306,11 +326,11 @@ function How({ t }: { t: Copy }) {
           {t.steps.map((s) => (
             <li
               key={s.n}
-              className="grid grid-cols-[44px_1fr] gap-2 py-5 border-b border-navy-deep/15"
+              className="grid grid-cols-[44px_1fr] gap-2 border-b border-navy-deep/15 py-5"
             >
-              <span className="text-xs font-mono text-gold pt-1">{s.n}</span>
+              <span className="pt-1 font-mono text-xs text-gold">{s.n}</span>
               <div>
-                <h3 className="font-serif text-[22px] md:text-[24px] text-navy-deep leading-snug">
+                <h3 className="font-serif text-[22px] leading-snug text-navy-deep md:text-[24px]">
                   {s.t}
                 </h3>
                 <p className="mt-1 text-[13px] leading-relaxed text-navy-deep/70">
@@ -320,19 +340,6 @@ function How({ t }: { t: Copy }) {
             </li>
           ))}
         </ol>
-      </div>
-
-      <div className="skyline-stage mt-10 md:mt-16 w-full overflow-hidden" aria-hidden="true">
-        <video
-          className="addis-skyline w-full h-auto object-cover"
-          src={skylineLoop}
-          poster={skylinePoster}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-        />
       </div>
     </section>
   );
@@ -443,7 +450,7 @@ function Waitlist({ t, role, setRole }: { t: Copy; role: Role; setRole: (role: R
           </p>
           <h2 className="mt-3 font-serif text-[24px] leading-[1.1] md:text-[34px]">
             {role === "member"
-              ? (t === copy.en ? <>Your Digital Wallet.<br /><em className="text-gold">Rewarded.</em></> : <>የእርስዎ ዲጂታል ዋሌት።<br /><span className="text-gold">በሽልማት የተሰጠ</span></> )
+              ? (t === copy.en ? <>Your Digital Wallet.<br /><em className="text-gold">Rewarded.</em></> : <>የእርስዎ ዲጂታል ዋሌት።<br /><span className="text-gold">በሽልማት የተገነባ</span></> )
               : renderWaitlistTitle(t.waitlistTitle)}
           </h2>
           {t.waitlistSub ? (
