@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "ingida — Ethiopian Hospitality & Rewards Wallet" },
-      { name: "description", content: "Explore Addis Ababa and Ethiopia with ingida’s hospitality rewards network. Discover dining, stays, tourism and local merchants. Join the rewards wallet waitlist." },
+      { name: "description", content: "Explore Addis Ababa and Ethiopia with ingida’s hospitality rewards network. Discover dining, stays, tourism and local merchants. Join the rewards wallet waitlist to access the network." },
       { property: "og:title", content: "ingida — Ethiopian Hospitality & Rewards Wallet" },
       { property: "og:description", content: "Discover Ethiopia’s cities, dining, stays and local merchants with ingida. A hospitality network and rewards wallet, made in Addis Ababa." },
       { name: "twitter:title", content: "ingida — Ethiopian Hospitality & Rewards Wallet" },
@@ -292,55 +292,49 @@ function Network({ t }: { t: Copy }) {
 }
 
 function How({ t }: { t: Copy }) {
-  const ref = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) { el?.style.setProperty("--p", "1"); return; }
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const r = el.getBoundingClientRect();
-      const p = Math.min(1, Math.max(0, (window.innerHeight - r.top) / (r.height + window.innerHeight * 0.2)));
-      el.style.setProperty("--p", p.toFixed(3));
-    };
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); cancelAnimationFrame(raf); };
-  }, []);
   return (
-    <section id="how" ref={ref} className="how-section how-neon">
-      <div className="skyline-stage" aria-hidden="true">
-        <video className="addis-skyline" src={skylineLoop.url} poster={skylineWhite} autoPlay muted loop playsInline preload="metadata" />
-        <span className="neon-pin pin-stay" style={{ left: "30%", top: "14%" }}>Skyline Stay <em>+350 pts</em></span>
-        <span className="neon-pin pin-cathedral" style={{ left: "22%", top: "40%" }}>Cathedral Dine <em>+120 pts</em></span>
-        <span className="neon-pin pin-stadium" style={{ left: "58.5%", top: "71%" }}>Stadium Access <em>+200 pts</em></span>
-        <span className="neon-pin pin-hall" style={{ left: "72%", top: "30%" }}>Africa Hall Tours <em>+90 pts</em></span>
-        <span className="neon-pin pin-lion" style={{ left: "86%", top: "26%" }}>Lion of Judah <em>+150 pts</em></span>
-      </div>
-      <div className="how-inner how-split reveal-up">
+    <section id="how" className="how-section how-white bg-white text-navy-deep py-16 md:py-24">
+      <div className="how-inner how-split max-w-5xl mx-auto px-6 md:px-8">
         <div className="how-lead">
-          <p className="eyebrow">{t.howEyebrow}</p>
-          <h2 className="how-title">
-            {t === copy.en ? <><span className="italic text-gold">Spend.</span> Earn <span className="text-gold">&amp;</span> Redeem.</> : t.howTitle}
+          <p className="text-[10px] font-medium tracking-[0.3em] uppercase text-gold">
+            {t.howEyebrow}
+          </p>
+          <h2 className="font-serif text-[34px] md:text-[46px] leading-[1.15] text-navy-deep mt-3">
+            {t.howLead}
           </h2>
-          <p className="how-sub">{t.howLead}</p>
-          <Button asChild variant="secondary" className="invitation-cta h-12 rounded-none px-7 text-sm">
-            <a href="#waitlist">{t.ctaJoin}</a>
-          </Button>
         </div>
-        <ol className="how-steps how-steps-list">
+
+        <ol className="how-steps-list border-t border-navy-deep/15">
           {t.steps.map((s) => (
-            <li key={s.n}>
-              <span className="how-step-n">{s.n}</span>
+            <li
+              key={s.n}
+              className="grid grid-cols-[44px_1fr] gap-2 py-5 border-b border-navy-deep/15"
+            >
+              <span className="text-xs font-mono text-gold pt-1">{s.n}</span>
               <div>
-                <h3>{s.t}</h3>
-                <p>{s.d}</p>
+                <h3 className="font-serif text-[22px] md:text-[24px] text-navy-deep leading-snug">
+                  {s.t}
+                </h3>
+                <p className="mt-1 text-[13px] leading-relaxed text-navy-deep/70">
+                  {s.d}
+                </p>
               </div>
             </li>
           ))}
         </ol>
+      </div>
+
+      <div className="skyline-stage mt-10 md:mt-16 w-full overflow-hidden" aria-hidden="true">
+        <video
+          className="addis-skyline w-full h-auto object-cover"
+          src={skylineLoop.url}
+          poster={skylineWhite}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        />
       </div>
     </section>
   );
@@ -464,7 +458,7 @@ function Waitlist({ t }: { t: Copy }) {
           </p>
           <h2 className="mt-3 font-serif text-[24px] leading-[1.1] md:text-[34px]">
             {role === "member"
-              ? (t === copy.en ? <>Your Digital Wallet.<br /><em className="text-gold">Rewarded.</em></> : <>የእርስዎ ዲጂታል ዋሌት።<br /><span className="text-gold">በሽልማት የታጀበ።</span></>)
+              ? (t === copy.en ? <>Your Digital Wallet.<br /><em className="text-gold">Rewarded.</em></> : <>የእርስዎ ዲጂታል ዋሌት።<br /><span className="text-gold">በሽልማት የተሰጠ</span></> )
               : renderWaitlistTitle(t.waitlistTitle)}
           </h2>
           {t.waitlistSub ? (
@@ -553,7 +547,9 @@ function AlertChip({ value, label }: { value: string; label: string }) {
   return (
     <label className="cursor-pointer">
       <input type="radio" name="alerts" value={value} className="peer sr-only" />
-      <span className="block border-b border-transparent px-2 py-1 text-xs text-primary-foreground/80 peer-checked:border-gold peer-checked:text-gold peer-focus-visible:outline peer-focus-visible:outline-gold">{label}</span>
+      <span className="block border-b border-transparent px-2 py-1 text-xs text-primary-foreground/80 peer-checked:border-gold peer-checked:text-gold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-gold">
+        {label}
+      </span>
     </label>
   );
 }
@@ -572,7 +568,7 @@ function RoleChip({
   return (
     <label className="flex-1 cursor-pointer">
       <input type="radio" name={name} value={value} defaultChecked={defaultChecked} className="peer sr-only" />
-      <span className="block border-b border-primary-foreground/30 px-1 py-3 text-center text-xs text-primary-foreground/80 peer-checked:border-gold peer-checked:text-gold peer-focus-visible:outline peer-focus-visible:outline-gold">
+      <span className="block border-b border-primary-foreground/30 px-1 py-3 text-center text-xs text-primary-foreground/80 peer-checked:border-gold peer-checked:text-gold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-gold">
         {label}
       </span>
     </label>
