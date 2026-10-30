@@ -284,7 +284,7 @@ function ImageStrip({ t }: { t: Copy }) {
           <p className="eyebrow moment-line">{t === copy.en ? <>Build Lifestyle Wealth <span>on Daily Spend</span></> : <span className="moment-tag">#ክቡርእንግዳ</span>}</p>
           <h2>{t === copy.en ? <>More than a Wallet.<br /><em>A Lifestyle.</em></> : <span className="am-hero-title">እንግዳ ቆይታ</span>}</h2>
           <div className="wallet-feature-labels">
-            {t === copy.en ? <><span>Loyalty Network.</span><span>Rewards rWallet.</span></> : <span>ልዩ የእንግዳ ቆይታ እና አጋር ኔትወርክ</span>}
+            {t === copy.en ? <><span>Loyalty Network.</span><span>Rewards Wallet.</span></> : <span>ልዩ የእንግዳ ቆይታ እና አጋር ኔትወርክ</span>}
           </div>
         </div>
         <figure className="app-showcase">
@@ -308,7 +308,7 @@ function Network({ t }: { t: Copy }) {
             return (
               <li key={c.name} className="group flex items-center gap-2">
                 <Icon
-                  className="h-4 w-4 text-amber-100/80 transition-colors group-hover:text-gold md:h-4.5 md:w-4.5"
+                  className="h-6 w-6 text-amber-100/80 transition-colors group-hover:text-gold md:h-4.5 md:w-4.5"
                   strokeWidth={1.4}
                   aria-hidden
                 />
@@ -326,11 +326,11 @@ function Network({ t }: { t: Copy }) {
 
 function How({ t }: { t: Copy }) {
   return (
-    <section id="how" className="how-section relative w-full overflow-hidden bg-white text-navy-deep py-24 md:py-34">
+    <section id="how" className="how-section relative w-full overflow-hidden bg-white text-navy-deep py-10 md:py-18">
       {/* Background full-width skyline video */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <video
-          className="h-full w-full object-cover object-bottom opacity-60 md:opacity-60"
+          className="h-full w-full object-cover object-bottom opacity-20 md:opacity-20"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
