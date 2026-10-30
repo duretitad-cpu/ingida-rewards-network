@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   Utensils,
@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import skylineWhite from "@/assets/skyline-navy-white.jpg";
 import appPhones from "@/assets/ingida-wallet-navy.jpg";
+import skylineLoop from "@/assets/ingida-skyline-loop-navy.mp4.asset.json";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { Button } from "@/components/ui/button";
 import { useServerFn } from "@tanstack/react-start";
@@ -44,6 +45,7 @@ const copy = {
     ctaJoin: "Request Invitation",
     howEyebrow: "Membership",
     howTitle: "Spend. Earn & Redeem.",
+    howLead: "Join once. Earn across the city.",
     howBody:
       "",
     steps: [
@@ -83,7 +85,10 @@ const copy = {
     namePh: "Full name",
     emailPh: "Email",
     phonePh: "Phone number",
-    cityPh: "City",
+    businessPh: "Name of business",
+    alertsQ: "Receive alerts?",
+    yes: "Yes",
+    no: "No",
     roleMember: "I'm a member",
     roleMerchant: "I'm a merchant",
     submit: "Request invite",
@@ -97,12 +102,13 @@ const copy = {
     ctaJoin: "ተጋበዙ",
     howEyebrow: "አባልነት",
     howTitle: "እንግዳ ይጠቀሙ። ነጥብ ያግኙ። ይሽለሙ።",
+    howLead: "አንዴ ይመዝገቡ። በከተማው ሁሉ ያግኙ።",
     howBody:
       "በመላው ኢትዮጵያ የጋራ አቀባበል።",
     steps: [
       { n: "01", t: "በFAYDA ይመዝገቡ", d: "በFAYDA መታወቂያዎ አንዴ ያረጋግጡና ይጀምሩ።" },
       { n: "02", t: "ተገበዙ፣ ሽልማት ያግኙ", d: "በአጋር ንግድ ቤቶች ሲገዙ የETH QR ኮድን በክፍያ አፕዎ ይቃኙ። ሽልማትዎን ያግኙ።" },
-      { n: "03", t: "ሽልማትዎን ይጠቀሙ", d: "በአንድ አጋር ቦታ ያገኙትን ሽልማት በሚቀበሉ ሌሎች የኢንጊዳ አጋር ቦታዎችም ይጠቀሙ።" },
+      { n: "03", t: "ሽልማትዎን ይጠቀሙ", d: "በአንድ አጋር ቦታ ያገኙትን ሽልማት በሚቀበሉ ሌሎች የእንግዳ አጋር ቦታዎችም ይጠቀሙ።" },
     ],
     portals: [
       {
@@ -120,7 +126,7 @@ const copy = {
     ],
 
     networkEyebrow: "አውታረ መረቡ",
-    networkTitle: "የኢንጊዳ አጋር ኔትወርክ",
+    networkTitle: "የእንግዳ አጋር ኔትወርክ",
     cats: [
       { icon: Utensils, name: "መአድ", note: "ሬስቶራንቶችና ካፌዎች" },
       { icon: BedDouble, name: "ማረፍ", note: "ቡቲክ ሆቴሎችና ሎጆች" },
@@ -129,13 +135,16 @@ const copy = {
       { icon: Ticket, name: "ልዩ ተሞክሮዎች", note: "ልዩ ጊዜዎችና ተሞክሮዎች" },
     ],
     waitlistEyebrow: "ቅድመ መዳረሻ",
-    waitlistTitle: "የኢንጊዳ አካል ይሁኑ",
+    waitlistTitle: "የእንግዳ አካል ይሁኑ",
     waitlistSub: "",
 
     namePh: "ሙሉ ስም",
     emailPh: "ኢሜይል",
     phonePh: "ስልክ ቁጥር",
-    cityPh: "ከተማ",
+    businessPh: "የንግድ ቤቱ ስም",
+    alertsQ: "ማሳወቂያ ይቀበሉ?",
+    yes: "አዎ",
+    no: "አይ",
     roleMember: "ደንበኛ ነኝ",
     roleMerchant: "ነጋዴ ነኝ",
     submit: "ተጋበዙ",
@@ -168,7 +177,6 @@ function Index() {
         <How t={t} />
       </main>
       <Portals t={t} />
-      <IconStrip />
       <Waitlist t={t} />
       <Footer t={t} />
     </div>
@@ -304,26 +312,32 @@ function How({ t }: { t: Copy }) {
   return (
     <section id="how" ref={ref} className="how-section how-neon">
       <div className="skyline-stage" aria-hidden="true">
-        <img className="addis-skyline" src={skylineWhite} alt="" loading="lazy" />
+        <video className="addis-skyline" src={skylineLoop.url} poster={skylineWhite} autoPlay muted loop playsInline preload="metadata" />
         <span className="neon-pin pin-stay" style={{ left: "30%", top: "14%" }}>Skyline Stay <em>+350 pts</em></span>
         <span className="neon-pin pin-cathedral" style={{ left: "22%", top: "40%" }}>Cathedral Dine <em>+120 pts</em></span>
         <span className="neon-pin pin-stadium" style={{ left: "58.5%", top: "71%" }}>Stadium Access <em>+200 pts</em></span>
         <span className="neon-pin pin-hall" style={{ left: "72%", top: "30%" }}>Africa Hall Tours <em>+90 pts</em></span>
         <span className="neon-pin pin-lion" style={{ left: "86%", top: "26%" }}>Lion of Judah <em>+150 pts</em></span>
       </div>
-      <div className="how-inner reveal-up">
-        <p className="eyebrow">{t.howEyebrow}</p>
-        <h2 className="how-title">
-          {t === copy.en ? <><span className="italic text-gold">Spend.</span> Earn <span className="text-gold">&amp;</span> Redeem.</> : t.howTitle}
-        </h2>
-        <Button asChild variant="secondary" className="invitation-cta h-12 rounded-none px-7 text-sm">
-          <a href="#waitlist">{t.ctaJoin}<span aria-hidden>→</span></a>
-        </Button>
-        <ol className="how-steps">
+      <div className="how-inner how-split reveal-up">
+        <div className="how-lead">
+          <p className="eyebrow">{t.howEyebrow}</p>
+          <h2 className="how-title">
+            {t === copy.en ? <><span className="italic text-gold">Spend.</span> Earn <span className="text-gold">&amp;</span> Redeem.</> : t.howTitle}
+          </h2>
+          <p className="how-sub">{t.howLead}</p>
+          <Button asChild variant="secondary" className="invitation-cta h-12 rounded-none px-7 text-sm">
+            <a href="#waitlist">{t.ctaJoin}</a>
+          </Button>
+        </div>
+        <ol className="how-steps how-steps-list">
           {t.steps.map((s) => (
             <li key={s.n}>
-              <h3>{s.t}</h3>
-              <p>{s.d}</p>
+              <span className="how-step-n">{s.n}</span>
+              <div>
+                <h3>{s.t}</h3>
+                <p>{s.d}</p>
+              </div>
             </li>
           ))}
         </ol>
@@ -371,12 +385,6 @@ function PortalRow({ p }: { p: Copy["portals"][number] }) {
         <p className="max-w-md text-[12.5px] leading-relaxed text-muted-foreground">
           {p.desc}
         </p>
-        <span
-          aria-hidden
-          className="mt-1 text-lg text-gold transition-transform group-hover:translate-x-1 md:text-xl"
-        >
-          →
-        </span>
       </div>
     </a>
   );
@@ -385,7 +393,7 @@ function PortalRow({ p }: { p: Copy["portals"][number] }) {
 function IconStrip() {
   const icons = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
   return (
-    <div className="brand-interlude bg-background text-navy-deep" aria-label="ingida hospitality network">
+    <div className="brand-interlude text-navy-deep">
       <IngidaLogo className="interlude-logo" />
       <div className="interlude-icons" aria-hidden="true">
         {icons.map((Icon, i) => (
@@ -402,7 +410,7 @@ function IconStrip() {
 }
 
 function renderWaitlistTitle(title: string) {
-  const tokens = ["ingida", "ኢንጊዳ"];
+  const tokens = ["ingida", "እንግዳ"];
   for (const tok of tokens) {
     const idx = title.indexOf(tok);
     if (idx !== -1) {
@@ -427,7 +435,8 @@ function Waitlist({ t }: { t: Copy }) {
     e.preventDefault();
     if (state === "sending") return;
     const form = new FormData(e.currentTarget);
-    const result = waitlistSchema.safeParse(Object.fromEntries(form.entries()));
+    const raw = Object.fromEntries(form.entries());
+    const result = waitlistSchema.safeParse(raw);
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "Please check your details.");
       return;
@@ -435,7 +444,7 @@ function Waitlist({ t }: { t: Copy }) {
     setState("sending");
     setError("");
     try {
-      await saveRequest({ data: result.data });
+      await saveRequest({ data: raw });
       setState("done");
     } catch {
       setState("idle");
@@ -475,12 +484,21 @@ function Waitlist({ t }: { t: Copy }) {
             <form onSubmit={onSubmit} className="space-y-3 text-left">
               <div className="hidden" aria-hidden="true"><input name="website" tabIndex={-1} autoComplete="off" /></div>
               <Field name="name" placeholder={t.namePh} required />
-              <Field name="email" type="email" placeholder={t.emailPh} required />
               <Field name="phone" type="tel" placeholder={t.phonePh} required />
-              <Field name="city" placeholder={t.cityPh} />
-              <div className="flex gap-2 pt-1" onChange={(event) => {
+              <Field name="email" type="email" placeholder={t.emailPh} required />
+              {role === "merchant" ? (
+                <Field name="business_name" placeholder={t.businessPh} required />
+              ) : (
+                <fieldset className="flex items-center gap-4 border-b border-primary-foreground/30 py-3">
+                  <legend className="sr-only">{t.alertsQ}</legend>
+                  <span aria-hidden className="flex-1 text-base text-primary-foreground/70">{t.alertsQ}</span>
+                  <AlertChip value="yes" label={t.yes} />
+                  <AlertChip value="no" label={t.no} />
+                </fieldset>
+              )}
+              <div className="flex gap-2 pt-1" onChangeCapture={(event) => {
                 const input = event.target;
-                if (input instanceof HTMLInputElement) setRole(input.value);
+                if (input instanceof HTMLInputElement && input.name === "role") setRole(input.value);
               }}>
                 <RoleChip name="role" value="member" label={t.roleMember} defaultChecked />
                 <RoleChip name="role" value="merchant" label={t.roleMerchant} />
@@ -524,9 +542,18 @@ function Field({
         placeholder={placeholder}
         required={required}
         maxLength={name === "email" ? 255 : name === "phone" ? 30 : 100}
-        autoComplete={name === "name" ? "name" : name === "email" ? "email" : name === "phone" ? "tel" : "address-level2"}
+        autoComplete={name === "name" ? "name" : name === "email" ? "email" : name === "phone" ? "tel" : "organization"}
         className="w-full border-b border-primary-foreground/30 bg-transparent py-3 text-base text-primary-foreground placeholder:text-primary-foreground/70 outline-none transition-colors focus:border-gold"
       />
+    </label>
+  );
+}
+
+function AlertChip({ value, label }: { value: string; label: string }) {
+  return (
+    <label className="cursor-pointer">
+      <input type="radio" name="alerts" value={value} className="peer sr-only" />
+      <span className="block border-b border-transparent px-2 py-1 text-xs text-primary-foreground/80 peer-checked:border-gold peer-checked:text-gold peer-focus-visible:outline peer-focus-visible:outline-gold">{label}</span>
     </label>
   );
 }
@@ -558,7 +585,7 @@ function Footer({ t }: { t: Copy }) {
     <footer className="border-t border-border/60 bg-background py-8">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-5 text-center md:px-8">
         <div className="flex flex-col items-center gap-4">
-          <a href="#top" aria-label="ingida home"><IngidaLogo className="footer-logo text-navy-deep" /></a>
+          <a href="#top" aria-label="ingida home"><IconStrip /></a>
           <div className="flex items-center justify-center gap-4">
             <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="text-muted-foreground transition-colors hover:text-gold">
               <Instagram className="h-4 w-4" strokeWidth={1.5} />
@@ -582,7 +609,7 @@ function Footer({ t }: { t: Copy }) {
             <span aria-hidden className="opacity-40">·</span>
             <a href="#" className="hover:text-foreground">{t === copy.en ? "Cookies" : "ኩኪዎች"}</a>
             <span aria-hidden className="opacity-40">·</span>
-            <a href="#" className="hover:text-foreground">{t.footAdmin}</a>
+            <Link to="/operators" className="hover:text-foreground">{t.footAdmin}</Link>
           </div>
         </div>
       </div>
