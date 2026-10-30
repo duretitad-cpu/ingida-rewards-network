@@ -331,13 +331,13 @@ function How({ t }: { t: Copy }) {
       id="how"
       className="how-section relative isolate w-full overflow-hidden bg-white text-navy-deep"
     >
-      {/* Background video */}
+      {/* Full-height video background */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[370px] overflow-hidden bg-white sm:h-[410px] md:inset-0 md:h-full"
+        className="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-white"
         aria-hidden="true"
       >
         <video
-          className="h-full w-full object-fill md:object-contain"
+          className="h-full w-full object-cover object-center md:object-contain md:object-top"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
@@ -347,19 +347,19 @@ function How({ t }: { t: Copy }) {
           preload="metadata"
         />
 
-        {/* Subtle wash over the video */}
+        {/* Subtle wash */}
         <div className="absolute inset-0 bg-white/10" />
 
-        {/* Mobile: blend the video directly into the white content */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.05)_40%,rgba(255,255,255,0.45)_65%,#ffffff_100%)] md:hidden" />
+        {/* Mobile fade */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.05)_40%,rgba(255,255,255,0.45)_68%,#ffffff_100%)] md:hidden" />
 
-        {/* Desktop: stronger white transition at the bottom */}
-        <div className="absolute inset-0 hidden bg-[linear-gradient(to_bottom,rgba(255,255,255,0)_0%,rgba(255,255,255,0.05)_35%,rgba(255,255,255,0.4)_60%,rgba(255,255,255,0.78)_78%,#ffffff_100%)] md:block" />
+        {/* Desktop fade rising from the bottom */}
+        <div className="absolute inset-0 hidden bg-[linear-gradient(to_bottom,transparent_35%,rgba(255,255,255,0.08)_48%,rgba(255,255,255,0.4)_65%,rgba(255,255,255,0.82)_82%,#ffffff_100%)] md:block" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-10 pt-[285px] sm:px-8 md:px-10 md:pb-24 md:pt-[380px]">
-        <div className="how-inner how-split grid grid-cols-1 items-start gap-7 md:grid-cols-2 md:gap-14">
+      {/* Desktop section matches the full video area */}
+      <div className="relative z-10 mx-auto flex min-h-[780px] w-full max-w-5xl flex-col justify-end px-6 pb-12 pt-[285px] sm:px-8 md:min-h-[900px] md:px-10 md:pb-24 md:pt-24">
+        <div className="how-inner how-split grid grid-cols-1 items-end gap-7 md:grid-cols-2 md:gap-14">
 
           {/* Lead */}
           <div className="how-lead text-center md:text-left">
