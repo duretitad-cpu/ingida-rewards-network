@@ -586,3 +586,21 @@ html[lang="am"] h1, html[lang="am"] h2, html[lang="am"] h3, html[lang="am"] .net
   .editorial-content #how { padding-top: 32px; }
   .how-section.how-neon .skyline-stage { margin-top: 8px; }
 }
+
+/* ===== Membership split layout (inspo) + video skyline ===== */
+.how-split { display: grid; grid-template-columns: 1fr 1.1fr; gap: 64px; align-items: start; text-align: left; transform: none; opacity: 1; }
+.how-lead .how-title { font-size: 44px; line-height: 1.15; }
+.how-sub { margin-top: 14px; font-family: var(--font-editorial); font-size: 20px; color: color-mix(in oklch, var(--primary-foreground) 78%, transparent); }
+.how-lead .invitation-cta { margin-top: 28px; }
+.how-steps-list { display: block; margin-top: 0; border-top: 1px solid color-mix(in oklch, var(--primary-foreground) 22%, transparent); }
+.how-steps-list li { display: grid; grid-template-columns: 40px 1fr; gap: 8px; padding: 22px 0; border-bottom: 1px solid color-mix(in oklch, var(--primary-foreground) 22%, transparent); }
+.how-steps-list .how-step-n { color: var(--gold); font-size: 11px; padding-top: 6px; }
+.how-steps-list h3 { margin-top: 0; font-family: var(--font-editorial); font-size: 24px; }
+.how-steps-list p { margin-top: 4px; }
+video.addis-skyline { object-fit: cover; }
+#footer-brand .brand-interlude, footer .brand-interlude { padding: 0; }
+@media (max-width: 760px) {
+  .how-split { grid-template-columns: 1fr; gap: 36px; text-align: center; }
+  .how-lead .how-title { font-size: 32px; }
+  .how-steps-list li { text-align: left; }
+}
