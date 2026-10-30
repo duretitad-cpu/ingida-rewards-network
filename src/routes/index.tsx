@@ -329,11 +329,11 @@ function How({ t }: { t: Copy }) {
   return (
     <section
       id="how"
-      className="how-section relative isolate w-full overflow-hidden bg-white text-navy-deep md:flex md:min-h-[780px] md:flex-col md:justify-end"
+      className="how-section relative isolate w-full overflow-hidden bg-white text-navy-deep"
     >
       {/* Background video */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[450px] overflow-hidden md:inset-0 md:h-full"
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[370px] overflow-hidden sm:h-[410px] md:inset-0 md:h-full"
         aria-hidden="true"
       >
         <video
@@ -347,18 +347,18 @@ function How({ t }: { t: Copy }) {
           preload="metadata"
         />
 
-        {/* Gentle white wash over the video */}
+        {/* Soft overlay */}
         <div className="absolute inset-0 bg-white/15" />
 
-        {/* Gradual transition from video into the text area */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0)_0%,rgba(255,255,255,0.08)_25%,rgba(255,255,255,0.38)_48%,rgba(255,255,255,0.82)_72%,#ffffff_100%)]" />
+        {/* Longer fade on mobile; subtle fade on desktop */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0)_0%,rgba(255,255,255,0.08)_25%,rgba(255,255,255,0.38)_48%,rgba(255,255,255,0.82)_72%,#ffffff_100%)] md:bg-gradient-to-b md:from-white/10 md:via-white/35 md:to-white/75" />
       </div>
 
-      {/* Content stays in normal document flow */}
-      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-12 pt-[300px] sm:px-8 md:px-10 md:pb-24 md:pt-24">
+      {/* Content remains in normal document flow */}
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-12 pt-[285px] sm:px-8 md:px-10 md:py-34">
         <div className="how-inner how-split grid grid-cols-1 items-start gap-10 md:grid-cols-2 md:gap-14">
 
-          {/* Lead text */}
+          {/* Left column */}
           <div className="how-lead text-center md:text-left">
             <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-gold">
               {t.howEyebrow}
@@ -373,7 +373,7 @@ function How({ t }: { t: Copy }) {
             </p>
           </div>
 
-          {/* Steps */}
+          {/* Right column */}
           <ol className="how-steps-list border-t border-navy-deep/15">
             {t.steps.map((s) => (
               <li
