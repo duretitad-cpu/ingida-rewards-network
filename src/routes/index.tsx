@@ -47,7 +47,7 @@ const copy = {
     ctaJoin: "Request Invitation",
     howEyebrow: "Capture this #ingidaMoment",
     howTitle: "Spend. Earn & Redeem.",
-    howLead: "Join once. Earn across the city.",
+    howLead: "Spend Across the City with ingida",
     howBody: "",
     steps: [
       { n: "01", t: "Spend", d: "Join with FAYDA ID and Spend." },
