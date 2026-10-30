@@ -169,16 +169,46 @@ function Index() {
   }, [lang]);
 
   return (
-    <div className="min-h-dvh bg-background text-foreground">
-      <Hero t={t} lang={lang} setLang={setLang} />
-      <main className="editorial-content">
-        <How t={t} />
-      </main>
-      <IconStrip />
-      <Waitlist t={t} role={role} setRole={setRole} />
-      <Portals t={t} role={role} />
-      <Footer t={t} />
-    </div>
+    <>
+      <style>{`
+        .hospitality-hero > .network-ribbon {
+          background: linear-gradient(180deg, #182642 0%, #111a2e 100%) !important;
+          color: rgb(254 243 199 / 0.9) !important;
+          border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+          box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 12px 28px -8px rgba(0, 0, 0, 0.5);
+        }
+
+        .network-ribbon .network-icon,
+        .network-category svg {
+          width: 28px !important;
+          height: 28px !important;
+          color: rgb(254 243 199 / 0.9) !important;
+        }
+
+        .network-category h3 {
+          color: rgb(254 243 199 / 0.8) !important;
+          font-size: 12px !important;
+        }
+
+        .how-white video {
+          opacity: 1 !important;
+          display: block;
+        }
+      `}</style>
+
+      <div className="min-h-dvh bg-background text-foreground">
+        <Hero t={t} lang={lang} setLang={setLang} />
+        <main className="editorial-content">
+          <How t={t} />
+        </main>
+        <Waitlist t={t} role={role} setRole={setRole} />
+
+        <CategoryIconBar />
+
+        <Portals t={t} role={role} />
+        <Footer t={t} />
+      </div>
+    </>
   );
 }
 
@@ -229,22 +259,6 @@ function Hero({ t, lang, setLang }: { t: Copy; lang: Lang; setLang: (l: Lang) =>
   );
 }
 
-function IconStrip() {
-  const icons = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
-  return (
-    <div className="flex items-center justify-center gap-6 bg-navy-deep py-6 text-amber-100/80 md:gap-8">
-      {icons.map((Icon, i) => (
-        <Icon
-          key={i}
-          className="h-4 w-4 text-amber-100/75 transition-colors hover:text-gold md:h-5 md:w-5"
-          strokeWidth={1.4}
-          aria-hidden
-        />
-      ))}
-    </div>
-  );
-}
-
 function ImageStrip({ t }: { t: Copy }) {
   const showcaseRef = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
@@ -283,18 +297,22 @@ function ImageStrip({ t }: { t: Copy }) {
 
 function Network({ t }: { t: Copy }) {
   return (
-    <section id="network" className="network-ribbon">
-      <div className="network-ribbon-inner">
-        <ul className="network-categories">
+    <section
+      id="network"
+      className="relative z-10 w-full border-t border-white/10 bg-gradient-to-b from-[#182642] to-[#111a2e] py-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12),0_12px_28px_-8px_rgba(0,0,0,0.5)]"
+    >
+      <div className="mx-auto max-w-4xl px-6">
+        <ul className="grid grid-cols-5 items-center justify-items-center gap-2 text-center md:gap-8">
           {t.cats.map((c) => {
             const Icon = c.icon;
             return (
-              <li
-                key={c.name}
-                className="network-category"
-              >
-                <Icon className="network-icon" strokeWidth={1.4} aria-hidden />
-                <h3>
+              <li key={c.name} className="group flex flex-col items-center gap-2">
+                <Icon
+                  className="h-7 w-7 text-amber-100/90 transition-transform duration-200 group-hover:scale-110 group-hover:text-gold"
+                  strokeWidth={1.4}
+                  aria-hidden
+                />
+                <h3 className="text-[11px] font-medium uppercase tracking-wider text-amber-100/80 group-hover:text-amber-100 md:text-[12px]">
                   {c.name}
                 </h3>
               </li>
@@ -308,28 +326,8 @@ function Network({ t }: { t: Copy }) {
 
 function How({ t }: { t: Copy }) {
   return (
-    <section
-      id="how"
-      className="relative overflow-hidden bg-white text-navy-deep py-16 md:py-24"
-    >
-      <div
-        className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
-        aria-hidden="true"
-      >
-        <video
-          className="h-full w-full object-cover object-bottom opacity-20 md:opacity-25"
-          src={skylineLoop}
-          poster={skylinePoster}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white/95" />
-      </div>
-
-      <div className="relative z-10 how-inner how-split mx-auto max-w-5xl px-6 md:px-8">
+    <section id="how" className="how-section how-white bg-white py-16 text-navy-deep md:py-20">
+      <div className="how-inner how-split mx-auto max-w-5xl px-6 md:px-8">
         <div className="how-lead">
           <p className="text-[10px] font-medium tracking-[0.3em] uppercase text-gold">
             {t.howEyebrow}
@@ -337,6 +335,9 @@ function How({ t }: { t: Copy }) {
           <h2 className="mt-3 font-serif text-[34px] leading-[1.15] text-navy-deep md:text-[46px]">
             {t.howLead}
           </h2>
+          <p className="mt-3 text-sm text-navy-deep/70 md:text-base">
+            {t.howTitle}
+          </p>
         </div>
 
         <ol className="how-steps-list border-t border-navy-deep/15">
@@ -358,7 +359,35 @@ function How({ t }: { t: Copy }) {
           ))}
         </ol>
       </div>
+
+      <div className="mx-auto mt-8 max-w-5xl px-6 md:mt-12 md:px-8" aria-hidden="true">
+        <video
+          className="h-auto w-full rounded-sm object-cover shadow-sm"
+          src={skylineLoop}
+          poster={skylinePoster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        />
+      </div>
     </section>
+  );
+}
+
+function CategoryIconBar() {
+  const icons = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
+  return (
+    <div className="flex items-center justify-center gap-5 border-t border-border/40 bg-background py-4 text-muted-foreground" aria-hidden="true">
+      {icons.map((Icon, i) => (
+        <Icon
+          key={i}
+          className="h-4 w-4 text-muted-foreground/70 transition-colors hover:text-gold"
+          strokeWidth={1.5}
+        />
+      ))}
+    </div>
   );
 }
 
