@@ -38,6 +38,7 @@ export const Route = createFileRoute("/")({
 });
 
 type Lang = "en" | "am";
+type Role = "member" | "merchant";
 
 const copy = {
   en: {
@@ -46,10 +47,10 @@ const copy = {
     ctaJoin: "Request Invitation",
     howEyebrow: "Membership",
     howTitle: "Spend. Earn & Redeem.",
-    howLead: "Spend once. Earn across the city.",
+    howLead: "Join once. Earn across the city.",
     howBody: "",
     steps: [
-      { n: "01", t: "Spend", d: "Verify once with your FAYDA ID." },
+      { n: "01", t: "Join", d: "Verify once with your FAYDA ID." },
       { n: "02", t: "Earn", d: "Scan an ETH QR when you spend with a partner." },
       { n: "03", t: "Redeem", d: "Use your rewards across participating partners." },
     ],
@@ -92,6 +93,7 @@ const copy = {
     submitted: "Your invitation request has been received.",
     footNote: "Made in Addis Ababa",
     footAdmin: "Operators",
+    appSoon: "Soon on App Store & Google Play",
   },
   am: {
     tagline: "እንግዳ",
@@ -145,6 +147,7 @@ const copy = {
     submitted: "በዝርዝሩ ውስጥ ተካትተዋል። በቅርቡ እናገኝዎታለን።",
     footNote: "ከአዲስ አበባ የተሠራ",
     footAdmin: "ኦፕሬተሮች",
+    appSoon: "በአፕስቶር እና ጎግል ፕሌይ በቅርቡ",
   },
 };
 
@@ -152,6 +155,7 @@ type Copy = typeof copy.en;
 
 function Index() {
   const [lang, setLang] = useState<Lang>("en");
+  const [role, setRole] = useState<Role>("member");
   const t = copy[lang];
 
   useEffect(() => {
@@ -170,8 +174,8 @@ function Index() {
       <main className="editorial-content">
         <How t={t} />
       </main>
-      <Waitlist t={t} />
-      <Portals t={t} />
+      <Waitlist t={t} role={role} setRole={setRole} />
+      <Portals t={t} role={role} />
       <Footer t={t} />
     </div>
   );
@@ -334,19 +338,19 @@ function How({ t }: { t: Copy }) {
   );
 }
 
-function Portals({ t }: { t: Copy }) {
-  const [members, merchants] = t.portals;
+function Portals({ t, role }: { t: Copy; role: Role }) {
+  const portal = role === "member" ? t.portals[0] : t.portals[1];
   return (
     <section id="portals" className="bg-background py-10 text-navy-deep md:py-14">
-      <div className="mx-auto grid max-w-5xl gap-6 px-5 md:grid-cols-2 md:gap-10 md:px-8">
-        <PortalRow p={members} />
-        <PortalRow p={merchants} />
+      <div className="mx-auto grid max-w-5xl gap-6 px-5 md:grid-cols-1 md:gap-10 md:px-8">
+        <PortalRow p={portal} t={t} />
       </div>
     </section>
   );
 }
 
-function PortalRow({ p }: { p: Copy["portals"][number] }) {
+function PortalRow({ p, t }: { p: Copy["portals"][number]; t: Copy }) {
+  const isMemberApp = p.tag === "Rewards App" || p.tag === "ደንበኞች";
   return (
     <a
       href={p.href}
@@ -373,6 +377,12 @@ function PortalRow({ p }: { p: Copy["portals"][number] }) {
         <p className="max-w-md text-[12.5px] leading-relaxed text-muted-foreground">
           {p.desc}
         </p>
+
+        {isMemberApp ? (
+          <p className="mt-2 text-[10px] font-medium tracking-[0.2em] uppercase text-gold">
+            {t.appSoon}
+          </p>
+        ) : null}
       </div>
     </a>
   );
@@ -395,8 +405,7 @@ function renderWaitlistTitle(title: string) {
   return title;
 }
 
-function Waitlist({ t }: { t: Copy }) {
-  const [role, setRole] = useState("member");
+function Waitlist({ t, role, setRole }: { t: Copy; role: Role; setRole: (role: Role) => void }) {
   const [state, setState] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState("");
   const saveRequest = useServerFn(submitWaitlist);
@@ -467,7 +476,7 @@ function Waitlist({ t }: { t: Copy }) {
               )}
               <div className="flex gap-2 pt-1" onChangeCapture={(event) => {
                 const input = event.target;
-                if (input instanceof HTMLInputElement && input.name === "role") setRole(input.value);
+                if (input instanceof HTMLInputElement && input.name === "role") setRole(input.value as Role);
               }}>
                 <RoleChip name="role" value="member" label={t.roleMember} defaultChecked />
                 <RoleChip name="role" value="merchant" label={t.roleMerchant} />
@@ -522,7 +531,7 @@ function AlertChip({ value, label }: { value: string; label: string }) {
   return (
     <label className="cursor-pointer">
       <input type="radio" name="alerts" value={value} className="peer sr-only" />
-      <span className="block border-b border-transparent px-2 py-1 text-xs text-primary-foreground/80 peer-checked:border-gold peer-checked:text-gold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-gold">
+      <span className="block border-b border-transparent px-2 py-1 text-xs text-primary-foreground/80 peer-checked:border-gold peer-checked:text-gold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-gold">
         {label}
       </span>
     </label>
@@ -543,7 +552,7 @@ function RoleChip({
   return (
     <label className="flex-1 cursor-pointer">
       <input type="radio" name={name} value={value} defaultChecked={defaultChecked} className="peer sr-only" />
-      <span className="block border-b border-primary-foreground/30 px-1 py-3 text-center text-xs text-primary-foreground/80 peer-checked:border-gold peer-checked:text-gold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-gold">
+      <span className="block border-b border-primary-foreground/30 px-1 py-3 text-center text-xs text-primary-foreground/80 peer-checked:border-gold peer-checked:text-gold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-gold">
         {label}
       </span>
     </label>
@@ -555,14 +564,14 @@ function Footer({ t }: { t: Copy }) {
   return (
     <footer className="border-t border-border/60 bg-background py-8">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-5 text-center md:px-8">
-        <div className="flex items-center justify-center gap-3">
-          <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors hover:border-gold hover:text-gold">
+        <div className="flex items-center justify-center gap-4">
+          <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="text-muted-foreground transition-colors hover:text-gold">
             <Instagram className="h-4 w-4" strokeWidth={1.5} />
           </a>
-          <a href="https://tiktok.com" target="_blank" rel="noreferrer" aria-label="TikTok" className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors hover:border-gold hover:text-gold">
+          <a href="https://tiktok.com" target="_blank" rel="noreferrer" aria-label="TikTok" className="text-muted-foreground transition-colors hover:text-gold">
             <Music2 className="h-4 w-4" strokeWidth={1.5} />
           </a>
-          <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors hover:border-gold hover:text-gold">
+          <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-muted-foreground transition-colors hover:text-gold">
             <Linkedin className="h-4 w-4" strokeWidth={1.5} />
           </a>
         </div>
