@@ -340,7 +340,7 @@ function How({ t }: { t: Copy }) {
           preload="metadata"
         />
         {/* Soft wash ensuring crisp text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/85 to-white/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/65 to-white/50" />
       </div>
 
       {/* Foreground content overlay */}
