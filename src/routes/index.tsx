@@ -326,11 +326,11 @@ function Network({ t }: { t: Copy }) {
 
 function How({ t }: { t: Copy }) {
   return (
-    <section id="how" className="how-section relative w-full overflow-hidden bg-white text-navy-deep py-16 md:py-24">
+    <section id="how" className="how-section relative w-full overflow-hidden bg-white text-navy-deep py-24 md:py-34">
       {/* Background full-width skyline video */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <video
-          className="h-full w-full object-cover object-bottom opacity-25 md:opacity-30"
+          className="h-full w-full object-cover object-bottom opacity-60 md:opacity-60"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
@@ -344,7 +344,7 @@ function How({ t }: { t: Copy }) {
       </div>
 
       {/* Foreground content overlay */}
-      <div className="relative z-10 mx-auto max-w-5xl px-6 md:px-8">
+      <div className="relative z-10 mx-auto max-w-5xl px-8 md:px-10">
         <div className="how-inner how-split grid gap-10 md:grid-cols-2 md:gap-14">
           <div className="how-lead">
             <p className="text-[10px] font-medium tracking-[0.3em] uppercase text-gold">
@@ -386,7 +386,7 @@ function CategoryIconBar() {
   const icons = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
   return (
     <div
-      className="flex items-center justify-center gap-6 border-t border-border/40 bg-background py-5 text-navy-deep md:gap-8"
+      className="flex items-center justify-center gap-6 border-t border-border/40 bg-background py-8 text-navy-deep md:gap-8"
       aria-hidden="true"
     >
       {icons.map((Icon, i) => (
