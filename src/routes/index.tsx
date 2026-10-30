@@ -322,6 +322,7 @@ function Network({ t }: { t: Copy }) {
   );
 }
 
+
 function How({ t }: { t: Copy }) {
   return (
     <section
@@ -330,7 +331,7 @@ function How({ t }: { t: Copy }) {
     >
       {/* Video background */}
       <div
-       className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[370px] overflow-hidden bg-white sm:h-[410px] md:inset-x-0 md:top-0 md:h-[350px]"
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[370px] overflow-hidden bg-transparent sm:h-[410px] md:inset-x-0 md:top-0 md:h-[350px]"
         aria-hidden="true"
       >
         <video
@@ -344,14 +345,8 @@ function How({ t }: { t: Copy }) {
           preload="auto"
         />
 
-        {/* Light wash over video */}
-        <div className="absolute inset-0 bg-white/10" />
-
-    {/* Mobile: fade into the white content below */}
-<div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.05)_38%,rgba(255,255,255,0.35)_62%,rgba(255,255,255,0.82)_82%,#fff_100%)] md:hidden" />
-
-{/* Desktop: fade across the shorter full-width strip */}
-<div className="absolute inset-0 hidden bg-white/30 md:block" />
+        {/* Mobile fade only */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.05)_38%,rgba(255,255,255,0.35)_62%,rgba(255,255,255,0.82)_82%,#fff_100%)] md:hidden" />
       </div>
 
       {/* Mobile layout */}
