@@ -324,200 +324,74 @@ function Network({ t }: { t: Copy }) {
   );
 }
 
+
 function How({ t }: { t: Copy }) {
   return (
     <section
       id="how"
-      className="
-        how-section relative isolate w-full
-        overflow-hidden bg-[#FAF9F6] text-navy-deep
-        min-h-[780px] md:min-h-[850px]
-      "
+      className="how-section relative isolate w-full overflow-hidden bg-white text-navy-deep md:flex md:min-h-[780px] md:flex-col md:justify-end"
     >
-      {/* Background skyline video */}
+      {/* Background video */}
       <div
-        className="
-          absolute inset-x-0 top-0 z-0
-          h-[370px] sm:h-[410px]
-          md:h-full
-          overflow-hidden
-          pointer-events-none
-        "
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[450px] overflow-hidden md:inset-0 md:h-full"
         aria-hidden="true"
       >
         <video
-          className="
-            absolute inset-0
-            h-full w-full
-            object-contain md:object-cover
-            object-center
-            md:object-[center_45%]
-          "
+          className="h-full w-full object-cover object-center"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
         />
 
-        {/* Subtle ivory overlay */}
-        <div className="absolute inset-0 bg-white/20" />
+        {/* Gentle white wash over the video */}
+        <div className="absolute inset-0 bg-white/15" />
 
-        {/* Gradual fade behind the text */}
-        <div
-          className="
-            absolute inset-0
-            bg-gradient-to-b
-            from-white/5
-            via-white/10 via-[45%]
-            to-[#FAF9F6]
-          "
-        />
-
-        {/* Extra soft fade at the bottom */}
-        <div
-          className="
-            absolute inset-x-0 bottom-0
-            h-[40%]
-            bg-gradient-to-b
-            from-transparent to-[#FAF9F6]
-          "
-        />
+        {/* Gradual transition from video into the text area */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0)_0%,rgba(255,255,255,0.08)_25%,rgba(255,255,255,0.38)_48%,rgba(255,255,255,0.82)_72%,#ffffff_100%)]" />
       </div>
 
-      {/* Main content */}
-      <div
-        className="
-          relative z-10
-          mx-auto w-full max-w-[1440px]
-          px-6 sm:px-8 md:px-[6.5%]
+      {/* Content stays in normal document flow */}
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-12 pt-[300px] sm:px-8 md:px-10 md:pb-24 md:pt-24">
+        <div className="how-inner how-split grid grid-cols-1 items-start gap-10 md:grid-cols-2 md:gap-14">
 
-          pt-[285px] sm:pt-[320px]
-          pb-10
-
-          md:absolute md:inset-x-0 md:bottom-0
-          md:pt-24 md:pb-20
-        "
-      >
-        <div
-          className="
-            how-inner how-split
-            grid grid-cols-1
-            gap-6 sm:gap-7
-            md:grid-cols-[1.2fr_0.8fr]
-            md:gap-16
-            items-start
-          "
-        >
-
-          {/* LEFT: Headline */}
+          {/* Lead text */}
           <div className="how-lead text-center md:text-left">
-
-            <p
-              className="
-                text-[9px] md:text-[10px]
-                font-medium tracking-[0.3em]
-                uppercase text-gold
-              "
-            >
+            <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-gold">
               {t.howEyebrow}
             </p>
 
-            <h2
-              className="
-                mt-2 md:mt-3
-                mx-auto md:mx-0
-                max-w-xl
-                font-serif
-                text-[31px] leading-[1.08]
-                sm:text-[36px]
-                md:text-[46px]
-                text-navy-deep
-              "
-            >
+            <h2 className="mt-3 font-serif text-[34px] leading-[1.15] text-navy-deep md:text-[46px]">
               {t.howLead}
             </h2>
 
-            <p
-              className="
-                mt-3 md:mt-4
-                text-[12px] sm:text-sm md:text-base
-                leading-relaxed
-                text-navy-deep/80
-              "
-            >
+            <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-navy-deep/80 md:mx-0 md:text-base">
               {t.howTitle}
             </p>
-
           </div>
 
-          {/* RIGHT: Numbered steps */}
-          <ol
-            className="
-              how-steps-list
-              border-t border-navy-deep/15
-            "
-          >
+          {/* Steps */}
+          <ol className="how-steps-list border-t border-navy-deep/15">
             {t.steps.map((s) => (
               <li
                 key={s.n}
-                className="
-                  flex flex-col
-                  items-center
-                  gap-1
-                  border-b border-navy-deep/15
-                  py-3.5
-                  text-center
-
-                  md:grid
-                  md:grid-cols-[32px_1fr]
-                  md:items-start
-                  md:gap-3
-                  md:py-5
-                  md:text-left
-                "
+                className="flex flex-col items-center border-b border-navy-deep/15 py-5 text-center md:grid md:grid-cols-[44px_1fr] md:items-start md:gap-2 md:text-left"
               >
-
-                {/* Step number */}
-                <span
-                  className="
-                    font-mono
-                    text-[9px] md:text-[10px]
-                    leading-none
-                    text-gold
-                    md:pt-1
-                  "
-                >
+                <span className="font-mono text-xs text-gold">
                   {s.n}
                 </span>
 
-                {/* Step title and description */}
-                <div className="text-center md:text-left">
-
-                  <h3
-                    className="
-                      font-serif
-                      text-[21px] md:text-[24px]
-                      leading-snug
-                      text-navy-deep
-                    "
-                  >
+                <div className="mt-1 w-full md:mt-0">
+                  <h3 className="font-serif text-[22px] leading-snug text-navy-deep md:text-[24px]">
                     {s.t}
                   </h3>
 
-                  <p
-                    className="
-                      mt-0.5 md:mt-1
-                      text-[11px] md:text-[13px]
-                      leading-relaxed
-                      text-navy-deep/75
-                    "
-                  >
+                  <p className="mx-auto mt-1 max-w-sm text-[13px] leading-relaxed text-navy-deep/75 md:mx-0">
                     {s.d}
                   </p>
-
                 </div>
               </li>
             ))}
