@@ -308,7 +308,7 @@ function Network({ t }: { t: Copy }) {
             return (
               <li key={c.name} className="group flex items-center gap-2">
                 <Icon
-                  className="h-6 w-6 text-amber-100/80 transition-colors group-hover:text-gold md:h-4.5 md:w-4.5"
+                  className="h-1 w-1 text-amber-100/80 transition-colors group-hover:text-gold md:h-4.5 md:w-4.5"
                   strokeWidth={1.4}
                   aria-hidden
                 />
@@ -330,7 +330,7 @@ function How({ t }: { t: Copy }) {
       {/* Background full-width skyline video */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <video
-          className="h-full w-full object-cover object-bottom opacity-0 md:opacity-80"
+          className="h-full w-full object-cover object-bottom opacity-0 md:opacity-0"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
