@@ -331,13 +331,13 @@ function How({ t }: { t: Copy }) {
       id="how"
       className="how-section relative isolate w-full overflow-hidden bg-white text-navy-deep"
     >
-      {/* Full-height video background */}
+      {/* Video area */}
       <div
-        className="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-white"
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[370px] overflow-hidden bg-white sm:h-[410px] md:inset-0 md:h-full"
         aria-hidden="true"
       >
         <video
-          className="h-full w-full object-cover object-center md:object-contain md:object-top"
+          className="h-full w-full object-contain object-top"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
@@ -347,59 +347,80 @@ function How({ t }: { t: Copy }) {
           preload="metadata"
         />
 
-        {/* Subtle wash */}
         <div className="absolute inset-0 bg-white/10" />
 
-        {/* Mobile fade */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.05)_40%,rgba(255,255,255,0.45)_68%,#ffffff_100%)] md:hidden" />
+        {/* Mobile transition */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.08)_40%,rgba(255,255,255,0.48)_68%,#fff_100%)] md:hidden" />
 
-        {/* Desktop fade rising from the bottom */}
-        <div className="absolute inset-0 hidden bg-[linear-gradient(to_bottom,transparent_35%,rgba(255,255,255,0.08)_48%,rgba(255,255,255,0.4)_65%,rgba(255,255,255,0.82)_82%,#ffffff_100%)] md:block" />
+        {/* Desktop transition */}
+        <div className="absolute inset-0 hidden bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.08)_40%,rgba(255,255,255,0.4)_65%,rgba(255,255,255,0.85)_85%,#fff_100%)] md:block" />
       </div>
 
-      {/* Desktop section matches the full video area */}
-      <div className="relative z-10 mx-auto flex min-h-[780px] w-full max-w-5xl flex-col justify-end px-6 pb-12 pt-[285px] sm:px-8 md:min-h-[900px] md:px-10 md:pb-24 md:pt-24">
-        <div className="how-inner how-split grid grid-cols-1 items-end gap-7 md:grid-cols-2 md:gap-14">
+      {/* Mobile layout */}
+      <div className="relative z-10 px-6 pb-10 pt-[285px] text-center md:hidden">
+        <div className="mx-auto max-w-md">
+          <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-gold">
+            {t.howEyebrow}
+          </p>
+          <h2 className="mt-3 font-serif text-[34px] leading-[1.15] text-navy-deep">
+            {t.howLead}
+          </h2>
+          <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-navy-deep/80">
+            {t.howTitle}
+          </p>
+        </div>
 
-          {/* Lead */}
-          <div className="how-lead text-center md:text-left">
+        <ol className="mx-auto mt-7 max-w-md border-t border-navy-deep/15">
+          {t.steps.map((s) => (
+            <li
+              key={s.n}
+              className="flex flex-col items-center border-b border-navy-deep/15 py-3 text-center"
+            >
+              <span className="font-mono text-xs text-gold">{s.n}</span>
+              <h3 className="mt-1 font-serif text-[22px] leading-snug text-navy-deep">
+                {s.t}
+              </h3>
+              <p className="mx-auto mt-1 max-w-sm text-[13px] leading-relaxed text-navy-deep/75">
+                {s.d}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      {/* Desktop layout */}
+      <div className="relative z-10 mx-auto hidden w-full max-w-5xl px-10 pb-20 pt-[410px] md:block">
+        <div className="grid grid-cols-2 items-end gap-14">
+          <div className="text-left">
             <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-gold">
               {t.howEyebrow}
             </p>
-
-            <h2 className="mt-3 font-serif text-[34px] leading-[1.15] text-navy-deep md:text-[46px]">
+            <h2 className="mt-3 font-serif text-[46px] leading-[1.15] text-navy-deep">
               {t.howLead}
             </h2>
-
-            <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-navy-deep/80 md:mx-0 md:mt-4 md:text-base">
+            <p className="mt-4 max-w-md text-base leading-relaxed text-navy-deep/80">
               {t.howTitle}
             </p>
           </div>
 
-          {/* Steps */}
           <ol className="how-steps-list border-t border-navy-deep/15">
             {t.steps.map((s) => (
               <li
                 key={s.n}
-                className="flex flex-col items-center border-b border-navy-deep/15 py-3 text-center md:grid md:grid-cols-[44px_1fr] md:items-start md:gap-2 md:py-5 md:text-left"
+                className="grid grid-cols-[44px_1fr] gap-2 border-b border-navy-deep/15 py-5 text-left"
               >
-                <span className="font-mono text-xs text-gold">
-                  {s.n}
-                </span>
-
-                <div className="mt-1 w-full md:mt-0">
-                  <h3 className="font-serif text-[22px] leading-snug text-navy-deep md:text-[24px]">
+                <span className="pt-1 font-mono text-xs text-gold">{s.n}</span>
+                <div>
+                  <h3 className="font-serif text-[24px] leading-snug text-navy-deep">
                     {s.t}
                   </h3>
-
-                  <p className="mx-auto mt-1 max-w-sm text-[13px] leading-relaxed text-navy-deep/75 md:mx-0">
+                  <p className="mt-1 text-[13px] leading-relaxed text-navy-deep/75">
                     {s.d}
                   </p>
                 </div>
               </li>
             ))}
           </ol>
-
         </div>
       </div>
     </section>
