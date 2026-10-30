@@ -25,7 +25,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "ingida — Ethiopian Hospitality & Rewards Wallet" },
-      { name: "description", content: "Explore Addis Ababa and Ethiopia with ingida’s hospitality rewards network. Discover dining, stays, tourism and local merchants. Join the rewards wallet waitlist." },
+      { name: "description", content: "Explore Addis Ababa and Ethiopia with ingida’s hospitality rewards network. Discover dining, stays, tourism and local merchants. Join the rewards wallet waitlist and unlock city-wide rewards." },
       { property: "og:title", content: "ingida — Ethiopian Hospitality & Rewards Wallet" },
       { property: "og:description", content: "Discover Ethiopia’s cities, dining, stays and local merchants with ingida. A hospitality network and rewards wallet, made in Addis Ababa." },
       { name: "twitter:title", content: "ingida — Ethiopian Hospitality & Rewards Wallet" },
@@ -46,10 +46,10 @@ const copy = {
     ctaJoin: "Request Invitation",
     howEyebrow: "Membership",
     howTitle: "Spend. Earn & Redeem.",
-    howLead: "Join once. Earn across the city.",
+    howLead: "Spend once. Earn across the city.",
     howBody: "",
     steps: [
-      { n: "01", t: "Join", d: "Verify once with your FAYDA ID." },
+      { n: "01", t: "Spend", d: "Verify once with your FAYDA ID." },
       { n: "02", t: "Earn", d: "Scan an ETH QR when you spend with a partner." },
       { n: "03", t: "Redeem", d: "Use your rewards across participating partners." },
     ],
@@ -434,7 +434,7 @@ function Waitlist({ t }: { t: Copy }) {
           </p>
           <h2 className="mt-3 font-serif text-[24px] leading-[1.1] md:text-[34px]">
             {role === "member"
-              ? (t === copy.en ? <>Your Digital Wallet.<br /><em className="text-gold">Rewarded.</em></> : <>የእርስዎ ዲጂታል ዋሌት።<br /><span className="text-gold">በሽልማት ተሸልሟል።</span></>)
+              ? (t === copy.en ? <>Your Digital Wallet.<br /><em className="text-gold">Rewarded.</em></> : <>የእርስዎ ዲጂታል ዋሌት።<br /><span className="text-gold">በሽልማት የተሰጠ</span></> )
               : renderWaitlistTitle(t.waitlistTitle)}
           </h2>
           {t.waitlistSub ? (
@@ -555,14 +555,14 @@ function Footer({ t }: { t: Copy }) {
   return (
     <footer className="border-t border-border/60 bg-background py-8">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-5 text-center md:px-8">
-        <div className="flex items-center justify-center gap-4">
-          <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="text-muted-foreground transition-colors hover:text-gold">
+        <div className="flex items-center justify-center gap-3">
+          <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors hover:border-gold hover:text-gold">
             <Instagram className="h-4 w-4" strokeWidth={1.5} />
           </a>
-          <a href="https://tiktok.com" target="_blank" rel="noreferrer" aria-label="TikTok" className="text-muted-foreground transition-colors hover:text-gold">
+          <a href="https://tiktok.com" target="_blank" rel="noreferrer" aria-label="TikTok" className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors hover:border-gold hover:text-gold">
             <Music2 className="h-4 w-4" strokeWidth={1.5} />
           </a>
-          <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-muted-foreground transition-colors hover:text-gold">
+          <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors hover:border-gold hover:text-gold">
             <Linkedin className="h-4 w-4" strokeWidth={1.5} />
           </a>
         </div>
