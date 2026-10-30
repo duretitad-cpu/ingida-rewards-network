@@ -326,11 +326,11 @@ function Network({ t }: { t: Copy }) {
 
 function How({ t }: { t: Copy }) {
   return (
-    <section id="how" className="how-section relative w-full overflow-hidden bg-white text-navy-deep py-10 md:py-18">
+    <section id="how" className="how-section relative w-full overflow-hidden bg-white text-navy-deep py-24 md:py-40">
       {/* Background full-width skyline video */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <video
-          className="h-full w-full object-cover object-bottom opacity-20 md:opacity-20"
+          className="h-full w-full object-cover object-bottom opacity-10 md:opacity-8"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
