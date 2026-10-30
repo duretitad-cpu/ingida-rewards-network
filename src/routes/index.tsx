@@ -174,6 +174,7 @@ function Index() {
       <main className="editorial-content">
         <How t={t} />
       </main>
+      <IconStrip />
       <Waitlist t={t} role={role} setRole={setRole} />
       <Portals t={t} role={role} />
       <Footer t={t} />
@@ -223,7 +224,6 @@ function Hero({ t, lang, setLang }: { t: Copy; lang: Lang; setLang: (l: Lang) =>
     >
       <Nav lang={lang} setLang={setLang} />
       <ImageStrip t={t} />
-      <IconStrip />
       <Network t={t} />
     </section>
   );
