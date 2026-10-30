@@ -324,6 +324,7 @@ function Network({ t }: { t: Copy }) {
   );
 }
 
+
 function How({ t }: { t: Copy }) {
   return (
     <section
@@ -336,7 +337,7 @@ function How({ t }: { t: Copy }) {
         aria-hidden="true"
       >
         <video
-          className="h-full w-full object-contain object-center"
+          className="h-full w-full object-fill md:object-contain"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
@@ -346,19 +347,19 @@ function How({ t }: { t: Copy }) {
           preload="metadata"
         />
 
-        {/* Light wash */}
-        <div className="absolute inset-0 bg-white/15" />
+        {/* Subtle wash over the video */}
+        <div className="absolute inset-0 bg-white/10" />
 
-        {/* Mobile transition — retain the softer fade */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0)_0%,rgba(255,255,255,0.08)_25%,rgba(255,255,255,0.38)_48%,rgba(255,255,255,0.82)_72%,#ffffff_100%)] md:hidden" />
+        {/* Mobile: blend the video directly into the white content */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.05)_40%,rgba(255,255,255,0.45)_65%,#ffffff_100%)] md:hidden" />
 
-        {/* Desktop text readability and lower fade */}
-        <div className="absolute inset-0 hidden bg-[linear-gradient(to_bottom,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0.18)_25%,rgba(255,255,255,0.68)_55%,rgba(255,255,255,0.94)_78%,#ffffff_100%)] md:block" />
+        {/* Desktop: stronger white transition at the bottom */}
+        <div className="absolute inset-0 hidden bg-[linear-gradient(to_bottom,rgba(255,255,255,0)_0%,rgba(255,255,255,0.05)_35%,rgba(255,255,255,0.4)_60%,rgba(255,255,255,0.78)_78%,#ffffff_100%)] md:block" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-10 pt-[285px] sm:px-8 md:px-10 md:pb-28 md:pt-36">
-        <div className="how-inner how-split grid grid-cols-1 items-start gap-8 md:grid-cols-2 md:gap-14">
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-10 pt-[285px] sm:px-8 md:px-10 md:pb-24 md:pt-[380px]">
+        <div className="how-inner how-split grid grid-cols-1 items-start gap-7 md:grid-cols-2 md:gap-14">
 
           {/* Lead */}
           <div className="how-lead text-center md:text-left">
@@ -380,7 +381,7 @@ function How({ t }: { t: Copy }) {
             {t.steps.map((s) => (
               <li
                 key={s.n}
-                className="flex flex-col items-center border-b border-navy-deep/15 py-4 text-center md:grid md:grid-cols-[44px_1fr] md:items-start md:gap-2 md:py-5 md:text-left"
+                className="flex flex-col items-center border-b border-navy-deep/15 py-3 text-center md:grid md:grid-cols-[44px_1fr] md:items-start md:gap-2 md:py-5 md:text-left"
               >
                 <span className="font-mono text-xs text-gold">
                   {s.n}
