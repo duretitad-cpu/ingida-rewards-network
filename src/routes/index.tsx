@@ -324,35 +324,46 @@ function Network({ t }: { t: Copy }) {
   );
 }
 
+
 function How({ t }: { t: Copy }) {
   return (
-    <section id="how" className="how-section relative w-full overflow-hidden bg-white text-navy-deep py-46 md:py-58">
+    <section
+      id="how"
+      className="how-section relative w-full min-h-[850px] md:min-h-[1000px] overflow-hidden bg-white text-navy-deep py-32 md:py-40 flex items-center"
+    >
       {/* Background full-width skyline video */}
-      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+      <div
+        className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+        aria-hidden="true"
+      >
         <video
-          className="h-full w-full object-cover object-bottom opacity-0 md:opacity-10"
+          className="absolute inset-0 h-full w-full object-cover object-bottom opacity-30 md:opacity-40"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
         />
-        {/* Soft wash ensuring crisp text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/65 to-white/70" />
+
+        {/* Softer white wash for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/65 via-white/40 to-white/55" />
       </div>
 
-      {/* Foreground content overlay */}
-      <div className="relative z-40 mx-auto max-w-5xl px-8 md:px-10">
+      {/* Foreground content */}
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-8 md:px-10">
         <div className="how-inner how-split grid gap-10 md:grid-cols-2 md:gap-14">
+
           <div className="how-lead">
             <p className="text-[10px] font-medium tracking-[0.3em] uppercase text-gold">
               {t.howEyebrow}
             </p>
+
             <h2 className="mt-3 font-serif text-[34px] leading-[1.15] text-navy-deep md:text-[46px]">
               {t.howLead}
             </h2>
+
             <p className="mt-4 text-sm leading-relaxed text-navy-deep/80 md:text-base">
               {t.howTitle}
             </p>
@@ -364,11 +375,15 @@ function How({ t }: { t: Copy }) {
                 key={s.n}
                 className="grid grid-cols-[44px_1fr] gap-2 border-b border-navy-deep/15 py-5"
               >
-                <span className="pt-1 font-mono text-xs text-gold">{s.n}</span>
+                <span className="pt-1 font-mono text-xs text-gold">
+                  {s.n}
+                </span>
+
                 <div>
                   <h3 className="font-serif text-[22px] leading-snug text-navy-deep md:text-[24px]">
                     {s.t}
                   </h3>
+
                   <p className="mt-1 text-[13px] leading-relaxed text-navy-deep/75">
                     {s.d}
                   </p>
@@ -376,11 +391,13 @@ function How({ t }: { t: Copy }) {
               </li>
             ))}
           </ol>
+
         </div>
       </div>
     </section>
   );
 }
+
 
 function CategoryIconBar() {
   const icons = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
