@@ -324,23 +324,35 @@ function Network({ t }: { t: Copy }) {
   );
 }
 
-
 function How({ t }: { t: Copy }) {
   return (
     <section
       id="how"
-      className="how-section relative isolate w-full min-h-[900px] md:min-h-[950px] overflow-hidden bg-white text-navy-deep"
+      className="
+        how-section relative isolate w-full
+        overflow-hidden bg-[#FAF9F6] text-navy-deep
+        min-h-[780px] md:min-h-[850px]
+      "
     >
-      {/* Controlled skyline video area */}
+      {/* Background skyline video */}
       <div
-        className="absolute inset-x-0 top-0 z-0 h-[58%] sm:h-[65%] md:h-[82%] overflow-hidden"
+        className="
+          absolute inset-x-0 top-0 z-0
+          h-[370px] sm:h-[410px]
+          md:h-full
+          overflow-hidden
+          pointer-events-none
+        "
         aria-hidden="true"
       >
         <video
-          className="absolute inset-0 w-full h-full object-cover
-            object-[center_55%]
+          className="
+            absolute inset-0
+            h-full w-full
+            object-contain md:object-cover
+            object-center
             md:object-[center_45%]
-            opacity-100"
+          "
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
@@ -350,65 +362,167 @@ function How({ t }: { t: Copy }) {
           preload="auto"
         />
 
-        {/* Soft contrast control */}
-        <div className="absolute inset-0 bg-gradient-to-b
-          from-white/5
-          via-transparent via-[45%]
-          to-white"
+        {/* Subtle ivory overlay */}
+        <div className="absolute inset-0 bg-white/20" />
+
+        {/* Gradual fade behind the text */}
+        <div
+          className="
+            absolute inset-0
+            bg-gradient-to-b
+            from-white/5
+            via-white/10 via-[45%]
+            to-[#FAF9F6]
+          "
         />
 
-        {/* Extra fade behind text */}
-        <div className="absolute inset-x-0 bottom-0 h-[38%]
-          bg-gradient-to-b from-transparent to-white"
+        {/* Extra soft fade at the bottom */}
+        <div
+          className="
+            absolute inset-x-0 bottom-0
+            h-[40%]
+            bg-gradient-to-b
+            from-transparent to-[#FAF9F6]
+          "
         />
       </div>
 
-      {/* Bottom text overlay */}
-      <div className="absolute inset-x-0 bottom-0 z-10">
-        <div className="mx-auto w-full max-w-[1440px] px-6 sm:px-8 md:px-[6.5%] pt-16 pb-12 md:pt-24 md:pb-20">
+      {/* Main content */}
+      <div
+        className="
+          relative z-10
+          mx-auto w-full max-w-[1440px]
+          px-6 sm:px-8 md:px-[6.5%]
 
-          <div className="how-inner how-split grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr] gap-8 md:gap-16 items-start">
+          pt-[285px] sm:pt-[320px]
+          pb-10
 
-            {/* Headline */}
-            <div className="how-lead text-center md:text-left">
-              <p className="text-[9px] md:text-[10px] font-medium tracking-[0.3em] uppercase text-gold">
-                {t.howEyebrow}
-              </p>
+          md:absolute md:inset-x-0 md:bottom-0
+          md:pt-24 md:pb-20
+        "
+      >
+        <div
+          className="
+            how-inner how-split
+            grid grid-cols-1
+            gap-6 sm:gap-7
+            md:grid-cols-[1.2fr_0.8fr]
+            md:gap-16
+            items-start
+          "
+        >
 
-              <h2 className="mt-2 md:mt-3 mx-auto md:mx-0 max-w-xl font-serif text-[32px] leading-[1.08] sm:text-[38px] md:text-[46px] text-navy-deep">
-                {t.howLead}
-              </h2>
+          {/* LEFT: Headline */}
+          <div className="how-lead text-center md:text-left">
 
-              <p className="mt-3 md:mt-4 text-[12px] leading-relaxed text-navy-deep/80 sm:text-sm md:text-base">
-                {t.howTitle}
-              </p>
-            </div>
+            <p
+              className="
+                text-[9px] md:text-[10px]
+                font-medium tracking-[0.3em]
+                uppercase text-gold
+              "
+            >
+              {t.howEyebrow}
+            </p>
 
-            {/* Steps */}
-            <ol className="how-steps-list border-t border-navy-deep/20">
-              {t.steps.map((s) => (
-                <li
-                  key={s.n}
-                  className="grid grid-cols-1 md:grid-cols-[32px_1fr] gap-1 md:gap-3 border-b border-navy-deep/20 py-4 md:py-5 text-center md:text-left"
-                >
-                  <span className="pt-0 md:pt-1 font-mono text-[9px] md:text-[10px] text-gold">
-                    {s.n}
-                  </span>
+            <h2
+              className="
+                mt-2 md:mt-3
+                mx-auto md:mx-0
+                max-w-xl
+                font-serif
+                text-[31px] leading-[1.08]
+                sm:text-[36px]
+                md:text-[46px]
+                text-navy-deep
+              "
+            >
+              {t.howLead}
+            </h2>
 
-                  <div>
-                    <h3 className="font-serif text-[20px] md:text-[24px] leading-snug text-navy-deep">
-                      {s.t}
-                    </h3>
-
-                    <p className="mt-1 text-[11px] md:text-[13px] leading-relaxed text-navy-deep/75">
-                      {s.d}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+            <p
+              className="
+                mt-3 md:mt-4
+                text-[12px] sm:text-sm md:text-base
+                leading-relaxed
+                text-navy-deep/80
+              "
+            >
+              {t.howTitle}
+            </p>
 
           </div>
+
+          {/* RIGHT: Numbered steps */}
+          <ol
+            className="
+              how-steps-list
+              border-t border-navy-deep/15
+            "
+          >
+            {t.steps.map((s) => (
+              <li
+                key={s.n}
+                className="
+                  flex flex-col
+                  items-center
+                  gap-1
+                  border-b border-navy-deep/15
+                  py-3.5
+                  text-center
+
+                  md:grid
+                  md:grid-cols-[32px_1fr]
+                  md:items-start
+                  md:gap-3
+                  md:py-5
+                  md:text-left
+                "
+              >
+
+                {/* Step number */}
+                <span
+                  className="
+                    font-mono
+                    text-[9px] md:text-[10px]
+                    leading-none
+                    text-gold
+                    md:pt-1
+                  "
+                >
+                  {s.n}
+                </span>
+
+                {/* Step title and description */}
+                <div className="text-center md:text-left">
+
+                  <h3
+                    className="
+                      font-serif
+                      text-[21px] md:text-[24px]
+                      leading-snug
+                      text-navy-deep
+                    "
+                  >
+                    {s.t}
+                  </h3>
+
+                  <p
+                    className="
+                      mt-0.5 md:mt-1
+                      text-[11px] md:text-[13px]
+                      leading-relaxed
+                      text-navy-deep/75
+                    "
+                  >
+                    {s.d}
+                  </p>
+
+                </div>
+              </li>
+            ))}
+          </ol>
+
         </div>
       </div>
     </section>
