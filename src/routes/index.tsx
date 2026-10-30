@@ -301,23 +301,23 @@ function Network({ t }: { t: Copy }) {
       className="relative z-10 w-full border-t border-white/5 bg-white/[0.02] py-5"
     >
       <div className="mx-auto max-w-5xl px-6 md:px-10">
-        <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 text-center md:justify-start md:gap-x-10">
-          {t.cats.map((c) => {
-            const Icon = c.icon;
-            return (
-              <li key={c.name} className="group flex items-center gap-3">
-                <Icon
-                  className="h-6 w-6 shrink-0 text-amber-100/90 transition-colors group-hover:text-gold md:h-7 md:w-7"
-                  strokeWidth={1.5}
-                  aria-hidden
-                />
-                <h3 className="text-[12px] font-medium uppercase tracking-[0.14em] text-amber-100/90 transition-colors group-hover:text-amber-100 md:text-[14px]">
-                  {c.name}
-                </h3>
-              </li>
-            );
-          })}
-        </ul>
+        <ul className="grid grid-cols-5 items-center gap-1 text-center">
+  {t.cats.map((c) => {
+    const Icon = c.icon;
+    return (
+      <li key={c.name} className="flex min-w-0 flex-col items-center justify-center gap-2">
+        <Icon
+          className="h-7 w-7 shrink-0 text-amber-100/90 md:h-8 md:w-8"
+          strokeWidth={1.5}
+          aria-hidden
+        />
+        <h3 className="text-[9px] font-medium uppercase leading-tight tracking-[0.08em] text-amber-100/90 md:text-[12px]">
+          {c.name}
+        </h3>
+      </li>
+    );
+  })}
+</ul>
       </div>
     </section>
   );
@@ -335,7 +335,7 @@ function How({ t }: { t: Copy }) {
         aria-hidden="true"
       >
         <video
-          className="h-full w-full object-cover object-top"
+          className="h-full w-full object-contain object-top md:object-cover"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
