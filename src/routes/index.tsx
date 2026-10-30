@@ -325,19 +325,23 @@ function Network({ t }: { t: Copy }) {
 }
 
 
+
 function How({ t }: { t: Copy }) {
   return (
     <section
       id="how"
-      className="how-section relative isolate w-full min-h-[1050px] md:min-h-[950px] overflow-hidden bg-white text-navy-deep"
+      className="how-section relative isolate w-full min-h-[900px] md:min-h-[950px] overflow-hidden bg-white text-navy-deep"
     >
-      {/* Full-section skyline video */}
+      {/* Controlled skyline video area */}
       <div
-        className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
+        className="absolute inset-x-0 top-0 z-0 h-[58%] sm:h-[65%] md:h-[82%] overflow-hidden"
         aria-hidden="true"
       >
         <video
-          className="absolute inset-0 h-full w-full object-cover object-bottom opacity-100"
+          className="absolute inset-0 w-full h-full object-cover
+            object-[center_55%]
+            md:object-[center_45%]
+            opacity-100"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
@@ -347,38 +351,42 @@ function How({ t }: { t: Copy }) {
           preload="auto"
         />
 
-        {/* Keep upper skyline visible, fade into white behind text */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/0 via-[65%] to-white" />
+        {/* Soft contrast control */}
+        <div className="absolute inset-0 bg-gradient-to-b
+          from-white/5
+          via-transparent via-[45%]
+          to-white"
+        />
 
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent from-[45%] via-white/15 via-[65%] to-white" />
+        {/* Extra fade behind text */}
+        <div className="absolute inset-x-0 bottom-0 h-[38%]
+          bg-gradient-to-b from-transparent to-white"
+        />
       </div>
 
-      {/* Bottom editorial text overlay */}
+      {/* Bottom text overlay */}
       <div className="absolute inset-x-0 bottom-0 z-10">
-        <div className="mx-auto w-full max-w-[1440px] px-6 sm:px-8 md:px-[6.5%] pt-32 pb-12 md:pt-40 md:pb-20">
+        <div className="mx-auto w-full max-w-[1440px] px-6 sm:px-8 md:px-[6.5%] pt-16 pb-12 md:pt-24 md:pb-20">
 
           <div className="how-inner how-split grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr] gap-8 md:gap-16 items-start">
 
-            {/* Left headline */}
+            {/* Headline */}
             <div className="how-lead text-center md:text-left">
-
               <p className="text-[9px] md:text-[10px] font-medium tracking-[0.3em] uppercase text-gold">
                 {t.howEyebrow}
               </p>
 
-              <h2 className="mt-2 md:mt-3 font-serif text-[32px] leading-[1.08] sm:text-[38px] md:text-[46px] text-navy-deep max-w-xl">
+              <h2 className="mt-2 md:mt-3 mx-auto md:mx-0 max-w-xl font-serif text-[32px] leading-[1.08] sm:text-[38px] md:text-[46px] text-navy-deep">
                 {t.howLead}
               </h2>
 
               <p className="mt-3 md:mt-4 text-[12px] leading-relaxed text-navy-deep/80 sm:text-sm md:text-base">
                 {t.howTitle}
               </p>
-
             </div>
 
-            {/* Right numbered steps */}
+            {/* Steps */}
             <ol className="how-steps-list border-t border-navy-deep/20">
-
               {t.steps.map((s) => (
                 <li
                   key={s.n}
@@ -399,8 +407,8 @@ function How({ t }: { t: Copy }) {
                   </div>
                 </li>
               ))}
-
             </ol>
+
           </div>
         </div>
       </div>
