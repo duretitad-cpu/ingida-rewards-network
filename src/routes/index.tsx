@@ -333,11 +333,11 @@ function How({ t }: { t: Copy }) {
     >
       {/* Video background */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[370px] overflow-hidden bg-white sm:h-[410px] md:inset-0 md:h-full"
+       className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[370px] overflow-hidden bg-white sm:h-[410px] md:inset-x-0 md:top-0 md:h-[350px]"
         aria-hidden="true"
       >
         <video
-          className="h-full w-full object-contain object-top"
+          className="h-full w-full object-cover object-top"
           src={skylineLoop}
           poster={skylinePoster}
           autoPlay
@@ -350,11 +350,11 @@ function How({ t }: { t: Copy }) {
         {/* Light wash over video */}
         <div className="absolute inset-0 bg-white/10" />
 
-        {/* Mobile: softer, longer transition into text */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.04)_30%,rgba(255,255,255,0.22)_48%,rgba(255,255,255,0.65)_68%,#fff_92%)] md:hidden" />
+    {/* Mobile: fade into the white content below */}
+<div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.05)_38%,rgba(255,255,255,0.35)_62%,rgba(255,255,255,0.82)_82%,#fff_100%)] md:hidden" />
 
-        {/* Desktop: fade begins higher for readable text */}
-        <div className="absolute inset-0 hidden bg-[linear-gradient(to_bottom,rgba(255,255,255,0.04)_20%,rgba(255,255,255,0.18)_35%,rgba(255,255,255,0.48)_52%,rgba(255,255,255,0.82)_70%,#fff_90%)] md:block" />
+{/* Desktop: fade across the shorter full-width strip */}
+<div className="absolute inset-0 hidden bg-[linear-gradient(to_bottom,rgba(255,255,255,0.02)_15%,rgba(255,255,255,0.12)_35%,rgba(255,255,255,0.45)_62%,rgba(255,255,255,0.85)_85%,#fff_100%)] md:block" />
       </div>
 
       {/* Mobile layout */}
