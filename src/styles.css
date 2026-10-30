@@ -469,29 +469,20 @@ body .eyebrow, body [class*="tracking-"] { letter-spacing: 0; }
 /* ===== Scroll-driven skyline (white steps section) ===== */
 .how-section, .how-cream { --p: 0; background: var(--background); color: var(--navy-deep); }
 .how-section .how-steps p { color: color-mix(in oklch, var(--navy-deep) 72%, transparent); }
-.skyline-stage { order: 2; position: relative; margin: 56px -24px 0; height: clamp(220px, 30vw, 420px); overflow: hidden;
-  clip-path: inset(calc((1 - var(--p)) * 45%) 0 0 0); }
+.skyline-stage { order: 2; position: relative; margin: 56px -24px 0; height: clamp(220px, 30vw, 420px); overflow: hidden; clip-path: inset(calc((1 - var(--p)) * 45%) 0 0 0); }
 .skyline-stage::before { content: ""; position: absolute; inset: 0 0 auto; height: 30%; z-index: 1; background: linear-gradient(180deg, var(--background), transparent); }
-.how-section .skyline-stage .addis-skyline { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; animation: none;
-  object-fit: cover; object-position: calc(15% + var(--p) * 70%) bottom;
-  transform: translateY(calc((1 - var(--p)) * 60px)) scale(calc(1.12 - var(--p) * 0.12)); transform-origin: center bottom; will-change: transform; }
+.how-section .skyline-stage .addis-skyline { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; animation: none; object-fit: cover; object-position: calc(15% + var(--p) * 70%) bottom; transform: translateY(calc((1 - var(--p)) * 60px)) scale(calc(1.12 - var(--p) * 0.12)); transform-origin: center bottom; will-change: transform; }
 .how-inner { transform: translateY(calc((1 - var(--p)) * 30px)); opacity: calc(0.4 + var(--p) * 1.2); }
 @media (min-width: 900px) { .how-section .skyline-stage .addis-skyline { object-position: center bottom; } }
 @media (max-width: 639px) { .skyline-stage { margin-top: 40px; height: 240px; } }
 
 /* ===== Seamless skyline: no crops, soft edges ===== */
-.skyline-stage { height: auto; overflow: visible; clip-path: none; margin: 48px -24px 0; padding-bottom: 8px;
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 88%, transparent 100%), linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-  mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 88%, transparent 100%), linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-  -webkit-mask-composite: source-in; mask-composite: intersect; }
+.skyline-stage { height: auto; overflow: visible; clip-path: none; margin: 48px -24px 0; padding-bottom: 8px; -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 88%, transparent 100%), linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 88%, transparent 100%), linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); -webkit-mask-composite: source-in; mask-composite: intersect; }
 .skyline-stage::before { display: none; }
-.how-section .skyline-stage .addis-skyline { position: relative; inset: auto; display: block; width: 100%; height: auto; object-fit: initial;
-  opacity: calc(0.25 + var(--p) * 0.9);
-  transform: translateY(calc((1 - var(--p)) * 40px)) scale(calc(1.06 - var(--p) * 0.06)); }
+.how-section .skyline-stage .addis-skyline { position: relative; inset: auto; display: block; width: 100%; height: auto; object-fit: initial; opacity: calc(0.25 + var(--p) * 0.9); transform: translateY(calc((1 - var(--p)) * 40px)) scale(calc(1.06 - var(--p) * 0.06)); }
 @media (max-width: 639px) {
   .skyline-stage { height: auto; margin-top: 32px; overflow: hidden; }
-  .how-section .skyline-stage .addis-skyline { width: 190%; max-width: none;
-    transform: translateX(calc(-8% - var(--p) * 30%)) translateY(calc((1 - var(--p)) * 30px)); }
+  .how-section .skyline-stage .addis-skyline { width: 190%; max-width: none; transform: translateX(calc(-8% - var(--p) * 30%)) translateY(calc((1 - var(--p)) * 30px)); }
 }
 
 /* Neon navy "Spend. Earn & Redeem." section */
@@ -504,14 +495,8 @@ section.how-section.how-neon { background: var(--navy-deep); color: var(--primar
 .how-section.how-neon .skyline-stage .addis-skyline { mask-image: none; }
 @media (max-width: 639px) {
   .how-section.how-neon .skyline-stage { height: 330px; }
-  .how-section.how-neon .skyline-stage .addis-skyline { position: absolute; inset: auto 0 0 0; width: 100%; height: auto; object-fit: initial; }
-  .pin-stay { left: 50% !important; top: 5% !important; }
-  .pin-cathedral { left: 27% !important; top: 26% !important; }
-  .pin-stadium { left: 76% !important; top: 26% !important; }
-  .pin-hall { left: 27% !important; top: 46% !important; }
-  .pin-lion { left: 76% !important; top: 46% !important; }
 }
-.neon-pin { position: absolute; z-index: 2; display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; background: rgb(255 255 255 / 0.08); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgb(255 255 255 / 0.28); color: var(--primary-foreground); transform: translateX(-50%); box-shadow: 0 12px 32px -14px rgb(0 0 0 / 0.5); }
+.neon-pin { position: absolute; z-index: 2; display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: rgb(255 255 255 / 0.92); background: rgb(255 255 255 / 0.08); border: 1px solid rgb(255 255 255 / 0.18); backdrop-filter: blur(10px); }
 .neon-pin::before { content: ""; position: relative; left: auto; width: 5px; height: 5px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px rgb(255 255 255 / 0.9); flex: none; }
 .neon-pin em { font-style: normal; color: rgb(255 255 255 / 0.72); letter-spacing: 0.03em; }
 @media (max-width: 640px) { .neon-pin { font-size: 8.5px; padding: 4px 10px; gap: 6px; } }
@@ -533,10 +518,10 @@ section.how-section.how-neon { background: var(--navy-deep); color: var(--primar
 .how-section.how-neon .skyline-stage .addis-skyline { mask-image: none; }
 .neon-pin { transform: translate(-50%, 0); }
 .neon-pin::after { content: ""; position: absolute; left: 50%; top: calc(100% + 4px); width: 1px; height: 24px; background: linear-gradient(180deg, rgb(255 255 255 / 0.55), transparent); }
- .early-access { background: var(--navy-deep); color: var(--primary-foreground); }
- .early-access input { color: var(--primary-foreground); border-color: color-mix(in oklch, var(--primary-foreground) 30%, transparent); }
- .early-access input::placeholder { color: color-mix(in oklch, var(--primary-foreground) 70%, transparent); }
- .early-access label span.block { color: color-mix(in oklch, var(--primary-foreground) 80%, transparent); border-color: color-mix(in oklch, var(--primary-foreground) 30%, transparent); }
+.early-access { background: var(--navy-deep); color: var(--primary-foreground); }
+.early-access input { color: var(--primary-foreground); border-color: color-mix(in oklch, var(--primary-foreground) 30%, transparent); }
+.early-access input::placeholder { color: color-mix(in oklch, var(--primary-foreground) 70%, transparent); }
+.early-access label span.block { color: color-mix(in oklch, var(--primary-foreground) 80%, transparent); border-color: color-mix(in oklch, var(--primary-foreground) 30%, transparent); }
 .early-access .peer:checked + span.block { color: var(--gold); border-color: var(--gold); }
 .early-access .invite-submit:hover { color: var(--navy-deep); }
 @media (max-width: 639px) {
