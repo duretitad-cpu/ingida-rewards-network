@@ -587,3 +587,87 @@ video.addis-skyline { object-fit: cover; }
   .how-lead .how-title { font-size: 32px; }
   .how-steps-list li { text-align: left; }
 }
+
+
+/* Integrated phone showcase and membership film */
+:root {
+  --showcase-navy: oklch(0.275 0.056 252);
+  --showcase-blend: linear-gradient(90deg, var(--showcase-navy), transparent 30%);
+  --showcase-mask: linear-gradient(90deg, transparent, var(--background) 14%, var(--background) 90%, transparent);
+  --membership-fade: linear-gradient(180deg, transparent 0%, color-mix(in oklch, var(--background) 12%, transparent) 28%, color-mix(in oklch, var(--background) 87%, transparent) 64%, var(--background) 100%);
+  --membership-edge: linear-gradient(180deg, var(--showcase-navy), transparent);
+  --membership-divider: color-mix(in oklch, var(--navy-deep) 15%, transparent);
+}
+.hospitality-hero, .hospitality-hero .wallet-feature, .language-nav, .app-showcase {
+  background: var(--showcase-navy);
+}
+.wallet-feature { padding-inline: 24px; }
+.wallet-feature-inner { min-height: 560px; }
+.wallet-feature-copy { width: 47%; padding: 64px 0 70px 24px; }
+.wallet-feature-copy .hero-logo { margin-bottom: 32px; }
+.wallet-feature-copy h2 { font-size: 42px; line-height: 1.25; margin-top: 0; }
+.wallet-feature-labels { font-size: 16px; margin-top: 22px; }
+.app-showcase { width: 55%; height: calc(100% - 80px); }
+.app-showcase::after { background: var(--showcase-blend); }
+.app-showcase-phones { mask-image: var(--showcase-mask); }
+.wallet-feature-inner .network-ribbon {
+  position: absolute; bottom: 22px; left: 48%; right: 0;
+  background: transparent; border: 0; box-shadow: none; color: var(--primary-foreground);
+}
+.hero-categories { display: flex; align-items: start; gap: 22px; padding: 0; margin: 0; }
+.hero-categories li { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 40px; }
+.hero-categories svg { width: 24px; height: 24px; }
+.hero-categories span { font-size: 12px; line-height: 1.4; }
+.membership-section { position: relative; isolation: isolate; overflow: hidden; background: var(--background); color: var(--navy-deep); }
+.membership-film { position: absolute; inset: 0; overflow: hidden; z-index: -2; }
+.membership-film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; object-position: center top; opacity: 1; }
+.membership-wash { position: absolute; inset: 0; z-index: -1; background: var(--membership-fade); pointer-events: none; }
+.membership-section::before { content: ""; position: absolute; inset: 0 0 auto; height: 44px; background: var(--membership-edge); opacity: .25; pointer-events: none; }
+.membership-content { max-width: 1152px; margin: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: end; padding: 270px 48px 64px; }
+.membership-lead h2 { font-family: var(--font-editorial); font-size: 46px; line-height: 1.2; margin-top: 14px; }
+.membership-subtitle { font-size: 18px; line-height: 1.6; margin-top: 20px; }
+.membership-steps { list-style: none; padding: 0; margin: 0; }
+.membership-steps li { display: grid; grid-template-columns: 32px 1fr; gap: 10px; padding: 20px 0; }
+.membership-steps li + li { border-top: 1px solid var(--membership-divider); }
+.membership-number { font-size: 12px; padding-top: 8px; color: var(--gold); }
+.membership-steps h3 { font-family: var(--font-editorial); font-size: 28px; line-height: 1.25; }
+.membership-steps p { font-size: 15px; line-height: 1.65; margin-top: 8px; }
+.membership-content { transition: opacity 800ms ease, transform 800ms ease; }
+.membership-section:not(.membership-visible) .membership-content { opacity: .65; transform: translateY(16px); }
+.category-icon-bar { display: flex; justify-content: center; gap: 28px; padding: 32px 24px; background: var(--background); color: var(--navy-deep); }
+.category-icon-bar > div { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.category-icon-bar svg { width: 32px; height: 32px; }
+.category-icon-bar span { font-size: 12px; }
+.store-availability { margin-top: 16px; }
+.store-marks { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; }
+.store-mark { display: inline-flex; align-items: center; gap: 8px; color: var(--navy-deep); font-size: 14px; }
+.store-mark svg { width: 22px; height: 24px; }
+#portals .store-availability p { margin-top: 12px; font-size: 11px; color: var(--muted-foreground); }
+@media (max-width: 767px) {
+  .wallet-feature-inner { min-height: 0; }
+  .wallet-feature-copy { width: 100%; padding: 24px 0 20px; text-align: center; }
+  .wallet-feature-copy h2 { font-size: 34px; }
+  .wallet-feature-copy .hero-logo { margin-inline: auto; margin-bottom: 24px; }
+  .wallet-feature-labels { justify-content: center; font-size: 15px; }
+  .app-showcase { position: relative; width: min(100%, 480px); height: auto; aspect-ratio: 1; margin: auto; }
+  .app-showcase::after { background: none; }
+  .wallet-feature-inner .network-ribbon { position: relative; inset: auto; padding: 4px 0 28px; }
+  .hero-categories { justify-content: center; gap: 16px; }
+  .hero-categories svg { width: 24px; height: 24px; }
+  .hero-categories span { font-size: 11px; }
+  .membership-content { grid-template-columns: 1fr; gap: 24px; padding: 170px 24px 32px; }
+  .membership-lead h2 { font-size: 34px; }
+  .membership-subtitle { font-size: 16px; margin-top: 14px; }
+  .membership-steps h3 { font-size: 25px; }
+  .membership-steps li { padding: 16px 0; }
+  .membership-steps p { font-size: 14px; }
+  .membership-wash { background: linear-gradient(180deg, transparent, var(--background) 290px); }
+  .category-icon-bar { gap: 22px; padding-block: 28px; }
+  .category-icon-bar svg { width: 30px; height: 30px; }
+  .hero-categories li { min-width: 0; }
+  html[lang="am"] .hero-categories { gap: 12px; }
+  html[lang="am"] .hero-categories li { flex: 1; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .membership-content, .membership-section:not(.membership-visible) .membership-content { opacity: 1; transform: none; transition: none; }
+}

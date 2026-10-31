@@ -13,13 +13,14 @@ import {
 
 import appPhones from "@/assets/ingida-wallet-navy.jpg";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
+import { StoreMarks } from "@/components/brand/store-marks";
 import { Button } from "@/components/ui/button";
 import { useServerFn } from "@tanstack/react-start";
 import { submitWaitlist } from "@/lib/waitlist.functions";
 import { waitlistSchema } from "@/lib/waitlist-schema";
 
 const skylineLoop = "/Web.mp4";
-const skylinePoster = "/Web.mp4";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -169,45 +170,17 @@ function Index() {
   }, [lang]);
 
   return (
-    <>
-      <style>{`
-        .hospitality-hero > .network-ribbon {
-          background: linear-gradient(180deg, #182642 0%, #111a2e 100%) !important;
-          color: rgb(254 243 199 / 0.9) !important;
-          border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
-          box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 12px 28px -8px rgba(0, 0, 0, 0.5);
-        }
-
-        .network-ribbon .network-icon,
-        .network-category svg {
-          width: 28px !important;
-          height: 28px !important;
-          color: rgb(254 243 199 / 0.9) !important;
-        }
-
-        .network-category h3 {
-          color: rgb(254 243 199 / 0.8) !important;
-          font-size: 12px !important;
-        }
-
-        .how-white video {
-          opacity: 1 !important;
-          display: block;
-        }
-      `}</style>
-
       <div className="min-h-dvh bg-background text-foreground">
         <Hero t={t} lang={lang} setLang={setLang} />
         <main className="editorial-content">
           <How t={t} />
         </main>
-        <CategoryIconBar />
+        <CategoryIconBar t={t} />
         <Waitlist t={t} role={role} setRole={setRole} />
 
         <Portals t={t} role={role} />
         <Footer t={t} />
       </div>
-    </>
   );
 }
 
@@ -279,7 +252,6 @@ function ImageStrip({ t }: { t: Copy }) {
       <div className="wallet-feature-inner">
         <div className="wallet-feature-copy">
           <h1 aria-label="ingida"><IngidaLogo className="hero-logo" /></h1>
-          <p className="eyebrow moment-line">{t === copy.en ? <>Build Lifestyle Wealth <span>on Daily Spend</span></> : <span className="moment-tag">#ክቡርእንግዳ</span>}</p>
           <h2>{t === copy.en ? <>More than a Wallet.<br /><em>A Lifestyle.</em></> : <span className="am-hero-title">እንግዳ ቆይታ</span>}</h2>
           <div className="wallet-feature-labels">
             {t === copy.en ? <><span>Loyalty Network.</span><span>Rewards Wallet.</span></> : <span>ልዩ የእንግዳ ቆይታ እና አጋር ኔትወርክ</span>}
@@ -288,6 +260,7 @@ function ImageStrip({ t }: { t: Copy }) {
         <figure className="app-showcase">
           <img src={appPhones} alt="ingida hospitality home screen and rewards wallet on two phones" className="app-showcase-phones" fetchPriority="high" />
         </figure>
+        <Network t={t} />
       </div>
     </section>
   );
@@ -295,144 +268,84 @@ function ImageStrip({ t }: { t: Copy }) {
 
 function Network({ t }: { t: Copy }) {
   return (
-    <section
-      id="network"
-      className="relative z-10 w-full border-t border-white/5 bg-white/[0.02] py-5"
-    >
-      <div className="mx-auto max-w-5xl px-6 md:px-10">
-       <ul className="grid grid-cols-5 items-center gap-1 text-center">
-  {t.cats.map((c) => {
-    const Icon = c.icon;
-    return (
-      <li key={c.name} className="flex min-w-0 flex-col items-center justify-center gap-2">
-        <Icon
-          className="h-7 w-7 shrink-0 text-amber-100/90 md:h-8 md:w-8"
-          strokeWidth={1.5}
-          aria-hidden
-        />
-        <h3 className="text-[9px] font-medium uppercase leading-tight tracking-[0.08em] text-amber-100/90 md:text-[12px]">
-          {c.name}
-        </h3>
-      </li>
-    );
-  })}
-</ul>
-      </div>
+    <section id="network" className="network-ribbon" aria-label={t.networkEyebrow}>
+      <ul className="hero-categories">
+        {t.cats.map(({ icon: Icon, name }) => (
+          <li key={name}>
+            <Icon strokeWidth={1.5} aria-hidden="true" />
+            <span>{name}</span>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }
 
-
 function How({ t }: { t: Copy }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    const section = sectionRef.current;
+    if (!video || !section) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry?.isIntersecting) {
+        section.classList.add("membership-visible");
+        if (!reducedMotion.matches) void video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    }, { threshold: 0.12 });
+    observer.observe(section);
+    const onMotionChange = () => {
+      if (reducedMotion.matches) video.pause();
+    };
+    reducedMotion.addEventListener("change", onMotionChange);
+    return () => {
+      observer.disconnect();
+      reducedMotion.removeEventListener("change", onMotionChange);
+      video.pause();
+    };
+  }, []);
+
   return (
-    <section
-      id="how"
-      className="how-section relative isolate w-full overflow-hidden bg-white text-navy-deep"
-    >
-      {/* Video background */}
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[370px] overflow-hidden bg-transparent sm:h-[410px] md:inset-x-0 md:top-0 md:h-[350px]"
-        aria-hidden="true"
-      >
-        <video
-          className="h-full w-full object-contain object-top md:object-cover"
-          src={skylineLoop}
-          poster={skylinePoster}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-        />
-
-        {/* Mobile fade only */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.05)_38%,rgba(255,255,255,0.35)_62%,rgba(255,255,255,0.82)_82%,#fff_100%)] md:hidden" />
+    <section ref={sectionRef} id="how" className="membership-section">
+      <div className="membership-film" aria-hidden="true">
+        <video ref={videoRef} src={skylineLoop} muted loop playsInline preload="auto" />
       </div>
-
-      {/* Mobile layout */}
-      <div className="relative z-10 px-6 pb-10 pt-[285px] text-center md:hidden">
-        <div className="mx-auto max-w-md">
-          <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-gold">
-            {t.howEyebrow}
-          </p>
-          <h2 className="mt-3 font-serif text-[34px] leading-[1.15] text-navy-deep">
-            {t.howLead}
-          </h2>
-          <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-navy-deep/80">
-            {t.howTitle}
-          </p>
+      <div className="membership-wash" aria-hidden="true" />
+      <div className="membership-content">
+        <div className="membership-lead">
+          <p className="eyebrow">{t.howEyebrow}</p>
+          <h2>{t.howLead}</h2>
+          <p className="membership-subtitle">{t.howTitle}</p>
         </div>
-
-        <ol className="mx-auto mt-7 max-w-md border-t border-navy-deep/15">
-          {t.steps.map((s) => (
-            <li
-              key={s.n}
-              className="flex flex-col items-center border-b border-navy-deep/15 py-3 text-center"
-            >
-              <span className="font-mono text-xs text-gold">{s.n}</span>
-              <h3 className="mt-1 font-serif text-[22px] leading-snug text-navy-deep">
-                {s.t}
-              </h3>
-              <p className="mx-auto mt-1 max-w-sm text-[13px] leading-relaxed text-navy-deep/75">
-                {s.d}
-              </p>
+        <ol className="membership-steps">
+          {t.steps.map((step) => (
+            <li key={step.n}>
+              <span className="membership-number">{step.n}</span>
+              <div>
+                <h3>{step.t}</h3>
+                <p>{step.d}</p>
+              </div>
             </li>
           ))}
         </ol>
       </div>
-
-      {/* Desktop layout */}
-      <div className="relative z-10 mx-auto hidden w-full max-w-5xl px-10 pb-20 pt-[410px] md:block">
-        <div className="grid grid-cols-2 items-end gap-14">
-          <div className="text-left">
-            <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-gold">
-              {t.howEyebrow}
-            </p>
-            <h2 className="mt-3 font-serif text-[46px] leading-[1.15] text-navy-deep">
-              {t.howLead}
-            </h2>
-            <p className="mt-4 max-w-md text-base leading-relaxed text-navy-deep/80">
-              {t.howTitle}
-            </p>
-          </div>
-
-          <ol className="how-steps-list border-t border-navy-deep/15">
-            {t.steps.map((s) => (
-              <li
-                key={s.n}
-                className="grid grid-cols-[44px_1fr] gap-2 border-b border-navy-deep/15 py-5 text-left"
-              >
-                <span className="pt-1 font-mono text-xs text-gold">{s.n}</span>
-                <div>
-                  <h3 className="font-serif text-[24px] leading-snug text-navy-deep">
-                    {s.t}
-                  </h3>
-                  <p className="mt-1 text-[13px] leading-relaxed text-navy-deep/75">
-                    {s.d}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </div>
     </section>
   );
 }
 
-function CategoryIconBar() {
-  const icons = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
+function CategoryIconBar({ t }: { t: Copy }) {
   return (
-    <div
-      className="flex items-center justify-center gap-6 border-t border-border/40 bg-background py-8 text-navy-deep md:gap-8"
-      aria-hidden="true"
-    >
-      {icons.map((Icon, i) => (
-        <Icon
-          key={i}
-          className="h-6 w-6 text-navy-deep/80 transition-transform duration-200 hover:scale-110 hover:text-gold md:h-7 md:w-7"
-          strokeWidth={1.4}
-        />
+    <div className="category-icon-bar">
+      {t.cats.map(({ icon: Icon, name }) => (
+        <div key={name}>
+          <Icon strokeWidth={1.4} aria-hidden="true" />
+          <span>{name}</span>
+        </div>
       ))}
     </div>
   );
@@ -479,9 +392,7 @@ function PortalRow({ p, t }: { p: Copy["portals"][number]; t: Copy }) {
         </p>
 
         {isMemberApp ? (
-          <p className="mt-2 text-[10px] font-medium tracking-[0.2em] uppercase text-gold">
-            {t.appSoon}
-          </p>
+          <StoreMarks soon={t.appSoon} />
         ) : null}
       </div>
     </a>
