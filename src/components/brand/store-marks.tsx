@@ -1,4 +1,4 @@
-export function StoreMarks({ soon }: { soon: string }) {
+export function StoreMarks() {
   return (
     <div className="store-availability">
       <div className="store-marks">
@@ -15,7 +15,6 @@ export function StoreMarks({ soon }: { soon: string }) {
           <span>Google Play</span>
         </span>
       </div>
-      <p>{soon}</p>
     </div>
   );
 }

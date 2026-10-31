@@ -93,7 +93,6 @@ const copy = {
     submitted: "Your invitation request has been received.",
     footNote: "Made in Addis Ababa",
     footAdmin: "Operators",
-    appSoon: "Soon on App Store & Google Play",
   },
   am: {
     tagline: "እንግዳ",
@@ -147,7 +146,6 @@ const copy = {
     submitted: "በዝርዝሩ ውስጥ ተካትተዋል። በቅርቡ እናገኝዎታለን።",
     footNote: "ከአዲስ አበባ የተሠራ",
     footAdmin: "ኦፕሬተሮች",
-    appSoon: "በአፕስቶር እና ጎግል ፕሌይ በቅርቡ",
   },
 };
 
@@ -251,15 +249,15 @@ function ImageStrip({ t }: { t: Copy }) {
       <div className="wallet-feature-inner">
         <div className="wallet-feature-copy">
           <h1 aria-label="ingida"><IngidaLogo className="hero-logo" /></h1>
-          <h2>{t === copy.en ? <>More than a Wallet.<br /><em>A Lifestyle.</em></> : <span className="am-hero-title">እንግዳ ቆይታ</span>}</h2>
           <div className="wallet-feature-labels">
             {t === copy.en ? <><span>Loyalty Network.</span><span>Rewards Wallet.</span></> : <span>ልዩ የእንግዳ ቆይታ እና አጋር ኔትወርክ</span>}
           </div>
+          <h2>{t === copy.en ? <>More than a Wallet.<br /><em>A Lifestyle.</em></> : <span className="am-hero-title">እንግዳ ቆይታ</span>}</h2>
         </div>
+        <Network t={t} />
         <figure className="app-showcase">
           <img src={appPhones} alt="ingida hospitality home screen and rewards wallet on two phones" className="app-showcase-phones" fetchPriority="high" />
         </figure>
-        <Network t={t} />
       </div>
     </section>
   );
@@ -312,7 +310,7 @@ function How({ t }: { t: Copy }) {
   return (
     <section ref={sectionRef} id="how" className="membership-section">
       <div className="membership-film" aria-hidden="true">
-        <video ref={videoRef} src={membershipLoop.url} poster={membershipPoster.url} muted loop playsInline preload="auto" />
+        <video ref={videoRef} src={membershipLoop.url} poster={membershipPoster.url} muted loop playsInline controls={false} disablePictureInPicture disableRemotePlayback tabIndex={-1} preload="auto" />
       </div>
       <div className="membership-wash" aria-hidden="true" />
       <div className="membership-content">
@@ -341,9 +339,8 @@ function CategoryIconBar({ t }: { t: Copy }) {
   return (
     <div className="category-icon-bar">
       {t.cats.map(({ icon: Icon, name }) => (
-        <div key={name}>
+        <div key={name} role="img" aria-label={name}>
           <Icon strokeWidth={1.4} aria-hidden="true" />
-          <span>{name}</span>
         </div>
       ))}
     </div>
@@ -391,7 +388,7 @@ function PortalRow({ p, t }: { p: Copy["portals"][number]; t: Copy }) {
         </p>
 
         {isMemberApp ? (
-          <StoreMarks soon={t.appSoon} />
+          <StoreMarks />
         ) : null}
       </div>
     </a>
