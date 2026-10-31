@@ -287,6 +287,12 @@ function How({ t }: { t: Copy }) {
     const section = sectionRef.current;
     if (!video || !section) return;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    // Ensure video tries playing immediately if already in view
+    if (!reducedMotion.matches) {
+      void video.play().catch(() => {});
+    }
+
     const observer = new IntersectionObserver(([entry]) => {
       if (entry?.isIntersecting) {
         section.classList.add("membership-visible");
@@ -294,7 +300,7 @@ function How({ t }: { t: Copy }) {
       } else {
         video.pause();
       }
-    }, { threshold: 0.12 });
+    }, { threshold: 0.05 });
     observer.observe(section);
     const onMotionChange = () => {
       if (reducedMotion.matches) video.pause();
@@ -310,7 +316,22 @@ function How({ t }: { t: Copy }) {
   return (
     <section ref={sectionRef} id="how" className="membership-section">
       <div className="membership-film" aria-hidden="true">
-        <video ref={videoRef} src={membershipLoop.url} poster={membershipPoster.url} muted loop playsInline controls={false} disablePictureInPicture disableRemotePlayback tabIndex={-1} preload="auto" />
+        <video
+          ref={videoRef}
+          poster={membershipPoster.url}
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls={false}
+          disablePictureInPicture
+          disableRemotePlayback
+          tabIndex={-1}
+          preload="auto"
+        >
+          <source src="/Web.mp4" type="video/mp4" />
+          <source src={membershipLoop.url} type="video/webm" />
+        </video>
       </div>
       <div className="membership-wash" aria-hidden="true" />
       <div className="membership-content">
