@@ -12,15 +12,14 @@ import {
 } from "lucide-react";
 
 import appPhones from "@/assets/ingida-wallet-navy.jpg";
+import membershipLoop from "@/assets/membership-loop.webm.asset.json";
+import membershipPoster from "@/assets/membership-poster.jpg.asset.json";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { StoreMarks } from "@/components/brand/store-marks";
 import { Button } from "@/components/ui/button";
 import { useServerFn } from "@tanstack/react-start";
 import { submitWaitlist } from "@/lib/waitlist.functions";
 import { waitlistSchema } from "@/lib/waitlist-schema";
-
-const skylineLoop = "/Web.mp4";
-
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -313,7 +312,7 @@ function How({ t }: { t: Copy }) {
   return (
     <section ref={sectionRef} id="how" className="membership-section">
       <div className="membership-film" aria-hidden="true">
-        <video ref={videoRef} src={skylineLoop} muted loop playsInline preload="auto" />
+        <video ref={videoRef} src={membershipLoop.url} poster={membershipPoster.url} muted loop playsInline preload="auto" />
       </div>
       <div className="membership-wash" aria-hidden="true" />
       <div className="membership-content">
