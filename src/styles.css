@@ -680,3 +680,87 @@ video.addis-skyline { object-fit: cover; }
 @media (prefers-reduced-motion: reduce) {
   .membership-content, .membership-section:not(.membership-visible) .membership-content { opacity: 1; transform: none; transition: none; }
 }
+
+
+/* ===== Requested responsive refinements ===== */
+/* Keep the category icons directly beneath the Lifestyle headline. */
+.wallet-feature-copy .network-ribbon {
+  position: static;
+  inset: auto;
+  width: fit-content;
+  margin-top: 28px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: var(--primary-foreground);
+}
+.wallet-feature-copy .hero-categories {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.wallet-feature-copy .hero-categories li {
+  min-width: 42px;
+}
+
+/* A subtle 10%-opaque white wash over the desktop membership film. */
+.membership-wash {
+  background: rgb(255 255 255 / 10%);
+}
+
+/* Suppress WebKit's native playback overlays as well as the standard controls. */
+.membership-film video::-webkit-media-controls,
+.membership-film video::-webkit-media-controls-enclosure,
+.membership-film video::-webkit-media-controls-panel,
+.membership-film video::-webkit-media-controls-overlay-play-button,
+.membership-film video::-webkit-media-controls-play-button,
+.membership-film video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+/* Bring the blue category icons closer to the final membership copy. */
+.membership-content {
+  padding-bottom: 16px;
+}
+.category-icon-bar {
+  padding-top: 12px;
+}
+
+@media (max-width: 767px) {
+  .wallet-feature-copy .network-ribbon {
+    width: 100%;
+    margin-top: 22px;
+    padding: 0;
+  }
+  .wallet-feature-copy .hero-categories {
+    justify-content: center;
+    gap: 16px;
+  }
+  .membership-content {
+    padding-bottom: 16px;
+  }
+  .membership-steps li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 12px;
+  }
+  .membership-number {
+    position: static;
+    display: block;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+  }
+  .membership-steps li > div {
+    width: 100%;
+    text-align: center;
+  }
+  .category-icon-bar {
+    padding-top: 12px;
+  }
+}
+
