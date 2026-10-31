@@ -619,15 +619,68 @@ video.addis-skyline { object-fit: cover; }
 .hero-categories li { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 40px; }
 .hero-categories svg { width: 24px; height: 24px; }
 .hero-categories span { font-size: 12px; line-height: 1.4; }
-.membership-section { position: relative; isolation: isolate; overflow: hidden; background: var(--background); color: var(--navy-deep); }
-.editorial-content .membership-section#how { padding: 0; }
-.membership-film { position: absolute; inset: 0; overflow: hidden; z-index: -2; }
-.membership-film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; object-position: center top; opacity: 1; }
-.membership-film video { pointer-events: none; }
+/* Full-bleed video underlay (Desktop & Mobile) */
+.membership-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--background);
+  color: var(--navy-deep);
+}
+.editorial-content .membership-section#how {
+  padding: 0;
+}
+.membership-film {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: -2;
+  pointer-events: none;
+}
+.membership-film video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  pointer-events: none;
+  opacity: 1;
+}
+
+/* Strip any iOS/WebKit/Chrome play, pause, or media controls completely */
 .membership-film video::-webkit-media-controls,
-.membership-film video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }
-.membership-wash { position: absolute; inset: 0; z-index: -1; background: var(--membership-fade); pointer-events: none; }
-.membership-section::before { content: ""; position: absolute; inset: 0 0 auto; height: 44px; background: var(--membership-edge); opacity: .25; pointer-events: none; }
+.membership-film video::-webkit-media-controls-start-playback-button,
+.membership-film video::-webkit-media-controls-play-button,
+.membership-film video::-webkit-media-controls-panel,
+.membership-film video::-webkit-media-controls-enclosure {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+}
+
+/* Gradient wash keeping text legible while showing the city footage */
+.membership-wash {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.28) 24%,
+    rgba(255, 255, 255, 0.82) 58%,
+    rgba(255, 255, 255, 0.98) 100%
+  );
+  pointer-events: none;
+}
+.membership-section::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 44px;
+  background: linear-gradient(180deg, var(--showcase-navy), transparent);
+  opacity: 0.25;
+  pointer-events: none;
+}
 .membership-content { max-width: 1152px; margin: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: end; padding: 270px 48px 64px; }
 .membership-lead h2 { font-family: var(--font-editorial); font-size: 46px; line-height: 1.2; margin-top: 14px; }
 .membership-subtitle { font-size: 18px; line-height: 1.6; margin-top: 20px; }
@@ -667,15 +720,76 @@ video.addis-skyline { object-fit: cover; }
   .membership-steps li { position: relative; display: block; padding: 16px 24px; }
   .membership-number { position: absolute; left: 0; top: 16px; }
   .membership-steps p { font-size: 14px; }
-  .membership-film { bottom: auto; aspect-ratio: 16 / 9; }
-  .membership-film video { width: 100%; height: 100%; object-fit: cover; }
-  .membership-wash { bottom: auto; aspect-ratio: 16 / 9; background: var(--membership-mobile-fade); }
-  .membership-section::before { display: none; }
-  .category-icon-bar { gap: 22px; padding-block: 28px; }
-  .category-icon-bar svg { width: 24px; height: 24px; }
-  .hero-categories li { min-width: 0; }
-  html[lang="am"] .hero-categories { gap: 12px; }
-  html[lang="am"] .hero-categories li { flex: 1; text-align: center; }
+  .membership-film {
+    position: absolute;
+    inset: 0;
+    bottom: 0;
+    aspect-ratio: auto;
+    height: 100%;
+  }
+  .membership-film video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .membership-wash {
+    position: absolute;
+    inset: 0;
+    bottom: 0;
+    aspect-ratio: auto;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.35) 26%,
+      rgba(255, 255, 255, 0.86) 58%,
+      rgba(255, 255, 255, 0.98) 100%
+    );
+  }
+  .membership-section::before {
+    display: none;
+  }
+
+  /* Centered text and steps with middle-aligned numbers */
+  .membership-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 170px 20px 12px;
+    text-align: center;
+  }
+  .membership-lead h2 {
+    font-size: 34px;
+  }
+  .membership-subtitle {
+    font-size: 16px;
+    margin-top: 14px;
+  }
+  .membership-steps h3 {
+    font-size: 25px;
+  }
+  .membership-steps li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 14px 12px;
+  }
+  .membership-number {
+    position: static;
+    font-size: 13px;
+    margin-bottom: 2px;
+    color: var(--gold);
+  }
+  .membership-steps p {
+    font-size: 14px;
+  }
+
+  /* Reduced gap before the category icons */
+  .category-icon-bar {
+    gap: 20px;
+    padding-top: 8px;
+    padding-bottom: 24px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .membership-content, .membership-section:not(.membership-visible) .membership-content { opacity: 1; transform: none; transition: none; }
