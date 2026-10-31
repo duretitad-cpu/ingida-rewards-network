@@ -253,8 +253,8 @@ function ImageStrip({ t }: { t: Copy }) {
             {t === copy.en ? <><span>Loyalty Network.</span><span>Rewards Wallet.</span></> : <span>ልዩ የእንግዳ ቆይታ እና አጋር ኔትወርክ</span>}
           </div>
           <h2>{t === copy.en ? <>More than a Wallet.<br /><em>A Lifestyle.</em></> : <span className="am-hero-title">እንግዳ ቆይታ</span>}</h2>
+          <Network t={t} />
         </div>
-        <Network t={t} />
         <figure className="app-showcase">
           <img src={appPhones} alt="ingida hospitality home screen and rewards wallet on two phones" className="app-showcase-phones" fetchPriority="high" />
         </figure>
@@ -289,34 +289,40 @@ function How({ t }: { t: Copy }) {
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    // Try starting immediately on mount
-    if (!reducedMotion.matches) {
-      void video.play().catch(() => {});
-    }
+    // Explicitly set the properties browsers require for muted inline autoplay.
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
+    const tryPlay = () => {
+      if (!reducedMotion.matches) {
+        void video.play().catch(() => {
+          // Autoplay can still be blocked by browser or device-level settings.
+          // The video remains muted, looped and without visible player controls.
+        });
+      }
+    };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry?.isIntersecting) {
-          section.classList.add("membership-visible");
-          if (!reducedMotion.matches && video.paused) {
-            void video.play().catch(() => {});
-          }
-        } else {
-          video.pause();
-        }
+        if (entry?.isIntersecting) section.classList.add("membership-visible");
       },
       { threshold: 0.05 },
     );
 
     observer.observe(section);
+    video.addEventListener("canplay", tryPlay);
+    tryPlay();
 
     const onMotionChange = () => {
       if (reducedMotion.matches) video.pause();
+      else tryPlay();
     };
     reducedMotion.addEventListener("change", onMotionChange);
 
     return () => {
       observer.disconnect();
+      video.removeEventListener("canplay", tryPlay);
       reducedMotion.removeEventListener("change", onMotionChange);
       video.pause();
     };
