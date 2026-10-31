@@ -1,5 +1,5 @@
 # Website refresh
-- [ ] Refine hero typography and navy, label category icons, integrate full-width membership video on desktop/mobile, remove outer step dividers, and add store marks.
+- [x] Refine hero typography and navy, label category icons, integrate full-width membership video on desktop/mobile, remove outer step dividers, and add store marks.
 - [x] Resize the first logo, relocate the cream invitation button, switch portal and early-access colors, and tighten section gaps.
 - [ ] Apply brand-guide typography and supplied Amharic copy; simplify the three steps.
 - [ ] Match phone image background to navy, redraw photo-inspired skyline and add blue logo/icon interlude; verify layouts.
