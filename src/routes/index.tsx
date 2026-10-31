@@ -286,20 +286,35 @@ function How({ t }: { t: Copy }) {
     const video = videoRef.current;
     const section = sectionRef.current;
     if (!video || !section) return;
+
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry?.isIntersecting) {
-        section.classList.add("membership-visible");
-        if (!reducedMotion.matches) void video.play().catch(() => {});
-      } else {
-        video.pause();
-      }
-    }, { threshold: 0.12 });
+
+    // Try starting immediately on mount
+    if (!reducedMotion.matches) {
+      void video.play().catch(() => {});
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          section.classList.add("membership-visible");
+          if (!reducedMotion.matches && video.paused) {
+            void video.play().catch(() => {});
+          }
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.05 },
+    );
+
     observer.observe(section);
+
     const onMotionChange = () => {
       if (reducedMotion.matches) video.pause();
     };
     reducedMotion.addEventListener("change", onMotionChange);
+
     return () => {
       observer.disconnect();
       reducedMotion.removeEventListener("change", onMotionChange);
@@ -310,7 +325,23 @@ function How({ t }: { t: Copy }) {
   return (
     <section ref={sectionRef} id="how" className="membership-section">
       <div className="membership-film" aria-hidden="true">
-        <video ref={videoRef} src={membershipLoop.url} poster={membershipPoster.url} muted loop playsInline controls={false} disablePictureInPicture disableRemotePlayback tabIndex={-1} preload="auto" />
+        <video
+          ref={videoRef}
+          poster={membershipPoster.url}
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls={false}
+          disablePictureInPicture
+          disableRemotePlayback
+          tabIndex={-1}
+          preload="auto"
+          aria-hidden="true"
+        >
+          <source src="/Web.mp4" type="video/mp4" />
+          <source src={membershipLoop.url} type="video/webm" />
+        </video>
       </div>
       <div className="membership-wash" aria-hidden="true" />
       <div className="membership-content">
