@@ -546,7 +546,7 @@ section.how-section.how-neon { background: var(--navy-deep); color: var(--primar
 #portals a { border-top: 0; padding-top: 0; }
 .brand-interlude { padding-block: 8px 20px; }
 .early-access { padding-block: 32px 64px; }
-html[lang="am"] h1, html[lang="am"] h2, html[lang="am"] h3, html[lang="am"] .network-ribbon-title, html[lang="am"] .how-title { font-weight: 700; }
+html[lang="am"] h1, html[lang="am"] h2, html[lang="am"] h3, html[lang="am"] .network-ribbon-title, html[lang="am"] .how-title { font-weight: 400; }
 @media (max-width: 639px) {
   .network-categories { transform: translateX(10px); }
   .neon-pin { font-size: 8.5px; }
@@ -764,7 +764,26 @@ video.addis-skyline { object-fit: cover; }
   }
 }
 
-/* ===== Membership video background: desktop + mobile edge blend ===== */
+/* ===== Natural-proportion film with copy on its lower white fade ===== */
+:root {
+  --membership-fade: linear-gradient(180deg, transparent 35%, color-mix(in oklch, var(--background) 30%, transparent) 58%, color-mix(in oklch, var(--background) 94%, transparent) 80%, var(--background) 100%);
+  --membership-side-fade: linear-gradient(90deg, color-mix(in oklch, var(--background) 28%, transparent), transparent 8%, transparent 92%, color-mix(in oklch, var(--background) 28%, transparent));
+}
+.wallet-feature-copy .hero-logo { margin-bottom: 12px; }
+.wallet-feature-copy .wallet-feature-labels { margin-top: 0; }
+.wallet-feature-copy .hero-categories { color: var(--primary-foreground); }
+html[lang="am"] body { font-weight: 400; }
+html[lang="am"] :is(h1, h2, h3, p, span, a, label, button, input) { font-weight: 400; }
+html[lang="am"] .wallet-feature-labels { font-size: 20px; line-height: 1.6; }
+html[lang="am"] .am-hero-title { font-size: 60px; }
+html[lang="am"] .wallet-feature-copy .hero-categories { gap: 10px; }
+html[lang="am"] .hero-categories li { min-width: 36px; max-width: 96px; text-align: center; }
+html[lang="am"] .hero-categories span { font-size: 16px; line-height: 1.6; }
+html[lang="am"] .membership-lead h2 { font-size: 48px; }
+html[lang="am"] .membership-subtitle { font-size: 21px; }
+html[lang="am"] .membership-steps h3 { font-size: 32px; }
+html[lang="am"] .membership-steps p { font-size: 18px; }
+
 .membership-section {
   position: relative;
   isolation: isolate;
@@ -773,9 +792,11 @@ video.addis-skyline { object-fit: cover; }
 }
 
 .membership-film {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
+  position: relative;
+  inset: auto;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  z-index: 0;
   overflow: hidden;
 }
 
@@ -783,44 +804,58 @@ video.addis-skyline { object-fit: cover; }
   display: block;
   width: 100%;
   height: 100%;
-  aspect-ratio: auto;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
-  object-position: center center;
+  object-position: center top;
   opacity: 1;
 }
 
-/* A consistent translucent layer lets the film show through behind all copy. */
 .membership-wash {
   position: absolute;
   inset: 0;
-  z-index: -1;
-  background: rgb(255 255 255 / 46%);
+  aspect-ratio: auto;
+  z-index: 1;
+  background: var(--membership-fade), var(--membership-side-fade);
   pointer-events: none;
 }
+.membership-section::before { display: none; }
+.membership-content {
+  position: relative;
+  z-index: 2;
+  margin-top: max(-180px, -12vw);
+  align-items: start;
+  padding: 24px 48px 24px;
+}
+.membership-section:not(.membership-visible) .membership-content { opacity: 1; transform: none; }
 
 @media (max-width: 767px) {
-  /* Keep the film behind the full section and fade it smoothly into the page. */
+  .wallet-feature-copy .hero-logo { margin-bottom: 12px; }
+  html[lang="am"] .wallet-feature-labels { font-size: 18px; }
+  html[lang="am"] .am-hero-title { font-size: 48px; }
+  html[lang="am"] .wallet-feature-copy .hero-categories { gap: 8px; flex-wrap: nowrap; }
+  html[lang="am"] .hero-categories li { flex: 0 1 auto; min-width: 0; }
+  html[lang="am"] .hero-categories span { font-size: 14px; }
+  html[lang="am"] .membership-lead h2 { font-size: 38px; }
+  html[lang="am"] .membership-subtitle { font-size: 19px; }
+  html[lang="am"] .membership-steps h3 { font-size: 29px; }
+  html[lang="am"] .membership-steps p { font-size: 17px; }
   .membership-film {
-    inset: 0;
-    aspect-ratio: auto;
+    inset: auto;
+    aspect-ratio: 4 / 3;
   }
 
   .membership-film video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    aspect-ratio: auto;
     object-position: center top;
   }
 
-  .membership-wash {
-    inset: 0;
-    aspect-ratio: auto;
-    background: linear-gradient(
-      180deg,
-      rgb(255 255 255 / 38%) 0%,
-      rgb(255 255 255 / 52%) 42%,
-      color-mix(in oklch, var(--background) 82%, transparent) 72%,
-      var(--background) 100%
-    );
+  .membership-content {
+    margin-top: -64px;
+    padding: 0 24px 16px;
+    gap: 24px;
+    text-align: center;
   }
 }
