@@ -770,7 +770,7 @@ video.addis-skyline { object-fit: cover; }
   --membership-side-fade: linear-gradient(90deg, color-mix(in oklch, var(--background) 28%, transparent), transparent 8%, transparent 92%, color-mix(in oklch, var(--background) 28%, transparent));
 }
 .wallet-feature-copy .hero-logo { margin-bottom: 12px; }
-.wallet-feature-copy .wallet-feature-labels { margin-top: 0; var(--gold);}
+.wallet-feature-copy .wallet-feature-labels { margin-top: 0;}
 .wallet-feature-copy .hero-categories { color: var(--primary-foreground); }
 html[lang="am"] body { font-weight: 400; }
 html[lang="am"] :is(h1, h2, h3, p, span, a, label, button, input) { font-weight: 400; }
