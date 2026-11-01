@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 import appPhones from "@/assets/ingida-wallet-navy.jpg";
-import membershipLoop from "@/assets/membership-loop.webm.asset.json";
+import membershipLoop from "@/assets/membership-loop-fast.mp4.asset.json";
 import membershipPoster from "@/assets/membership-poster.jpg.asset.json";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { StoreMarks } from "@/components/brand/store-marks";
@@ -172,7 +172,7 @@ function Index() {
         <main className="editorial-content">
           <How t={t} />
         </main>
-        <CategoryIconBar t={t} />
+        <div className="membership-mobile-icons"><CategoryIconBar t={t} /></div>
         <Waitlist t={t} role={role} setRole={setRole} />
 
         <Portals t={t} role={role} />
@@ -312,7 +312,14 @@ function How({ t }: { t: Copy }) {
 
     observer.observe(section);
     video.addEventListener("canplay", tryPlay);
+    video.addEventListener("loadeddata", tryPlay);
     tryPlay();
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") tryPlay();
+      else video.pause();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     const onMotionChange = () => {
       if (reducedMotion.matches) video.pause();
@@ -323,6 +330,8 @@ function How({ t }: { t: Copy }) {
     return () => {
       observer.disconnect();
       video.removeEventListener("canplay", tryPlay);
+      video.removeEventListener("loadeddata", tryPlay);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       reducedMotion.removeEventListener("change", onMotionChange);
       video.pause();
     };
@@ -345,8 +354,7 @@ function How({ t }: { t: Copy }) {
           preload="auto"
           aria-hidden="true"
         >
-          <source src="/Web.mp4" type="video/mp4" />
-          <source src={membershipLoop.url} type="video/webm" />
+          <source src={membershipLoop.url} type="video/mp4" />
         </video>
         <div className="membership-wash" aria-hidden="true" />
       </div>
@@ -355,6 +363,7 @@ function How({ t }: { t: Copy }) {
           <p className="eyebrow">{t.howEyebrow}</p>
           <h2>{t.howLead}</h2>
           <p className="membership-subtitle">{t.howTitle}</p>
+          <CategoryIconBar t={t} />
         </div>
         <ol className="membership-steps">
           {t.steps.map((step) => (
