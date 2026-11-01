@@ -48,12 +48,12 @@ const copy = {
     ctaJoin: "Request Invitation",
     howEyebrow: "Capture this #ingidaMoment",
     howTitle: "2% Cashback in Points on Daily Spend.",
-    howLead: "Spend Across the City with ingida",
+    howLead: "Honoring Ethiopian Hospitality with Every Rewarded Experiance",
     howBody: "",
     steps: [
       { n: "01", t: "Spend", d: "Join with FAYDA ID and Spend." },
-      { n: "02", t: "Earn", d: "Earn points on Eligible Bills." },
-      { n: "03", t: "Redeem", d: "Use your rewards across participating partners." },
+      { n: "02", t: "Earn", d: "INGIDA points on Eligible Bills." },
+      { n: "03", t: "Redeem", d: "Rewards across Participating Partners." },
     ],
     portals: [
       {
