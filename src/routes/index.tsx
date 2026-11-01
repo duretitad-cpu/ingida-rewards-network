@@ -348,8 +348,8 @@ function How({ t }: { t: Copy }) {
           <source src="/Web.mp4" type="video/mp4" />
           <source src={membershipLoop.url} type="video/webm" />
         </video>
+        <div className="membership-wash" aria-hidden="true" />
       </div>
-      <div className="membership-wash" aria-hidden="true" />
       <div className="membership-content">
         <div className="membership-lead">
           <p className="eyebrow">{t.howEyebrow}</p>
