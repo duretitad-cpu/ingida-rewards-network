@@ -607,7 +607,7 @@ video.addis-skyline { object-fit: cover; }
 .wallet-feature-copy { width: 47%; padding: 64px 0 70px 24px; }
 .wallet-feature-copy .hero-logo { margin-bottom: 32px; }
 .wallet-feature-copy h2 { font-size: 42px; line-height: 1.25; margin-top: 0; }
-.wallet-feature-labels { font-size: 16px; margin-top: 0; margin-bottom: 16px; color: var(--primary-foreground); }
+.wallet-feature-labels { font-size: 16px; margin-top: 0; margin-bottom: 16px; color: var(--gold);}
 .app-showcase { width: 55%; top: 80px; height: calc(100% - 80px); }
 .app-showcase::after { background: var(--showcase-blend); }
 .app-showcase-phones { mask-image: var(--showcase-mask); opacity: 1; }
@@ -770,8 +770,8 @@ video.addis-skyline { object-fit: cover; }
   --membership-side-fade: linear-gradient(90deg, color-mix(in oklch, var(--background) 28%, transparent), transparent 8%, transparent 92%, color-mix(in oklch, var(--background) 28%, transparent));
 }
 .wallet-feature-copy .hero-logo { margin-bottom: 12px; }
-.wallet-feature-copy .wallet-feature-labels { margin-top: 0; }
-.wallet-feature-copy .hero-categories { color: var(--gold); }
+.wallet-feature-copy .wallet-feature-labels { margin-top: 0; var(--gold);}
+.wallet-feature-copy .hero-categories { color: var(--primary-foreground); }
 html[lang="am"] body { font-weight: 400; }
 html[lang="am"] :is(h1, h2, h3, p, span, a, label, button, input) { font-weight: 400; }
 html[lang="am"] .wallet-feature-labels { font-size: 20px; line-height: 1.6; }
