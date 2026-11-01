@@ -47,8 +47,8 @@ const copy = {
     heroHeadline: null,
     ctaJoin: "Request Invitation",
     howEyebrow: "Capture this #ingidaMoment",
-    howTitle: "2% Cashback in Points on Daily Spend.",
-    howLead: "Honoring Ethiopian Hospitality with Every Rewarded Experiance",
+    howTitle: "With Every Rewarded Experiance.",
+    howLead: "Honoring Ethiopian Hospitality ",
     howBody: "",
     steps: [
       { n: "01", t: "Spend", d: "Join with FAYDA ID and Spend." },
