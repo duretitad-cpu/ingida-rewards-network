@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 
 import appPhones from "@/assets/ingida-wallet-navy.jpg";
-import membershipLoop from "@/assets/membership-loop-fast.mp4.asset.json";
-import membershipWebm from "@/assets/membership-loop-fast.webm.asset.json";
+const membershipLoop = { url: "/Web2.mp4" };
+const membershipWebm = { url: "/Web2.mp4" };
 import membershipPoster from "@/assets/membership-poster.jpg.asset.json";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { StoreMarks } from "@/components/brand/store-marks";
