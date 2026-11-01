@@ -14,6 +14,7 @@
 - Use inline SVG logo icons traced from the supplied official artwork with currentColor, never font approximations or external logo URLs; this preserves lettering and avoids deployment-specific asset endpoints. Derive the favicon from the same source and never embed brand-guideline screenshots in the page.
 - Keep app-store marks in a shared browser-safe brand component and display them as availability labels, not download links, until real store destinations are supplied.
 - Membership uses a full-width, aspect-ratio-constrained video stage with proportion-preserving cropping and a lower white fade; copy overlaps that fade instead of stretching footage behind the entire text section.
+- Serve membership playback from a fast-start, audio-free H.264 asset with a forward/reverse cycle; this preserves mobile compatibility and matching loop-boundary frames without player controls.
 - Use the guide-approved secondary font until licensed primary font files are supplied; never download or substitute unlicensed primary font files.
 - The app showcase uses a source-grounded generated phone image in an unframed overlay feature with CSS reveal motion and a reduced-motion fallback, not a live wallet interface; this preserves brand fidelity without implying functional payments.
 - Waitlist validation is shared between the public form and its dedicated server function; writes use a server-only client and the CRM table has no visitor read grants, keeping contact details private.
