@@ -1,5 +1,5 @@
 # Website refresh
-- [ ] Tighten Amharic icons and logo spacing, enlarge regular-weight Amharic text, and verify a natural-ratio autoplay video with white text overlay on desktop/mobile.
+- [x] Tighten Amharic icons and logo spacing, enlarge regular-weight Amharic text, and verify a proportion-preserving autoplay video with white text overlay on desktop/mobile.
 - [ ] Rearrange showcase labels and cream icons; simplify blue icons and store wording; center mobile membership text and verify seamless, control-free video and visible phones.
 - [x] Refine hero typography and navy, label category icons, integrate full-width membership video on desktop/mobile, remove outer step dividers, and add store marks.
 - [x] Resize the first logo, relocate the cream invitation button, switch portal and early-access colors, and tighten section gaps.
