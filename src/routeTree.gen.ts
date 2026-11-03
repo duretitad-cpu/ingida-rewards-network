@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OperatorsRouteImport } from './routes/operators'
+import { Route as NfcCardIdRouteImport } from './routes/nfc.$cardId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,40 @@ const OperatorsRoute = OperatorsRouteImport.update({
   path: '/operators',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NfcCardIdRoute = NfcCardIdRouteImport.update({
+  id: '/nfc/$cardId',
+  path: '/nfc/$cardId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/operators': typeof OperatorsRoute
+  '/nfc/$cardId': typeof NfcCardIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/operators': typeof OperatorsRoute
+  '/nfc/$cardId': typeof NfcCardIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/operators': typeof OperatorsRoute
+  '/nfc/$cardId': typeof NfcCardIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/operators'
+  fullPaths: '/' | '/operators' | '/nfc/$cardId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/operators'
-  id: '__root__' | '/' | '/operators'
+  to: '/' | '/operators' | '/nfc/$cardId'
+  id: '__root__' | '/' | '/operators' | '/nfc/$cardId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OperatorsRoute: typeof OperatorsRoute
+  NfcCardIdRoute: typeof NfcCardIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OperatorsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/nfc/$cardId': {
+      id: '/nfc/$cardId'
+      path: '/nfc/$cardId'
+      fullPath: '/nfc/$cardId'
+      preLoaderRoute: typeof NfcCardIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OperatorsRoute: OperatorsRoute,
+  NfcCardIdRoute: NfcCardIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

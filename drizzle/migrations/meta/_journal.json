@@ -8,6 +8,13 @@
       "when": 1793346623656,
       "tag": "0000_operators_crm",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793684648924,
+      "tag": "0001_nfc_smart_cards",
+      "breakpoints": true
     }
   ]
 }
