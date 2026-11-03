@@ -865,3 +865,11 @@ html[lang="am"] .membership-steps p { font-size: 18px; }
     text-align: center;
   }
 }
+
+/* First-section icons white, tagline gold, invitation button spacing. */
+.wallet-feature-copy .hero-categories,
+.wallet-feature-copy .hero-categories span,
+.wallet-feature-copy .hero-categories svg { color: var(--primary-foreground); }
+.wallet-feature-labels, .wallet-feature-copy .wallet-feature-labels { color: var(--gold); }
+.hero-cta { margin-top: 28px; }
+@media (max-width: 767px) { .hero-cta { display: flex; justify-content: center; margin-top: 22px; } }

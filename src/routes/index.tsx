@@ -255,6 +255,11 @@ function ImageStrip({ t }: { t: Copy }) {
           </div>
           <h2>{t === copy.en ? <>More than a Wallet.<br /><em>A Lifestyle.</em></> : <span className="am-hero-title">እንግዳ ቆይታ</span>}</h2>
           <Network t={t} />
+          <div className="hero-cta">
+            <Button asChild variant="outline" className="h-11 rounded-none border border-gold bg-transparent px-7 text-xs font-medium uppercase tracking-[0.16em] text-gold transition-all hover:bg-gold hover:text-navy-deep">
+              <a href="#waitlist">{t.ctaJoin}</a>
+            </Button>
+          </div>
         </div>
         <figure className="app-showcase">
           <img src={appPhones} alt="ingida hospitality home screen and rewards wallet on two phones" className="app-showcase-phones" fetchPriority="high" />
@@ -355,8 +360,8 @@ function How({ t }: { t: Copy }) {
           preload="auto"
           aria-hidden="true"
         >
+          <source src="/Web.mp4" type="video/mp4" />
           <source src={membershipWebm.url} type="video/webm" />
-          <source src={membershipLoop.url} type='video/mp4; codecs="avc1.64001f"' />
         </video>
         <div className="membership-wash" aria-hidden="true" />
       </div>

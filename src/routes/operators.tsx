@@ -4,6 +4,20 @@ import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { Button } from "@/components/ui/button";
+import { NfcCards } from "@/components/operators/nfc-cards";
+
+function OperatorTabs({ isAdmin, userId }: { isAdmin: boolean; userId: string }) {
+  const [tab, setTab] = useState<"crm" | "nfc">("crm");
+  return (
+    <div className="space-y-8">
+      <div className="flex gap-2">
+        <Button size="sm" variant={tab === "crm" ? "default" : "outline"} className="rounded-none" onClick={() => setTab("crm")}>Invitation CRM</Button>
+        <Button size="sm" variant={tab === "nfc" ? "default" : "outline"} className="rounded-none" onClick={() => setTab("nfc")}>NFC Smart Cards</Button>
+      </div>
+      {tab === "crm" ? <Crm isAdmin={isAdmin} userId={userId} /> : <NfcCards isAdmin={isAdmin} />}
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/operators")({
   head: () => ({
@@ -58,7 +72,7 @@ function OperatorsPage() {
         {!ready ? <p className="text-sm text-muted-foreground">Loading…</p>
           : !user ? <AuthForm />
           : !role ? <p className="text-sm">This account does not have operator access.</p>
-          : <Crm isAdmin={role === "admin"} userId={user.id} />}
+          : <OperatorTabs isAdmin={role === "admin"} userId={user.id} />}
       </main>
     </div>
   );
