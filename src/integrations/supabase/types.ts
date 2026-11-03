@@ -14,6 +14,98 @@ export type Database = {
   }
   public: {
     Tables: {
+      nfc_cards: {
+        Row: {
+          capture_mode: boolean
+          card_key: string
+          card_name: string
+          created_at: string
+          destination_url: string
+          id: string
+          is_active: boolean
+          owner_email: string
+          owner_name: string
+          owner_phone: string
+          owner_title: string
+          tap_count: number
+          updated_at: string
+        }
+        Insert: {
+          capture_mode?: boolean
+          card_key: string
+          card_name?: string
+          created_at?: string
+          destination_url?: string
+          id?: string
+          is_active?: boolean
+          owner_email?: string
+          owner_name?: string
+          owner_phone?: string
+          owner_title?: string
+          tap_count?: number
+          updated_at?: string
+        }
+        Update: {
+          capture_mode?: boolean
+          card_key?: string
+          card_name?: string
+          created_at?: string
+          destination_url?: string
+          id?: string
+          is_active?: boolean
+          owner_email?: string
+          owner_name?: string
+          owner_phone?: string
+          owner_title?: string
+          tap_count?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      nfc_contacts: {
+        Row: {
+          card_id: string
+          company: string
+          consent_given: boolean
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          notes: string
+          phone: string
+        }
+        Insert: {
+          card_id: string
+          company?: string
+          consent_given?: boolean
+          created_at?: string
+          email?: string
+          full_name: string
+          id?: string
+          notes?: string
+          phone?: string
+        }
+        Update: {
+          card_id?: string
+          company?: string
+          consent_given?: boolean
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          notes?: string
+          phone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nfc_contacts_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "nfc_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       operator_invite_codes: {
         Row: {
           code: string
