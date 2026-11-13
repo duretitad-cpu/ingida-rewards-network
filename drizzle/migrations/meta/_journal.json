@@ -15,6 +15,13 @@
       "when": 1793684648924,
       "tag": "0001_nfc_smart_cards",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794568386962,
+      "tag": "0002_crm_sources_admin_invites_inventory",
+      "breakpoints": true
     }
   ]
 }
