@@ -634,13 +634,13 @@ function Footer({ t }: { t: Copy }) {
     <footer className="border-t border-border/60 bg-background py-8">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-5 text-center md:px-8">
         <div className="flex items-center justify-center gap-4">
-          <a href="https://www.instagram.com/ingida.bet" target="_blank" rel="noreferrer" aria-label="Instagram" className="text-muted-foreground transition-colors hover:text-gold">
+          <a href="https://www.tiktok.com/@ingidabet?_r=1&_t=ZS-9BN5QCSMkBY" target="_blank" rel="noreferrer" aria-label="Instagram" className="text-muted-foreground transition-colors hover:text-gold">
             <Instagram className="h-4 w-4" strokeWidth={1.5} />
           </a>
           <a href="https://tiktok.com/ingidabet" target="_blank" rel="noreferrer" aria-label="TikTok" className="text-muted-foreground transition-colors hover:text-gold">
             <Music2 className="h-4 w-4" strokeWidth={1.5} />
           </a>
-          <a href="https://www.linkedin.com/ingida" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-muted-foreground transition-colors hover:text-gold">
+          <a href="https://www.linkedin.com/company/ingida/" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-muted-foreground transition-colors hover:text-gold">
             <Linkedin className="h-4 w-4" strokeWidth={1.5} />
           </a>
         </div>
