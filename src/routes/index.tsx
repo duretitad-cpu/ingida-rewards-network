@@ -414,15 +414,10 @@ function Portals({ t, role }: { t: Copy; role: Role }) {
 function PortalRow({ p, t }: { p: Copy["portals"][number]; t: Copy }) {
   const isMemberApp = p.tag === "Rewards App" || p.tag === "ደንበኞች";
   return (
-    <a
-      href={p.href}
-      target={p.href.startsWith("http") ? "_blank" : undefined}
-      rel="noreferrer"
-      className="portal-row group block pt-5 text-center md:pt-6"
-    >
+    <div className="portal-row group block pt-5 text-center md:pt-6">
       <div className="flex flex-col items-center gap-1.5">
         <p className="text-[9.5px] font-medium tracking-[0.28em] uppercase text-gold">{p.tag}</p>
-        <h3 className="font-serif text-[22px] italic leading-tight text-navy-deep md:text-[28px]">
+        <a href={p.href} target={p.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer"><h3 className="font-serif text-[22px] italic leading-tight text-navy-deep md:text-[28px]">
           {(() => {
             const parts = p.name.split(" ");
             const last = parts.pop() ?? "";
@@ -434,7 +429,7 @@ function PortalRow({ p, t }: { p: Copy["portals"][number]; t: Copy }) {
               </>
             );
           })()}
-        </h3>
+        </h3></a>
 
         <p className="max-w-md text-[12.5px] leading-relaxed text-muted-foreground">
           {p.desc}
@@ -444,7 +439,7 @@ function PortalRow({ p, t }: { p: Copy["portals"][number]; t: Copy }) {
           <StoreMarks />
         ) : null}
       </div>
-    </a>
+    </div>
   );
 }
 
