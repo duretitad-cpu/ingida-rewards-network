@@ -83,7 +83,7 @@ const copy = {
     waitlistSub: "",
     namePh: "Full name",
     emailPh: "Email",
-    phonePh: "Phone number",
+    phonePh: "Phone · +251 9XX XXX XXX",
     businessPh: "Name of business",
     alertsQ: "Receive alerts?",
     yes: "Yes",
@@ -104,8 +104,8 @@ const copy = {
     howLead: "አንዴ ይመዝገቡ። በከተማው ሁሉ ያግኙ።",
     howBody: "በመላው ኢትዮጵያ የጋራ አቀባበል።",
     steps: [
-      { n: "01", t: "በFAYDA ይመዝገቡ", d: "በFAYDA መታወቂያዎ አንዴ ያረጋግጡና ይጀምሩ።" },
-      { n: "02", t: "ተገበዙ፣ ሽልማት ያግኙ", d: "በአጋር ንግድ ቤቶች ሲገዙ የETH QR ኮድን በክፍያ አፕዎ ይቃኙ። ሽልማትዎን ያግኙ።" },
+      { n: "01", t: "በፋይዳ ይመዝገቡ", d: "በፋይዳ መታወቂያዎ አንዴ ያረጋግጡና ይጀምሩ።" },
+      { n: "02", t: "ተገበዙ፣ ሽልማት ያግኙ", d: "በአጋር ንግድ ቤቶች ሲገዙ የኢትዮጵያ ኪውአር ኮድን በክፍያ አፕዎ ይቃኙ። ሽልማትዎን ያግኙ።" },
       { n: "03", t: "ሽልማትዎን ይጠቀሙ", d: "በአንድ አጋር ቦታ ያገኙትን ሽልማት በሚቀበሉ ሌሎች የእንግዳ አጋር ቦታዎችም ይጠቀሙ።" },
     ],
     portals: [
@@ -136,7 +136,7 @@ const copy = {
     waitlistSub: "",
     namePh: "ሙሉ ስም",
     emailPh: "ኢሜይል",
-    phonePh: "ስልክ ቁጥር",
+    phonePh: "ስልክ ቁጥር · +251 9XX XXX XXX",
     businessPh: "የንግድ ቤቱ ስም",
     alertsQ: "ማሳወቂያ ይቀበሉ?",
     yes: "አዎ",
@@ -414,15 +414,10 @@ function Portals({ t, role }: { t: Copy; role: Role }) {
 function PortalRow({ p, t }: { p: Copy["portals"][number]; t: Copy }) {
   const isMemberApp = p.tag === "Rewards App" || p.tag === "ደንበኞች";
   return (
-    <a
-      href={p.href}
-      target={p.href.startsWith("http") ? "_blank" : undefined}
-      rel="noreferrer"
-      className="portal-row group block pt-5 text-center md:pt-6"
-    >
+    <div className="portal-row group block pt-5 text-center md:pt-6">
       <div className="flex flex-col items-center gap-1.5">
         <p className="text-[9.5px] font-medium tracking-[0.28em] uppercase text-gold">{p.tag}</p>
-        <h3 className="font-serif text-[22px] italic leading-tight text-navy-deep md:text-[28px]">
+        <a href={p.href} target={p.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer"><h3 className="font-serif text-[22px] italic leading-tight text-navy-deep md:text-[28px]">
           {(() => {
             const parts = p.name.split(" ");
             const last = parts.pop() ?? "";
@@ -434,7 +429,7 @@ function PortalRow({ p, t }: { p: Copy["portals"][number]; t: Copy }) {
               </>
             );
           })()}
-        </h3>
+        </h3></a>
 
         <p className="max-w-md text-[12.5px] leading-relaxed text-muted-foreground">
           {p.desc}
@@ -444,7 +439,7 @@ function PortalRow({ p, t }: { p: Copy["portals"][number]; t: Copy }) {
           <StoreMarks />
         ) : null}
       </div>
-    </a>
+    </div>
   );
 }
 
@@ -654,11 +649,11 @@ function Footer({ t }: { t: Copy }) {
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <a href="mailto:home@ingida.com" className="hover:text-foreground">home@ingida.com</a>
             <span aria-hidden className="opacity-40">·</span>
-            <a href="#" className="hover:text-foreground">{t === copy.en ? "Terms of Use" : "የአጠቃቀም ውሎች"}</a>
+            <Link to="/terms" className="hover:text-foreground">{t === copy.en ? "Terms of Use" : "የአጠቃቀም ውሎች"}</Link>
             <span aria-hidden className="opacity-40">·</span>
-            <a href="#" className="hover:text-foreground">{t === copy.en ? "Privacy Policy" : "የግላዊነት ፖሊሲ"}</a>
+            <Link to="/privacy" className="hover:text-foreground">{t === copy.en ? "Privacy Policy" : "የግላዊነት ፖሊሲ"}</Link>
             <span aria-hidden className="opacity-40">·</span>
-            <a href="#" className="hover:text-foreground">{t === copy.en ? "Cookies" : "ኩኪዎች"}</a>
+            <Link to="/cookies" className="hover:text-foreground">{t === copy.en ? "Cookies" : "ኩኪዎች"}</Link>
             <span aria-hidden className="opacity-40">·</span>
             <Link to="/operators" className="hover:text-foreground">{t.footAdmin}</Link>
           </div>

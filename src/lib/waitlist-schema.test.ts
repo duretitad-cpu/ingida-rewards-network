@@ -12,5 +12,8 @@ describe("waitlist CRM", () => {
   it("merchant requires business name", () => assert.equal(waitlistSchema.safeParse({ ...merchant, business_name: "" }).success, false));
   it("rejects other roles", () => assert.equal(waitlistSchema.safeParse({ ...member, role: "admin" }).success, false));
   it("rejects invalid email", () => assert.equal(waitlistSchema.safeParse({ ...member, email: "invalid" }).success, false));
+  it("formats 0911… as +251 911 …", () => assert.equal(waitlistSchema.parse({ ...member, phone: "0911234567" }).phone, "+251 911 234 567"));
+  it("formats 2517… as +251 7…", () => assert.equal(waitlistSchema.parse({ ...member, phone: "251712345678" }).phone, "+251 712 345 678"));
+  it("rejects non-Ethiopian numbers", () => assert.equal(waitlistSchema.safeParse({ ...member, phone: "+14155550100" }).success, false));
   it("rejects filled bot field", () => assert.equal(waitlistSchema.safeParse({ ...member, website: "spam" }).success, false));
 });

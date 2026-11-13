@@ -14,6 +14,101 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_invites: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          email: string
+          id: string
+          invited_by: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          invited_by?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          invited_by?: string | null
+        }
+        Relationships: []
+      }
+      inventory_items: {
+        Row: {
+          code_prefix: string
+          created_at: string
+          created_by: string | null
+          id: string
+          image_path: string
+          name: string
+          notes: string
+          quantity: number
+        }
+        Insert: {
+          code_prefix?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_path?: string
+          name: string
+          notes?: string
+          quantity?: number
+        }
+        Update: {
+          code_prefix?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_path?: string
+          name?: string
+          notes?: string
+          quantity?: number
+        }
+        Relationships: []
+      }
+      inventory_units: {
+        Row: {
+          claim_note: string
+          claimed_at: string | null
+          claimed_by: string | null
+          code: string
+          created_at: string
+          id: string
+          item_id: string
+        }
+        Insert: {
+          claim_note?: string
+          claimed_at?: string | null
+          claimed_by?: string | null
+          code: string
+          created_at?: string
+          id?: string
+          item_id: string
+        }
+        Update: {
+          claim_note?: string
+          claimed_at?: string | null
+          claimed_by?: string | null
+          code?: string
+          created_at?: string
+          id?: string
+          item_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_units_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "inventory_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nfc_cards: {
         Row: {
           capture_mode: boolean
@@ -67,6 +162,7 @@ export type Database = {
           card_id: string
           company: string
           consent_given: boolean
+          contact_type: string
           created_at: string
           email: string
           full_name: string
@@ -78,6 +174,7 @@ export type Database = {
           card_id: string
           company?: string
           consent_given?: boolean
+          contact_type?: string
           created_at?: string
           email?: string
           full_name: string
@@ -89,6 +186,7 @@ export type Database = {
           card_id?: string
           company?: string
           consent_given?: boolean
+          contact_type?: string
           created_at?: string
           email?: string
           full_name?: string
@@ -162,6 +260,7 @@ export type Database = {
           notes: string
           phone: string
           role: string
+          source: string
           status: string
           wants_alerts: boolean | null
         }
@@ -175,6 +274,7 @@ export type Database = {
           notes?: string
           phone: string
           role: string
+          source?: string
           status?: string
           wants_alerts?: boolean | null
         }
@@ -188,6 +288,7 @@ export type Database = {
           notes?: string
           phone?: string
           role?: string
+          source?: string
           status?: string
           wants_alerts?: boolean | null
         }

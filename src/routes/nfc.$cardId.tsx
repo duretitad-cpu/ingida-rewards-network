@@ -30,8 +30,8 @@ export const Route = createFileRoute("/nfc/$cardId")({
 });
 
 const text = {
-  en: { save: "Save Contact to Phone", title: "Let's stay connected", sub: "Share your details and continue.", name: "Full name", phone: "Phone", email: "Email", company: "Company", notes: "Notes (optional)", consent: "I agree to be contacted by ingida.", send: "Share & Continue", skip: "Skip & continue to link", done: "Thank you — taking you there…", doneNoLink: "Thank you — we'll be in touch.", missing: "Unrecognized Card", inactive: "Card Temporarily Inactive", fallback: "Visit ingida" },
-  am: { save: "አድራሻውን ያስቀምጡ", title: "እንገናኝ", sub: "መረጃዎን ያጋሩና ይቀጥሉ።", name: "ሙሉ ስም", phone: "ስልክ", email: "ኢሜይል", company: "ድርጅት", notes: "ማስታወሻ (አማራጭ)", consent: "እንግዳ እንዲያገኘኝ እስማማለሁ።", send: "ያጋሩና ይቀጥሉ", skip: "ዝለልና ወደ ሊንኩ ቀጥል", done: "እናመሰግናለን — እየወሰድንዎ ነው…", doneNoLink: "እናመሰግናለን — እናገኝዎታለን።", missing: "ያልታወቀ ካርድ", inactive: "ካርዱ ለጊዜው ተዘግቷል", fallback: "እንግዳን ይጎብኙ" },
+  en: { save: "Save Contact to Phone", title: "Let's stay connected", sub: "Share your details and continue.", name: "Full name", phone: "Phone · +251 9XX XXX XXX", email: "Email", company: "Company", notes: "Notes (optional)", consent: "I agree to be contacted by ingida.", send: "Share & Continue", skip: "Skip & continue to link", done: "Thank you — taking you there…", doneNoLink: "Thank you — we'll be in touch.", missing: "Unrecognized Card", inactive: "Card Temporarily Inactive", fallback: "Visit ingida" },
+  am: { save: "አድራሻውን ያስቀምጡ", title: "እንገናኝ", sub: "መረጃዎን ያጋሩና ይቀጥሉ።", name: "ሙሉ ስም", phone: "ስልክ · +251 9XX XXX XXX", email: "ኢሜይል", company: "ድርጅት", notes: "ማስታወሻ (አማራጭ)", consent: "እንግዳ እንዲያገኘኝ እስማማለሁ።", send: "ያጋሩና ይቀጥሉ", skip: "ዝለልና ወደ ሊንኩ ቀጥል", done: "እናመሰግናለን — እየወሰድንዎ ነው…", doneNoLink: "እናመሰግናለን — እናገኝዎታለን።", missing: "ያልታወቀ ካርድ", inactive: "ካርዱ ለጊዜው ተዘግቷል", fallback: "እንግዳን ይጎብኙ" },
 };
 
 function vcard(c: PublicNfcCard) {

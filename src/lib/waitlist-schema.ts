@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { formatEthiopianPhone } from "./phone";
 
 export const waitlistSchema = z
   .object({
     name: z.string().trim().min(1, "Please enter your name.").max(100),
     email: z.string().trim().email("Please enter a valid email.").max(255).transform((v) => v.toLowerCase()),
-    phone: z.string().trim().min(7, "Please enter a valid phone number.").max(30).regex(/^[+\d\s().-]+$/, "Please enter a valid phone number."),
+    phone: z.string().trim().max(30).refine((v) => formatEthiopianPhone(v) !== null, "Use an Ethiopian number, e.g. +251 911 234 567.").transform((v) => formatEthiopianPhone(v)!),
     role: z.enum(["member", "merchant"]),
     business_name: z.string().trim().max(120).optional().default(""),
     alerts: z.enum(["yes", "no"]).optional(),
