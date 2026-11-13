@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { formatEthiopianPhone } from "./phone";
 
 export type PublicNfcCard = {
   id: string;
@@ -39,7 +40,7 @@ export const tapNfcCard = createServerFn({ method: "GET" })
 export const nfcContactSchema = z.object({
   cardId: z.string().uuid(),
   full_name: z.string().trim().min(2, "Please enter your name").max(100),
-  phone: z.string().trim().max(30).regex(/^[+\d\s()-]*$/, "Use digits only"),
+  phone: z.string().trim().max(30).refine((v) => !v || formatEthiopianPhone(v) !== null, "Use an Ethiopian number, e.g. +251 911 234 567").transform((v) => (v ? formatEthiopianPhone(v)! : "")),
   email: z.string().trim().max(255).email("Enter a valid email").or(z.literal("")),
   company: z.string().trim().max(120).default(""),
   notes: z.string().trim().max(500).default(""),
