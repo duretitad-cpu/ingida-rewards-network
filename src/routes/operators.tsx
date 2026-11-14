@@ -5,16 +5,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { Button } from "@/components/ui/button";
 import { NfcCards } from "@/components/operators/nfc-cards";
+import { Inventory } from "@/components/operators/inventory";
 
 function OperatorTabs({ isAdmin, userId }: { isAdmin: boolean; userId: string }) {
-  const [tab, setTab] = useState<"crm" | "nfc">("crm");
+  const [tab, setTab] = useState<"crm" | "nfc" | "inv">("crm");
   return (
     <div className="space-y-8">
       <div className="flex gap-2">
         <Button size="sm" variant={tab === "crm" ? "default" : "outline"} className="rounded-none" onClick={() => setTab("crm")}>Invitation CRM</Button>
         <Button size="sm" variant={tab === "nfc" ? "default" : "outline"} className="rounded-none" onClick={() => setTab("nfc")}>NFC Smart Cards</Button>
+        <Button size="sm" variant={tab === "inv" ? "default" : "outline"} className="rounded-none" onClick={() => setTab("inv")}>Inventory</Button>
       </div>
-      {tab === "crm" ? <Crm isAdmin={isAdmin} userId={userId} /> : <NfcCards isAdmin={isAdmin} />}
+      {tab === "crm" ? <Crm isAdmin={isAdmin} userId={userId} /> : tab === "nfc" ? <NfcCards isAdmin={isAdmin} /> : <Inventory isAdmin={isAdmin} userId={userId} />}
     </div>
   );
 }
