@@ -360,7 +360,7 @@ function How({ t }: { t: Copy }) {
           preload="auto"
           aria-hidden="true"
         >
-          <source src="/Web.mp4" type="video/mp4" />
+          <source src="/Main2.mp4" type="video/mp4" />
           <source src={membershipWebm.url} type="video/webm" />
         </video>
         <div className="membership-wash" aria-hidden="true" />
