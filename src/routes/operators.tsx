@@ -5,16 +5,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { Button } from "@/components/ui/button";
 import { NfcCards } from "@/components/operators/nfc-cards";
+import { Inventory } from "@/components/operators/inventory";
 
 function OperatorTabs({ isAdmin, userId }: { isAdmin: boolean; userId: string }) {
-  const [tab, setTab] = useState<"crm" | "nfc">("crm");
+  const [tab, setTab] = useState<"crm" | "nfc" | "inv">("crm");
   return (
     <div className="space-y-8">
       <div className="flex gap-2">
         <Button size="sm" variant={tab === "crm" ? "default" : "outline"} className="rounded-none" onClick={() => setTab("crm")}>Invitation CRM</Button>
         <Button size="sm" variant={tab === "nfc" ? "default" : "outline"} className="rounded-none" onClick={() => setTab("nfc")}>NFC Smart Cards</Button>
+        <Button size="sm" variant={tab === "inv" ? "default" : "outline"} className="rounded-none" onClick={() => setTab("inv")}>Inventory</Button>
       </div>
-      {tab === "crm" ? <Crm isAdmin={isAdmin} userId={userId} /> : <NfcCards isAdmin={isAdmin} />}
+      {tab === "crm" ? <Crm isAdmin={isAdmin} userId={userId} /> : tab === "nfc" ? <NfcCards isAdmin={isAdmin} /> : <Inventory isAdmin={isAdmin} userId={userId} />}
     </div>
   );
 }
@@ -114,31 +116,41 @@ function AuthForm() {
   );
 }
 
-type Sub = { id: string; created_at: string; name: string; email: string; phone: string; role: string; business_name: string; wants_alerts: boolean | null; status: string; notes: string };
-const STATUSES = ["new", "contacted", "invited", "onboarded", "declined"];
+type Row = { id: string; kind: "wl" | "nfc"; created_at: string; name: string; email: string; phone: string; type: string; source: string; detail: string; notes: string };
+const TYPES = [["member", "User"], ["merchant", "Merchant"], ["stakeholder", "Stakeholder"]] as const;
+const SOURCES: Record<string, string> = { website: "Website", nfc: "NFC", other: "Other Links" };
 
 function Crm({ isAdmin, userId }: { isAdmin: boolean; userId: string }) {
-  const [rows, setRows] = useState<Sub[]>([]);
-  const [filter, setFilter] = useState<"all" | "member" | "merchant">("all");
+  const [rows, setRows] = useState<Row[]>([]);
+  const [filter, setFilter] = useState("all");
+  const [src, setSrc] = useState("all");
   const [q, setQ] = useState("");
   const load = useCallback(async () => {
-    const { data } = await supabase.from("waitlist_submissions").select("id, created_at, name, email, phone, role, business_name, wants_alerts, status, notes").order("created_at", { ascending: false });
-    setRows((data ?? []) as Sub[]);
+    const [w, n] = await Promise.all([
+      supabase.from("waitlist_submissions").select("id, created_at, name, email, phone, role, business_name, wants_alerts, source, notes").order("created_at", { ascending: false }),
+      supabase.from("nfc_contacts").select("id, created_at, full_name, email, phone, company, contact_type, notes"),
+    ]);
+    const a: Row[] = (w.data ?? []).map((r) => ({ id: r.id, kind: "wl", created_at: r.created_at, name: r.name, email: r.email, phone: r.phone, type: r.role, source: r.source, notes: r.notes,
+      detail: r.role === "merchant" ? r.business_name : r.wants_alerts == null ? "—" : r.wants_alerts ? "Alerts: yes" : "Alerts: no" }));
+    const b: Row[] = (n.data ?? []).map((r) => ({ id: r.id, kind: "nfc", created_at: r.created_at, name: r.full_name, email: r.email, phone: r.phone, type: r.contact_type, source: "nfc", notes: r.notes, detail: r.company || "—" }));
+    setRows([...a, ...b].sort((x, y) => y.created_at.localeCompare(x.created_at)));
   }, []);
   useEffect(() => { load(); }, [load]);
 
-  const shown = useMemo(() => rows.filter((r) => (filter === "all" || r.role === filter) &&
-    (!q || `${r.name} ${r.email} ${r.phone} ${r.business_name}`.toLowerCase().includes(q.toLowerCase()))), [rows, filter, q]);
+  const shown = useMemo(() => rows.filter((r) => (filter === "all" || r.type === filter) && (src === "all" || r.source === src) &&
+    (!q || `${r.name} ${r.email} ${r.phone} ${r.detail}`.toLowerCase().includes(q.toLowerCase()))), [rows, filter, src, q]);
 
-  const update = async (id: string, patch: Partial<Pick<Sub, "status" | "notes">>) => {
-    setRows((rs) => rs.map((r) => (r.id === id ? { ...r, ...patch } : r)));
-    await supabase.from("waitlist_submissions").update(patch).eq("id", id);
+  const update = async (r: Row, patch: { type?: string; notes?: string }) => {
+    setRows((rs) => rs.map((x) => (x.id === r.id ? { ...x, ...patch } : x)));
+    if (r.kind === "wl") await supabase.from("waitlist_submissions").update({ ...(patch.type ? { role: patch.type } : {}), ...(patch.notes != null ? { notes: patch.notes } : {}) }).eq("id", r.id);
+    else await supabase.from("nfc_contacts").update({ ...(patch.type ? { contact_type: patch.type } : {}), ...(patch.notes != null ? { notes: patch.notes } : {}) }).eq("id", r.id);
   };
+  const label = (t: string) => TYPES.find(([v]) => v === t)?.[1] ?? t;
 
   const exportCsv = () => {
-    const head = ["Date", "Name", "Phone", "Email", "Type", "Business", "Alerts", "Status", "Notes"];
+    const head = ["Date", "Name", "Phone", "Email", "Type", "Signed up from", "Details", "Notes"];
     const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
-    const lines = shown.map((r) => [new Date(r.created_at).toISOString(), r.name, r.phone, r.email, r.role, r.business_name, r.wants_alerts == null ? "" : r.wants_alerts ? "yes" : "no", r.status, r.notes].map((v) => esc(String(v))).join(","));
+    const lines = shown.map((r) => [new Date(r.created_at).toISOString(), r.name, r.phone, r.email, label(r.type), SOURCES[r.source] ?? r.source, r.detail, r.notes].map((v) => esc(String(v))).join(","));
     const url = URL.createObjectURL(new Blob([[head.join(","), ...lines].join("\n")], { type: "text/csv" }));
     const a = document.createElement("a"); a.href = url; a.download = "ingida-crm.csv"; a.click(); URL.revokeObjectURL(url);
   };
@@ -148,21 +160,20 @@ function Crm({ isAdmin, userId }: { isAdmin: boolean; userId: string }) {
       <section>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="font-serif text-3xl">Invitation CRM</h1>
-            <p className="text-sm text-muted-foreground">{rows.length} requests · {rows.filter((r) => r.role === "member").length} members · {rows.filter((r) => r.role === "merchant").length} merchants</p>
+            <h1 className="font-serif text-3xl">CRM</h1>
+            <p className="text-sm text-muted-foreground">{rows.length} contacts · {TYPES.map(([v, l]) => `${rows.filter((r) => r.type === v).length} ${l}`).join(" · ")}</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search" className="border-b border-border bg-transparent px-1 py-2 text-sm outline-none focus:border-gold" />
-            {(["all", "member", "merchant"] as const).map((f) => (
-              <Button key={f} size="sm" variant={filter === f ? "default" : "outline"} className="rounded-none capitalize" onClick={() => setFilter(f)}>{f}</Button>
-            ))}
+            <select value={filter} onChange={(e) => setFilter(e.target.value)} className="border border-border bg-background px-2 text-sm"><option value="all">All types</option>{TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>
+            <select value={src} onChange={(e) => setSrc(e.target.value)} className="border border-border bg-background px-2 text-sm"><option value="all">All sources</option>{Object.entries(SOURCES).map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>
             <Button size="sm" variant="outline" className="rounded-none" onClick={exportCsv}>Export CSV</Button>
           </div>
         </div>
         <div className="mt-6 overflow-x-auto">
           <table className="w-full min-w-[860px] text-left text-sm">
             <thead className="border-b border-border text-xs uppercase text-muted-foreground">
-              <tr><th className="py-2">Date</th><th>Name</th><th>Phone</th><th>Email</th><th>Type</th><th>Business / Alerts</th><th>Status</th><th>Notes</th></tr>
+              <tr><th className="py-2">Date</th><th>Name</th><th>Phone</th><th>Email</th><th>Type</th><th>Signed up from</th><th>Details</th><th>Notes</th></tr>
             </thead>
             <tbody>
               {shown.map((r) => (
@@ -171,62 +182,64 @@ function Crm({ isAdmin, userId }: { isAdmin: boolean; userId: string }) {
                   <td className="pr-3 py-3">{r.name}</td>
                   <td className="pr-3 py-3">{r.phone}</td>
                   <td className="pr-3 py-3">{r.email}</td>
-                  <td className="pr-3 py-3 capitalize">{r.role}</td>
-                  <td className="pr-3 py-3">{r.role === "merchant" ? r.business_name : r.wants_alerts == null ? "—" : r.wants_alerts ? "Alerts: yes" : "Alerts: no"}</td>
                   <td className="pr-3 py-3">
-                    <select value={r.status} onChange={(e) => update(r.id, { status: e.target.value })} className="border border-border bg-background px-2 py-1 text-sm">
-                      {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+                    <select value={r.type} onChange={(e) => update(r, { type: e.target.value })} className="border border-border bg-background px-2 py-1 text-sm">
+                      {TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                     </select>
                   </td>
-                  <td className="py-3">
-                    <input defaultValue={r.notes} maxLength={500} onBlur={(e) => e.target.value !== r.notes && update(r.id, { notes: e.target.value })} className="w-48 border-b border-border bg-transparent py-1 outline-none focus:border-gold" />
-                  </td>
+                  <td className="pr-3 py-3">{SOURCES[r.source] ?? r.source}</td>
+                  <td className="pr-3 py-3">{r.detail}</td>
+                  <td className="py-3"><input defaultValue={r.notes} maxLength={500} onBlur={(e) => e.target.value !== r.notes && update(r, { notes: e.target.value })} className="w-48 border-b border-border bg-transparent py-1 outline-none focus:border-gold" /></td>
                 </tr>
               ))}
-              {!shown.length && <tr><td colSpan={8} className="py-8 text-center text-muted-foreground">No requests yet.</td></tr>}
+              {!shown.length && <tr><td colSpan={8} className="py-8 text-center text-muted-foreground">No contacts yet.</td></tr>}
             </tbody>
           </table>
         </div>
       </section>
-      {isAdmin && <InviteCodes userId={userId} />}
+      {isAdmin && <AdminInvites userId={userId} />}
     </div>
   );
 }
 
-type Code = { id: string; code: string; created_at: string; used_by: string | null; used_at: string | null };
+type Invite = { id: string; email: string; created_at: string; accepted_at: string | null };
 
-function InviteCodes({ userId }: { userId: string }) {
-  const [codes, setCodes] = useState<Code[]>([]);
+function AdminInvites({ userId }: { userId: string }) {
+  const [list, setList] = useState<Invite[]>([]);
+  const [email, setEmail] = useState("connect@ingida.com");
+  const [msg, setMsg] = useState("");
   const load = useCallback(async () => {
-    const { data } = await supabase.from("operator_invite_codes").select("id, code, created_at, used_by, used_at").order("created_at", { ascending: false });
-    setCodes(data ?? []);
+    const { data } = await supabase.from("admin_invites").select("id, email, created_at, accepted_at").order("created_at", { ascending: false });
+    setList(data ?? []);
   }, []);
   useEffect(() => { load(); }, [load]);
-  const create = async () => {
-    const bytes = crypto.getRandomValues(new Uint8Array(6));
-    const code = Array.from(bytes, (b) => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[b % 32]).join("");
-    await supabase.from("operator_invite_codes").insert({ code: `INGIDA-${code}`, created_by: userId });
+  const send = async (e: FormEvent) => {
+    e.preventDefault();
+    const v = email.trim().toLowerCase();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) { setMsg("Enter a valid email."); return; }
+    const { error } = await supabase.from("admin_invites").insert({ email: v, invited_by: userId });
+    setMsg(error ? "Could not invite (maybe already invited)." : `Invited ${v}. They can now create an account on this page with that email.`);
     load();
   };
-  const remove = async (id: string) => { await supabase.from("operator_invite_codes").delete().eq("id", id); load(); };
+  const remove = async (id: string) => { await supabase.from("admin_invites").delete().eq("id", id); load(); };
   return (
     <section>
-      <div className="flex items-end justify-between">
-        <div>
-          <h2 className="font-serif text-2xl">Operator invite codes</h2>
-          <p className="text-sm text-muted-foreground">Each code lets one person create an operator account.</p>
-        </div>
-        <Button size="sm" className="rounded-none" onClick={create}>New code</Button>
-      </div>
+      <h2 className="font-serif text-2xl">Admin invites</h2>
+      <p className="text-sm text-muted-foreground">An invited email becomes an admin when it creates an account here.</p>
+      <form onSubmit={send} className="mt-3 flex flex-wrap gap-2">
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="border-b border-border bg-transparent px-1 py-2 text-sm outline-none focus:border-gold" />
+        <Button size="sm" type="submit" className="rounded-none">Send admin invite</Button>
+      </form>
+      {msg && <p className="mt-2 text-sm text-muted-foreground">{msg}</p>}
       <ul className="mt-4 divide-y divide-border border-y border-border text-sm">
-        {codes.map((c) => (
+        {list.map((c) => (
           <li key={c.id} className="flex items-center justify-between py-3">
-            <span className="font-mono">{c.code}</span>
-            {c.used_by ? <span className="text-muted-foreground">Used {c.used_at ? new Date(c.used_at).toLocaleDateString() : ""}</span>
+            <span>{c.email}</span>
+            {c.accepted_at ? <span className="text-muted-foreground">Joined {new Date(c.accepted_at).toLocaleDateString()}</span>
               : <Button size="sm" variant="ghost" onClick={() => remove(c.id)}>Revoke</Button>}
           </li>
         ))}
-        {!codes.length && <li className="py-3 text-muted-foreground">No codes yet.</li>}
+        {!list.length && <li className="py-3 text-muted-foreground">No invites yet.</li>}
       </ul>
     </section>
   );

@@ -22,6 +22,13 @@
       "when": 1794568386962,
       "tag": "0002_crm_sources_admin_invites_inventory",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794645476878,
+      "tag": "0003_admin_invite_writes",
+      "breakpoints": true
     }
   ]
 }

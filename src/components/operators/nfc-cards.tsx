@@ -114,40 +114,7 @@ export function NfcCards({ isAdmin }: { isAdmin: boolean }) {
         </div>
       </section>
 
-      <section>
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <h2 className="font-serif text-2xl">Contacts</h2>
-          <div className="flex flex-wrap gap-2">
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search" className={input + " w-40"} />
-            <select value={cardFilter} onChange={(e) => setCardFilter(e.target.value)} className="border border-border bg-background px-2 text-sm">
-              <option value="all">All cards</option>
-              {cards.map((c) => <option key={c.id} value={c.id}>Card {c.card_key}</option>)}
-            </select>
-            <Button size="sm" variant="outline" className="rounded-none" onClick={exportCsv}>Export CSV</Button>
-          </div>
-        </div>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[760px] text-left text-sm">
-            <thead className="border-b border-border text-xs uppercase text-muted-foreground">
-              <tr><th className="py-2">Date</th><th>Card</th><th>Name</th><th>Phone</th><th>Email</th><th>Company</th><th>Notes</th></tr>
-            </thead>
-            <tbody>
-              {shown.map((r) => (
-                <tr key={r.id} className="border-b border-border/60 align-top">
-                  <td className="py-3 pr-3 text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</td>
-                  <td className="pr-3 py-3">{nameOf(r.card_id)}</td>
-                  <td className="pr-3 py-3">{r.full_name}</td>
-                  <td className="pr-3 py-3">{r.phone}</td>
-                  <td className="pr-3 py-3">{r.email}</td>
-                  <td className="pr-3 py-3">{r.company}</td>
-                  <td className="pr-3 py-3">{r.notes}</td>
-                </tr>
-              ))}
-              {!shown.length && <tr><td colSpan={7} className="py-6 text-muted-foreground">No contacts yet.</td></tr>}
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <p className="text-sm text-muted-foreground">Card contacts now appear in the CRM tab under "NFC".</p>
     </div>
   );
 }

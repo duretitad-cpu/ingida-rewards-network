@@ -101,8 +101,7 @@ const copy = {
     ctaJoin: "ተጋበዙ",
     howEyebrow: "አባልነት",
     howTitle: "ከእለት ወጪ ነጥብ ያግኙ።",
-    howLead: "አንዴ ይመዝገቡ:       
-              በከተማው ሁሉ ሽልማት ያግኙ።",
+    howLead: "አንዴ ይመዝገቡ፤ በከተማው ሁሉ ሽልማት ያግኙ።",
     howBody: "የኢትዮጵያ አቀባበል።",
     steps: [
       { n: "01", t: "ይመዝገቡ", d: "በስልክ ቁጥርና ፋይዳ ዲጂታል መታወቂያ አንዴ ይመዝገቡ።" },
@@ -655,6 +654,8 @@ function Footer({ t }: { t: Copy }) {
             <Link to="/privacy" className="hover:text-foreground">{t === copy.en ? "Privacy Policy" : "የግላዊነት ፖሊሲ"}</Link>
             <span aria-hidden className="opacity-40">·</span>
             <Link to="/cookies" className="hover:text-foreground">{t === copy.en ? "Cookies" : "ኩኪዎች"}</Link>
+            <span aria-hidden className="opacity-40">·</span>
+            <a href="https://id-preview--e38b5c99-a873-4fb4-9c41-1f0b0bc7c6b4.lovable.app" target="_blank" rel="noreferrer" className="hover:text-foreground">{t === copy.en ? "All My Ingida's Eat" : "ተጋበዙ"}</a>
             <span aria-hidden className="opacity-40">·</span>
             <Link to="/operators" className="hover:text-foreground">{t.footAdmin}</Link>
           </div>
