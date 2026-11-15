@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as OperatorsRouteImport } from './routes/operators'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as QuestRouteImport } from './routes/quest'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as NfcCardIdRouteImport } from './routes/nfc.$cardId'
 
@@ -36,6 +37,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuestRoute = QuestRouteImport.update({
+  id: '/quest',
+  path: '/quest',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/cookies': typeof CookiesRoute
   '/operators': typeof OperatorsRoute
   '/privacy': typeof PrivacyRoute
+  '/quest': typeof QuestRoute
   '/terms': typeof TermsRoute
   '/nfc/$cardId': typeof NfcCardIdRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/cookies': typeof CookiesRoute
   '/operators': typeof OperatorsRoute
   '/privacy': typeof PrivacyRoute
+  '/quest': typeof QuestRoute
   '/terms': typeof TermsRoute
   '/nfc/$cardId': typeof NfcCardIdRoute
 }
@@ -69,21 +77,36 @@ export interface FileRoutesById {
   '/cookies': typeof CookiesRoute
   '/operators': typeof OperatorsRoute
   '/privacy': typeof PrivacyRoute
+  '/quest': typeof QuestRoute
   '/terms': typeof TermsRoute
   '/nfc/$cardId': typeof NfcCardIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/cookies' | '/operators' | '/privacy' | '/terms' | '/nfc/$cardId'
+    | '/'
+    | '/cookies'
+    | '/operators'
+    | '/privacy'
+    | '/quest'
+    | '/terms'
+    | '/nfc/$cardId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cookies' | '/operators' | '/privacy' | '/terms' | '/nfc/$cardId'
+  to:
+    | '/'
+    | '/cookies'
+    | '/operators'
+    | '/privacy'
+    | '/quest'
+    | '/terms'
+    | '/nfc/$cardId'
   id:
     | '__root__'
     | '/'
     | '/cookies'
     | '/operators'
     | '/privacy'
+    | '/quest'
     | '/terms'
     | '/nfc/$cardId'
   fileRoutesById: FileRoutesById
@@ -93,6 +116,7 @@ export interface RootRouteChildren {
   CookiesRoute: typeof CookiesRoute
   OperatorsRoute: typeof OperatorsRoute
   PrivacyRoute: typeof PrivacyRoute
+  QuestRoute: typeof QuestRoute
   TermsRoute: typeof TermsRoute
   NfcCardIdRoute: typeof NfcCardIdRoute
 }
@@ -127,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quest': {
+      id: '/quest'
+      path: '/quest'
+      fullPath: '/quest'
+      preLoaderRoute: typeof QuestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terms': {
       id: '/terms'
       path: '/terms'
@@ -149,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   CookiesRoute: CookiesRoute,
   OperatorsRoute: OperatorsRoute,
   PrivacyRoute: PrivacyRoute,
+  QuestRoute: QuestRoute,
   TermsRoute: TermsRoute,
   NfcCardIdRoute: NfcCardIdRoute,
 }
