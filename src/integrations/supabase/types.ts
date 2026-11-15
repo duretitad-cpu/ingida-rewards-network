@@ -48,6 +48,7 @@ export type Database = {
           name: string
           notes: string
           quantity: number
+          quest_reward: boolean
         }
         Insert: {
           code_prefix?: string
@@ -58,6 +59,7 @@ export type Database = {
           name: string
           notes?: string
           quantity?: number
+          quest_reward?: boolean
         }
         Update: {
           code_prefix?: string
@@ -68,11 +70,15 @@ export type Database = {
           name?: string
           notes?: string
           quantity?: number
+          quest_reward?: boolean
         }
         Relationships: []
       }
       inventory_units: {
         Row: {
+          assigned_at: string | null
+          assigned_name: string
+          assigned_phone: string
           claim_note: string
           claimed_at: string | null
           claimed_by: string | null
@@ -82,6 +88,9 @@ export type Database = {
           item_id: string
         }
         Insert: {
+          assigned_at?: string | null
+          assigned_name?: string
+          assigned_phone?: string
           claim_note?: string
           claimed_at?: string | null
           claimed_by?: string | null
@@ -91,6 +100,9 @@ export type Database = {
           item_id: string
         }
         Update: {
+          assigned_at?: string | null
+          assigned_name?: string
+          assigned_phone?: string
           claim_note?: string
           claimed_at?: string | null
           claimed_by?: string | null
@@ -299,6 +311,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_quest_merch: {
+        Args: { _answers: Json; _name: string; _phone: string }
+        Returns: {
+          already: boolean
+          code: string
+          item: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
