@@ -103,7 +103,7 @@ function Index() {
               <p className="text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">{r.eyebrow}</p>
             </div>
             <div key={round} className="mb-1 mt-5 flex items-center justify-center text-center">
-              <h2 className="font-serif text-2xl font-semibold leading-[1.12] text-primary">
+              <h2 className="font-serif text-xl font-semibold leading-[1.12] sm:text-2xl text-primary">
                 {r.key === "lifestyle" ? <><span className="block">Tell Us About Your Lifestyle.</span><span className="block text-balance">Where Do You Spend The Most?</span></> : r.prompt}
               </h2>
             </div>
