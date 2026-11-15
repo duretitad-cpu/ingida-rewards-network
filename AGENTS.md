@@ -19,3 +19,5 @@
 - The app showcase uses a source-grounded generated phone image in an unframed overlay feature with CSS reveal motion and a reduced-motion fallback, not a live wallet interface; this preserves brand fidelity without implying functional payments.
 - Waitlist validation is shared between the public form and its dedicated server function; writes use a server-only client and the CRM table has no visitor read grants, keeping contact details private.
 - The waitlist owner reviews and exports records through Lovable Cloud rather than a public export endpoint; this avoids exposing the CRM without an established owner login.
+- Quest language uses a validated URL search parameter shared by the footer and game; reloads and shared links retain the selected language.
+- Quest signup validates phones through the shared Ethiopian formatter and a matching database RPC; CRM writes and inventory assignment stay atomic and phone-scoped.

@@ -37,3 +37,21 @@ export const ROUNDS: Round[] = [
     reveal: () => ({ title: "One Network, Everywhere", body: "Earn at one partner, redeem at any other across INGIDA." }),
   },
 ];
+
+export const AM_ROUNDS: Round[] = [
+  {
+    key: "lifestyle", eyebrow: "እንኳን ደህና መጡ", prompt: "ብዙ ጊዜ ወጪዎን የት ያደርጋሉ?",
+    labels: ["ምግብ", "ማረፊያ", "ግዢ", "ጉዞ"], inside: ["ይግዙ፣ ነጥብ ያግኙ፣ ይሸለሙ"],
+    reveal: (i) => ({ title: ["የምግብ አፍቃሪ", "ከቤት ውጭ እንደ ቤት", "ለግዢ የተዘጋጁ", "ሁሌም በጉዞ"][i] ?? "እንኳን ደህና መጡ", body: "በፋይዳ መታወቂያዎ ይመዝገቡ፤ በዋሌትዎ ውስጥ በቴሌብር ይክፈሉ።" }),
+  },
+  {
+    key: "monthly", eyebrow: "ሁለተኛው እጥፋት", prompt: "በወር ምን ያህል ወጪ ያደርጋሉ?",
+    labels: ["ከ5 ሺህ በታች", "5–15 ሺህ", "15–30 ሺህ", "ከ30 ሺህ በላይ"], inside: ["ይግዙ፣ ነጥብ ያግኙ፣ ይሸለሙ"],
+    reveal: () => ({ title: "በእያንዳንዱ ክፍያ 2% ይመለሳል", body: "ብቁ በሆነ እያንዳንዱ ወጪ 2% ተመላሽ ያግኙ።" }),
+  },
+  {
+    key: "favorite", eyebrow: "የመጨረሻው እጥፋት", prompt: "ነጥብ ለማግኘትና ለመሸለም የሚወዱት ቦታ የት ነው?",
+    labels: ["ሆቴሎች", "ካፌዎች", "ላውንጆች", "ሱቆች"], inside: ["ይግዙ፣ ነጥብ ያግኙ፣ ይሸለሙ"],
+    reveal: () => ({ title: "አንድ ኔትወርክ፣ በሁሉም ቦታ", body: "በአንድ አጋር ነጥብ ያግኙ፤ በሌላ የእንግዳ አጋር ይሸለሙ።" }),
+  },
+];

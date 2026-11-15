@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Utensils, BedDouble, ShoppingBasket, Palmtree } from "lucide-react";
 
 export type Phase = "closed" | "h" | "v";
 type Point = [number, number];
@@ -8,8 +9,9 @@ const COLOURS = ["navy", "deep", "dusk", "navy"];
 
 // Every pocket shares its mouth vertices with the adjacent pocket and valley.
 // Discrete geometry frames keep the sheet connected throughout each paper fold.
-export function FortuneTeller({ labels, phase, disabled, onPick, inside = ["SPEND", "EARN", "REDEEM"] }: {
+export function FortuneTeller({ labels, phase, disabled, onPick, inside = ["Spend, Earn & Redeem"], iconIndex = 0 }: {
   labels: string[];
+  iconIndex?: number;
   inside?: string[];
   inner?: boolean;
   phase: Phase;
@@ -46,6 +48,7 @@ export function FortuneTeller({ labels, phase, disabled, onPick, inside = ["SPEN
   const controls: Point[] = [[52, 10], [190, 52], [148, 190], [10, 148]];
   const endControls: Point[] = [[10, 52], [148, 10], [190, 148], [52, 190]];
   const opening = Math.max(h, v);
+  const InteriorIcon = [Utensils, BedDouble, ShoppingBasket, Palmtree][iconIndex % 4] ?? Utensils;
 
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[min(380px,48dvh)] select-none">
@@ -59,19 +62,12 @@ export function FortuneTeller({ labels, phase, disabled, onPick, inside = ["SPEN
             </radialGradient>
           ))}
           <linearGradient id={`${id}-valley`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="var(--fold-paper-highlight)" />
-            <stop offset="0.65" stopColor="var(--fold-gold)" />
-            <stop offset="1" stopColor="var(--fold-gold-dark)" />
+            <stop offset="0" stopColor="var(--fold-navy-light)" />
+            <stop offset="0.65" stopColor="var(--fold-navy)" />
+            <stop offset="1" stopColor="var(--fold-navy-dark)" />
           </linearGradient>
-          <filter id={`${id}-grain`} x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
-            <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="12" stitchTiles="stitch" result="noise" />
-            <feColorMatrix in="noise" type="saturate" values="0" />
-            <feComponentTransfer result="soft-noise"><feFuncA type="linear" slope="0.32" /></feComponentTransfer>
-            <feComposite in="soft-noise" in2="SourceGraphic" operator="in" result="grain" />
-            <feBlend in="SourceGraphic" in2="grain" mode="soft-light" />
-          </filter>
         </defs>
-        <g filter={`url(#${id}-grain)`}>
+        <g>
           {tips.map((tip, i) => (
             <path key={`valley-${i}`} d={`M${point(tip)} L${point(tips[(i + 1) % 4] ?? top)} L100 100Z`} fill={`url(#${id}-valley)`} />
           ))}
@@ -99,11 +95,10 @@ export function FortuneTeller({ labels, phase, disabled, onPick, inside = ["SPEN
             );
           })}
         </g>
-        {opening > 0.7 && inside.map((word, i) => {
-          // Printed on the interior slopes, never a separate backdrop label.
-          const offset = (i - (inside.length - 1) / 2) * 23;
-          return <text key={word} x={v > h ? 100 : 100 + offset} y={v > h ? 100 + offset : 100} transform={`rotate(${v > h ? -8 : 8} ${v > h ? 100 : 100 + offset} ${v > h ? 100 + offset : 100})`} textAnchor="middle" dominantBaseline="middle" fontSize="6.5" className="font-serif font-bold fill-primary">{word}</text>;
-        })}
+        <g opacity={opening} className="quest-fold-mark">
+          <InteriorIcon x={91} y={82} width={18} height={18} strokeWidth={1.2} />
+          <text x={100} y={115} textAnchor="middle" fontSize="6" className="font-serif" fill="var(--fold-ink)">{inside.join(", ")}</text>
+        </g>
       </svg>
       <div role="group" aria-label="Paper fortune teller" className="absolute inset-[10%] grid grid-cols-2 grid-rows-2 gap-1">
         {corners.map((_, i) => <Button key={i} variant="ghost" disabled={disabled || !onPick} aria-label={labels[i]} onClick={() => onPick?.(i)} className="h-full w-full rounded-[35%] border-0 bg-transparent p-0 shadow-none hover:bg-transparent focus-visible:ring-2" />)}
