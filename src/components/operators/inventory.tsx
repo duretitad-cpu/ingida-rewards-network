@@ -3,8 +3,8 @@ import QRCode from "qrcode";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 
-type Item = { id: string; name: string; notes: string; image_path: string; quantity: number; code_prefix: string; created_at: string };
-type Unit = { id: string; item_id: string; code: string; claimed_at: string | null; claim_note: string };
+type Item = { id: string; name: string; notes: string; image_path: string; quantity: number; code_prefix: string; created_at: string; quest_reward: boolean };
+type Unit = { id: string; item_id: string; code: string; claimed_at: string | null; claim_note: string; assigned_name: string; assigned_phone: string };
 
 const ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 function makeCode(prefix: string) {
@@ -45,7 +45,7 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
   const load = useCallback(async () => {
     const [i, u] = await Promise.all([
       supabase.from("inventory_items").select("*").order("created_at", { ascending: false }),
-      supabase.from("inventory_units").select("id, item_id, code, claimed_at, claim_note").order("created_at"),
+      supabase.from("inventory_units").select("id, item_id, code, claimed_at, claim_note, assigned_name, assigned_phone").order("created_at"),
     ]);
     setItems((i.data ?? []) as Item[]); setUnits((u.data ?? []) as Unit[]);
   }, []);
@@ -62,7 +62,7 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
     if (!name) return;
     setBusy(true); setMsg("");
     const image_path = file && file.size ? await shrinkImage(file) : "";
-    const { data, error } = await supabase.from("inventory_items").insert({ name, notes: String(f.get("notes") ?? ""), image_path, quantity: qty, code_prefix: prefix, created_by: userId }).select("id").single();
+    const { data, error } = await supabase.from("inventory_items").insert({ name, notes: String(f.get("notes") ?? ""), image_path, quantity: qty, code_prefix: prefix, created_by: userId, quest_reward: f.get("quest") === "on" }).select("id").single();
     if (error || !data) { setMsg("Could not save the item."); setBusy(false); return; }
     const rows = Array.from({ length: qty }, () => ({ item_id: data.id, code: makeCode(prefix) }));
     const { error: e2 } = await supabase.from("inventory_units").insert(rows);
@@ -70,6 +70,7 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
     form.reset(); setBusy(false); load();
   };
 
+  const toggleQuest = async (it: Item) => { await supabase.from("inventory_items").update({ quest_reward: !it.quest_reward }).eq("id", it.id); load(); };
   const remove = async (id: string) => { if (confirm("Delete this item and all its codes?")) { await supabase.from("inventory_items").delete().eq("id", id); load(); } };
 
   const printCodes = (item: Item) => {
@@ -90,6 +91,7 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
           <input name="name" required maxLength={80} placeholder="Item name (e.g. Sticker pack)" className="border-b border-border bg-transparent py-2 outline-none focus:border-gold" />
           <input name="qty" type="number" min={1} max={1000} required placeholder="Quantity" className="border-b border-border bg-transparent py-2 outline-none focus:border-gold" />
           <input name="prefix" maxLength={8} placeholder="Code prefix (e.g. STK)" className="border-b border-border bg-transparent py-2 uppercase outline-none focus:border-gold" />
+          <label className="flex items-center gap-2 text-sm"><input name="quest" type="checkbox" /> Quest prize (All My Ingidas Eat players win these)</label>
           <input name="image" type="file" accept="image/*" className="py-2 text-sm" />
           <textarea name="notes" maxLength={500} placeholder="Notes" className="border-b border-border bg-transparent py-2 outline-none focus:border-gold md:col-span-2" />
           <Button type="submit" disabled={busy} className="rounded-none md:col-span-2">{busy ? "Saving…" : "Add stock & generate codes"}</Button>
@@ -109,6 +111,7 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
                     {it.notes && <p className="text-xs text-muted-foreground">{it.notes}</p>}
                   </div>
                   <Button size="sm" variant="outline" className="rounded-none" onClick={() => setOpen(open === it.id ? null : it.id)}>{open === it.id ? "Hide codes" : "View codes"}</Button>
+                  <Button size="sm" variant={it.quest_reward ? "default" : "outline"} className="rounded-none" onClick={() => toggleQuest(it)}>{it.quest_reward ? "Quest prize ✓" : "Make Quest prize"}</Button>
                   <Button size="sm" variant="outline" className="rounded-none" onClick={() => printCodes(it)}>Print QR</Button>
                   {isAdmin && <Button size="sm" variant="ghost" onClick={() => remove(it.id)}>Delete</Button>}
                 </div>
@@ -118,7 +121,7 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
                       <div key={u.id} className={`flex flex-col items-center gap-1 border border-border p-2 text-[10px] ${u.claimed_at ? "opacity-40" : ""}`}>
                         <Qr value={u.code} />
                         <span className="font-mono">{u.code}</span>
-                        <span>{u.claimed_at ? `Out ${new Date(u.claimed_at).toLocaleDateString()}` : "Available"}</span>
+                        <span>{u.claimed_at ? `Out ${new Date(u.claimed_at).toLocaleDateString()}` : u.assigned_name ? `Won by ${u.assigned_name}` : "Available"}</span>
                       </div>
                     ))}
                   </div>
@@ -176,7 +179,7 @@ function Scanner({ units, items, userId, onDone }: { units: Unit[]; items: Item[
         <div className="mt-4 text-sm">
           {!unit ? <p>No item found for {parseScannedCode(code)}.</p>
             : unit.claimed_at ? <p>{item?.name} — already checked out {new Date(unit.claimed_at).toLocaleString()}.</p>
-            : <div className="flex flex-wrap items-center gap-2"><span>{item?.name} · available</span>
+            : <div className="flex flex-wrap items-center gap-2"><span>{item?.name} · {unit.assigned_name ? `won in Quest by ${unit.assigned_name} (${unit.assigned_phone})` : "available"}</span>
                 <input value={note} onChange={(e) => setNote(e.target.value)} maxLength={200} placeholder="Who / note" className="border-b border-border bg-transparent py-1 outline-none" />
                 <Button size="sm" className="rounded-none" onClick={checkout}>Log checkout</Button></div>}
         </div>

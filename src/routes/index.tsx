@@ -655,7 +655,7 @@ function Footer({ t }: { t: Copy }) {
             <span aria-hidden className="opacity-40">·</span>
             <Link to="/cookies" className="hover:text-foreground">{t === copy.en ? "Cookies" : "ኩኪዎች"}</Link>
             <span aria-hidden className="opacity-40">·</span>
-            <a href="https://id-preview--e38b5c99-a873-4fb4-9c41-1f0b0bc7c6b4.lovable.app" target="_blank" rel="noreferrer" className="hover:text-foreground">{t === copy.en ? "All My Ingida's Eat" : "ተጋበዙ"}</a>
+            <Link to="/quest" className="hover:text-foreground">{t === copy.en ? "All My Ingida's Eat" : "ተጋበዙ"}</Link>
             <span aria-hidden className="opacity-40">·</span>
             <Link to="/operators" className="hover:text-foreground">{t.footAdmin}</Link>
           </div>
