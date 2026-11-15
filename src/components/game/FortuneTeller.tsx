@@ -92,7 +92,7 @@ export function FortuneTeller({ labels, phase, disabled, onPick, inside = ["SPEN
                 <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill={`url(#${id}-${colour})`} />
                 <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)}Z`} fill="var(--fold-sheen)" opacity="0.16" />
                 <path d={`M${point(corner)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill="var(--fold-shade)" opacity="0.18" />
-                <text x={x} y={y - (lines.length > 1 ? 5 : 0)} textAnchor="middle" dominantBaseline="middle" fontSize={label.length > 7 ? 8.5 : 10} className="font-display font-semibold" fill="var(--fold-ink)">
+                <text x={x} y={y - (lines.length > 1 ? 5 : 0)} textAnchor="middle" dominantBaseline="middle" fontSize={label.length > 7 ? 8.5 : 10} className="font-serif font-semibold" fill="var(--fold-ink)">
                   {lines.map((line, j) => <tspan key={j} x={x} dy={j ? 10 : 0}>{line}</tspan>)}
                 </text>
               </g>
@@ -102,7 +102,7 @@ export function FortuneTeller({ labels, phase, disabled, onPick, inside = ["SPEN
         {opening > 0.7 && inside.map((word, i) => {
           // Printed on the interior slopes, never a separate backdrop label.
           const offset = (i - (inside.length - 1) / 2) * 23;
-          return <text key={word} x={v > h ? 100 : 100 + offset} y={v > h ? 100 + offset : 100} transform={`rotate(${v > h ? -8 : 8} ${v > h ? 100 : 100 + offset} ${v > h ? 100 + offset : 100})`} textAnchor="middle" dominantBaseline="middle" fontSize="6.5" className="font-display font-bold fill-primary">{word}</text>;
+          return <text key={word} x={v > h ? 100 : 100 + offset} y={v > h ? 100 + offset : 100} transform={`rotate(${v > h ? -8 : 8} ${v > h ? 100 : 100 + offset} ${v > h ? 100 + offset : 100})`} textAnchor="middle" dominantBaseline="middle" fontSize="6.5" className="font-serif font-bold fill-primary">{word}</text>;
         })}
       </svg>
       <div role="group" aria-label="Paper fortune teller" className="absolute inset-[10%] grid grid-cols-2 grid-rows-2 gap-1">

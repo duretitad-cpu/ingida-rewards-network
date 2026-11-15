@@ -68,21 +68,21 @@ export function Reward({ result }: { result: MerchResult }) {
     <section className="flex flex-1 flex-col gap-5 py-7 text-center animate-in fade-in duration-300">
       <div>
         <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Your INGIDA Moment</p>
-        <h2 className="mt-2 font-display text-4xl font-semibold text-primary">All My Ingidas Eat</h2>
+        <h2 className="mt-2 font-serif text-4xl font-semibold text-primary">All My Ingidas Eat</h2>
         <p className="mt-1 text-sm text-muted-foreground">{result.code ? "Your socks. Your welcome." : "You're on the list — today's socks are all claimed."}</p>
       </div>
       <div className="flex flex-col items-center gap-2 border-y border-border py-5">
         <div className="bg-background p-1 text-primary">
-          <QRCodeSVG value={`INGIDA QR PREVIEW | ${result.code ?? "#allmyingidaseat"}`} size={160} fgColor="currentColor" bgColor="var(--background)" level="M" title="Mock redemption QR — show your code to an INGIDA host" />
+          <QRCodeSVG value={result.code ?? "#allmyingidaseat"} size={160} fgColor="currentColor" bgColor="var(--background)" level="M" title="Show this QR to an INGIDA host" />
         </div>
         {result.code && <p className="break-all font-mono text-xl font-bold text-primary">{result.code}</p>}
-        <p className="text-[10px] text-muted-foreground">QR preview · not scannable for redemption</p>
+        <p className="text-[10px] text-muted-foreground">Show this QR to an INGIDA host to collect</p>
       </div>
       <div className="merch-stage flex items-center gap-4 p-4 text-left">
         <img src={socks.url} alt="All My Ingidas Eat socks" className="h-28 w-28 shrink-0 object-contain" />
         <div className="min-w-0">
           <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{result.code ? (result.already ? "Your Saved Drop" : "Merch Drop") : "Merch Drop"}</p>
-          <p className="mt-1 font-display text-xl font-bold text-primary">All My Ingidas Eat Socks</p>
+          <p className="mt-1 font-serif text-xl font-bold text-primary">All My Ingidas Eat Socks</p>
           <p className="mt-1 break-all text-sm font-bold text-primary">#allmyingidaseat</p>
           <p className="mt-1 text-xs text-muted-foreground">{result.code ? "Show your code to an INGIDA host." : "Watch for the next drop."}</p>
         </div>

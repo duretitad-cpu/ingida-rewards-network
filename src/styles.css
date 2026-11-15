@@ -892,3 +892,28 @@ html[lang="am"] .how-step h3, html[lang="am"] .step-title { font-size: 0.92em; }
 }
 a.store-mark { text-decoration: none; transition: opacity 200ms ease; }
 a.store-mark:hover { opacity: 0.75; }
+
+.quest-page {
+  --fold-navy: oklch(0.28 0.065 265);
+  --fold-navy-light: oklch(0.44 0.067 260);
+  --fold-navy-dark: oklch(0.16 0.042 269);
+  --fold-deep: oklch(0.22 0.052 268);
+  --fold-deep-light: oklch(0.36 0.061 264);
+  --fold-deep-dark: oklch(0.12 0.031 270);
+  --fold-dusk: oklch(0.32 0.063 263);
+  --fold-dusk-light: oklch(0.47 0.058 258);
+  --fold-dusk-dark: oklch(0.19 0.044 268);
+  --fold-ink: oklch(0.8 0.06 85);
+  --fold-edge: oklch(0.97 0.01 85);
+  --fold-inside: oklch(0.21 0.028 110);
+  --fold-gold: oklch(0.96 0.03 85);
+  --fold-gold-dark: oklch(0.86 0.04 80);
+  --fold-paper-highlight: oklch(0.985 0.018 85);
+  --fold-sheen: oklch(0.73 0.055 260);
+  --fold-shade: oklch(0.08 0.025 270);
+}
+.merch-stage {
+  background: transparent;
+  border-radius: 48% 48% 8px 8px;
+}
+.ig-sticker { background: transparent; }
