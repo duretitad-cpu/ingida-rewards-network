@@ -253,7 +253,7 @@ function ImageStrip({ t }: { t: Copy }) {
           <div className="wallet-feature-labels">
             {t === copy.en ? <><span>Loyalty Network.</span><span>Rewards Wallet.</span></> : <span>ልዩ የእንግዳ ቆይታ እና አጋር ኔትወርክ</span>}
           </div>
-          <h2>{t === copy.en ? <>More than a Wallet.<br /><em>A Lifestyle.</em></> : <span className="am-hero-title">እንግዳ ቆይታ</span>}</h2>
+          <h2>{t === copy.en ? <>More than a Wallet.<br /><em>A Lifestyle.</em></> : <span className="am-hero-title">እንግዳ ዋሌት</span>}</h2>
           <Network t={t} />
           <div className="hero-cta">
             <Button asChild variant="outline" className="h-11 rounded-none border border-gold bg-transparent px-7 text-xs font-medium uppercase tracking-[0.16em] text-gold transition-all hover:bg-gold hover:text-navy-deep">
@@ -655,7 +655,7 @@ function Footer({ t }: { t: Copy }) {
             <span aria-hidden className="opacity-40">·</span>
             <Link to="/cookies" className="hover:text-foreground">{t === copy.en ? "Cookies" : "ኩኪዎች"}</Link>
             <span aria-hidden className="opacity-40">·</span>
-            <Link to="/quest" className="hover:text-foreground">{t === copy.en ? "All My Ingida's Eat" : "ተጋበዙ"}</Link>
+            <Link to="/quest" search={{ lang: t === copy.en ? "en" : "am" }} className="hover:text-foreground">{t === copy.en ? "All My Ingida's Eat" : "ተጋበዙ"}</Link>
             <span aria-hidden className="opacity-40">·</span>
             <Link to="/operators" className="hover:text-foreground">{t.footAdmin}</Link>
           </div>

@@ -118,7 +118,7 @@ function AuthForm() {
 
 type Row = { id: string; kind: "wl" | "nfc"; created_at: string; name: string; email: string; phone: string; type: string; source: string; detail: string; notes: string };
 const TYPES = [["member", "User"], ["merchant", "Merchant"], ["stakeholder", "Stakeholder"]] as const;
-const SOURCES: Record<string, string> = { website: "Website", nfc: "NFC", other: "Other Links" };
+const SOURCES: Record<string, string> = { website: "Website", nfc: "NFC", quest: "Quest", other: "Other Links" };
 
 function Crm({ isAdmin, userId }: { isAdmin: boolean; userId: string }) {
   const [rows, setRows] = useState<Row[]>([]);
