@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import socks from "@/assets/ingida-socks.png.asset.json";
 
-export type MerchResult = { code: string | null; item: string | null; already: boolean };
+export type MerchResult = { code: string | null; item: string | null; already: boolean; pending?: boolean };
 
 export function Reward({ result }: { result: MerchResult }) {
   const [busy, setBusy] = useState(false);
@@ -19,7 +19,6 @@ export function Reward({ result }: { result: MerchResult }) {
       canvas.height = 1920;
       const ctx = canvas.getContext("2d");
       if (!ctx) throw new Error("Canvas unavailable");
-      // Export colours reuse the same semantic palette as the reward display.
       const tokens = getComputedStyle(document.documentElement);
       ctx.fillStyle = tokens.getPropertyValue("--background").trim();
       ctx.fillRect(0, 0, 1080, 1920);
@@ -69,20 +68,27 @@ export function Reward({ result }: { result: MerchResult }) {
       <div>
         <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Your INGIDA Moment</p>
         <h2 className="mt-2 font-serif text-4xl font-semibold text-primary">All My Ingidas Eat</h2>
-        <p className="mt-1 text-sm text-muted-foreground">{result.code ? "Your socks. Your welcome." : "You're on the list — today's socks are all claimed."}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{result.pending ? "We're checking your reward inventory…" : result.code ? "Your socks. Your welcome." : "You're on the list — today's socks are all claimed."}</p>
       </div>
-      <div className="flex flex-col items-center gap-2 border-y border-border py-5">
-        <div className="bg-background p-1 text-primary">
-          <QRCodeSVG value={result.code ?? "#allmyingidaseat"} size={160} fgColor="currentColor" bgColor="var(--background)" level="M" title="Show this QR to an INGIDA host" />
+      {result.code ? (
+        <div className="flex flex-col items-center gap-2 border-y border-border py-5" aria-label="Redemption code">
+          <div className="bg-background p-1 text-primary">
+            <QRCodeSVG value={result.code} size={160} fgColor="currentColor" bgColor="var(--background)" level="M" title="Redemption QR code — show this to an INGIDA host" />
+          </div>
+          <p className="break-all font-mono text-xl font-bold text-primary">{result.code}</p>
+          <p className="text-[10px] text-muted-foreground">Show this QR or code to an INGIDA host to collect{result.item ? ` your ${result.item}` : ""}.</p>
         </div>
-        {result.code && <p className="break-all font-mono text-xl font-bold text-primary">{result.code}</p>}
-        <p className="text-[10px] text-muted-foreground">Show this QR to an INGIDA host to collect</p>
-      </div>
+      ) : (
+        <div className="border-y border-border py-5" role="status" aria-live="polite">
+          <p className="font-semibold text-primary">{result.pending ? "Your redemption code is being prepared." : "No redemption code is available right now."}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{result.pending ? "Keep this page open while we check the reward inventory." : "Today's codes may be fully claimed. Please check with an INGIDA host."}</p>
+        </div>
+      )}
       <div className="merch-stage flex items-center gap-4 p-4 text-left">
         <img src={socks.url} alt="All My Ingidas Eat socks" className="h-28 w-28 shrink-0 object-contain" />
         <div className="min-w-0">
           <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{result.code ? (result.already ? "Your Saved Drop" : "Merch Drop") : "Merch Drop"}</p>
-          <p className="mt-1 font-serif text-xl font-bold text-primary">All My Ingidas Eat Socks</p>
+          <p className="mt-1 font-serif text-xl font-bold text-primary">{result.item || "All My Ingidas Eat Socks"}</p>
           <p className="mt-1 break-all text-sm font-bold text-primary">#allmyingidaseat</p>
           <p className="mt-1 text-xs text-muted-foreground">{result.code ? "Show your code to an INGIDA host." : "Watch for the next drop."}</p>
         </div>
