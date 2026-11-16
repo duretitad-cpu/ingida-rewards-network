@@ -51,9 +51,9 @@ const copy = {
     howLead: "Honoring Ethiopian Hospitality ",
     howBody: "",
     steps: [
-      { n: "01", t: "Spend", d: "Join with FAYDA ID and Spend." },
-      { n: "02", t: "Earn", d: "INGIDA points on Eligible Bills." },
-      { n: "03", t: "Redeem", d: "Rewards across Participating Partners." },
+      { n: "01", t: "Spend", d: "Verify with Fayda ID and Spend." },
+      { n: "02", t: "Earn", d: "ingida Points on Eligible Bills." },
+      { n: "03", t: "Redeem", d: "Rewards across ingida's Addis Ababa Partners." },
     ],
     portals: [
       {
@@ -101,11 +101,11 @@ const copy = {
     ctaJoin: "ተጋበዙ",
     howEyebrow: "አባልነት",
     howTitle: "ከእለት ወጪ ነጥብ ያግኙ።",
-    howLead: "በከተማው ይሸለሙ",
+    howLead: "በአዲስ አበባ ይሸለሙ",
     howBody: "የኢትዮጵያ አቀባበል።",
     steps: [
       { n: "01", t: "ይመዝገቡ", d: "በስልክ ቁጥርና ፋይዳ ዲጂታል መታወቂያ አንዴ ይመዝገቡ።" },
-      { n: "02", t: "ነጥብ ያግኙ", d: "በአጋር ንግድ ቤቶች ሲገዙ የእንግዳ ዋሌትዎን በክፍያ ይጠቀሙ። ነጥብ ያግኙ።" },
+      { n: "02", t: "ነጥብ ያግኙ", d: "በአጋር ንግድ ቤቶች ሲገዙ የእንግዳ ዋሌትዎን ይጠቀሙ። ነጥብ ያግኙ።" },
       { n: "03", t: "ተገበዙ", d: "በአንድ አጋር ቦታ ያገኙትን ሽልማት በሚቀበሉ ሌሎች የእንግዳ አጋር ቦታዎችም ይጠቀሙ።" },
     ],
     portals: [
@@ -251,7 +251,7 @@ function ImageStrip({ t }: { t: Copy }) {
         <div className="wallet-feature-copy">
           <h1 aria-label="ingida"><IngidaLogo className="hero-logo" /></h1>
           <div className="wallet-feature-labels">
-            {t === copy.en ? <><span>Loyalty Network.</span><span>Rewards Wallet.</span></> : <span>ልዩ የእንግዳ ቆይታ እና አጋር ኔትወርክ</span>}
+            {t === copy.en ? <><span>Loyalty Network.</span><span>Rewards Wallet.</span></> : <span>እንግዳ ቆይታ እና ኔትወርክ</span>}
           </div>
           <h2>{t === copy.en ? <>More than a Wallet.<br /><em>A Lifestyle.</em></> : <span className="am-hero-title">እንግዳ ዋሌት</span>}</h2>
           <Network t={t} />
