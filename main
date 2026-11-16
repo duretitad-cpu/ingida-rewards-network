@@ -1,0 +1,647 @@
+import { useEffect, useId, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Link } from "@tanstack/react-router";
+import { Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket } from "lucide-react";
+import { IngidaLogo } from "@/components/brand/ingida-logo";
+
+export type Phase = "closed" | "h" | "v";
+type Point = [number, number];
+const point = ([x, y]: Point) => `${x} ${y}`;
+const COLOURS = ["navy", "deep", "dusk", "navy"];
+const CENTER_ICONS = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
+
+export function FortuneTeller({ labels, phase, disabled, onPick }: {
+  labels: string[];
+  iconIndex?: number;
+  inside?: string[];
+  inner?: boolean;
+  phase: Phase;
+  disabled?: boolean;
+  picked?: number | null;
+  onPick?: (i: number) => void;
+  advance?: boolean;
+}) {
+  const id = useId().replace(/:/g, "");
+  const [fold, setFold] = useState({ h: 0, v: 0 });
+  useEffect(() => {
+    const target = { h: phase === "h" ? 1 : 0, v: phase === "v" ? 1 : 0 };
+    let frame = 0;
+    const timer = setInterval(() => {
+      frame++;
+      setFold((current) => ({
+        h: current.h + (target.h - current.h) / (5 - frame),
+        v: current.v + (target.v - current.v) / (5 - frame),
+      }));
+      if (frame === 4) clearInterval(timer);
+    }, 75);
+    return () => clearInterval(timer);
+  }, [phase]);
+
+  const { h, v } = fold;
+  const top: Point = [100, 100 - 54 * h - 64 * v];
+  const right: Point = [100 + 64 * h + 54 * v, 100];
+  const bottom: Point = [100, 100 + 54 * h + 64 * v];
+  const left: Point = [100 - 64 * h - 54 * v, 100];
+  const tips = [top, right, bottom, left];
+  const seams: Point[] = [[100, 38 - 18 * h], [162 + 18 * v, 100], [100, 162 + 18 * h], [38 - 18 * v, 100]];
+  const corners: Point[] = [[16, 16], [184, 16], [184, 184], [16, 184]];
+  const controls: Point[] = [[52, 10], [190, 52], [148, 190], [10, 148]];
+  const endControls: Point[] = [[10, 52], [148, 10], [190, 148], [52, 190]];
+  const opening = Math.max(h, v);
+
+  return (
+    <div className="relative mx-auto aspect-square w-full max-w-[min(380px,48dvh)] select-none">
+      <svg viewBox="4 4 192 192" className="block h-full w-full overflow-visible" aria-hidden="true">
+        <defs>
+          {COLOURS.slice(0, 3).map((colour) => (
+            <radialGradient key={colour} id={`${id}-${colour}`} cx="28%" cy="18%" r="100%">
+              <stop offset="0" stopColor={`var(--fold-${colour}-light)`} />
+              <stop offset="0.48" stopColor={`var(--fold-${colour})`} />
+              <stop offset="1" stopColor={`var(--fold-${colour}-dark)`} />
+            </radialGradient>
+          ))}
+          <linearGradient id={`${id}-valley`} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="var(--fold-paper-highlight)" />
+            <stop offset="1" stopColor="var(--fold-edge)" />
+          </linearGradient>
+        </defs>
+        <g>
+          {tips.map((tip, i) => (
+            <path key={`valley-${i}`} d={`M${point(tip)} L${point(tips[(i + 1) % 4] ?? top)} L100 100Z`} fill={`url(#${id}-valley)`} />
+          ))}
+          {corners.map((corner, i) => {
+            const previous = (i + 3) % 4;
+            const seam = seams[i] ?? top;
+            const lastSeam = seams[previous] ?? left;
+            const tip = tips[i] ?? top;
+            const lastTip = tips[previous] ?? left;
+            const colour = COLOURS[i] ?? "navy";
+            const label = labels[i] ?? "";
+            const words = label.split(" ");
+            const lines = label.length > 10 && words.length > 1 ? [words.slice(0, Math.ceil(words.length / 2)).join(" "), words.slice(Math.ceil(words.length / 2)).join(" ")] : [label];
+            const x = i === 0 || i === 3 ? 56 - v * 5 : 144 + v * 5;
+            const y = i < 2 ? 66 - h * 15 : 137 + h * 15;
+            return (
+              <g key={i}>
+                <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill={`url(#${id}-${colour})`} />
+                <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)}Z`} fill="var(--fold-sheen)" opacity="0.16" />
+                <path d={`M${point(corner)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill="var(--fold-shade)" opacity="0.18" />
+                <text x={x} y={y - (lines.length > 1 ? 5 : 0)} textAnchor="middle" dominantBaseline="middle" fontSize={label.length > 7 ? 8.5 : 10} className="font-serif font-semibold" fill="var(--fold-ink)">
+                  {lines.map((line, j) => <tspan key={j} x={x} dy={j ? 10 : 0}>{line}</tspan>)}
+                </text>
+              </g>
+            );
+          })}
+        </g>
+      </svg>
+      <div className="quest-fold-mark pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2" style={{ opacity: opening }} aria-hidden="true">
+        <Link to="/" tabIndex={-1} aria-hidden="true" className="text-[oklch(0.24_0.05_265)]">
+          <IngidaLogo className="h-auto w-16" />
+        </Link>
+        <div className="flex items-center justify-center gap-2 text-gold" aria-hidden="true">
+          {CENTER_ICONS.map((Icon, index) => <Icon key={index} className="h-4 w-4" strokeWidth={1.7} />)}
+        </div>
+        <span className="font-serif text-[10px] font-semibold tracking-wide text-[oklch(0.24_0.05_265)]">Spend, Earn &amp; Redeem</span>
+      </div>
+      <div role="group" aria-label="Paper fortune teller" className="absolute inset-[10%] grid grid-cols-2 grid-rows-2 gap-1">
+        {corners.map((_, i) => <Button key={i} variant="ghost" disabled={disabled || !onPick} aria-label={labels[i]} onClick={() => onPick?.(i)} className="h-full w-full rounded-[35%] border-0 bg-transparent p-0 shadow-none hover:bg-transparent focus-visible:ring-2" />)}
+      </div>
+    </div>
+  );
+}
+
+
+import { useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
+import { Download, Instagram, Share2 } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import socks from "@/assets/ingida-socks.png.asset.json";
+
+export type MerchResult = { code: string | null; item: string | null; already: boolean; pending?: boolean };
+
+export function Reward({ result }: { result: MerchResult }) {
+  const [busy, setBusy] = useState(false);
+
+  async function exportSticker(share: boolean) {
+    setBusy(true);
+    try {
+      const image = await createImageBitmap(await (await fetch(socks.url)).blob());
+      const canvas = document.createElement("canvas");
+      canvas.width = 1080;
+      canvas.height = 1920;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("Canvas unavailable");
+      const tokens = getComputedStyle(document.documentElement);
+      ctx.fillStyle = tokens.getPropertyValue("--background").trim();
+      ctx.fillRect(0, 0, 1080, 1920);
+      ctx.fillStyle = tokens.getPropertyValue("--primary").trim();
+      ctx.textAlign = "center";
+      ctx.font = "bold 112px Georgia";
+      ctx.fillText("ingida", 540, 340);
+      ctx.font = "bold 64px Arial";
+      ctx.fillText("ALL MY INGIDAS EAT", 540, 540);
+      const scale = Math.min(800 / image.width, 700 / image.height);
+      const w = image.width * scale;
+      const h = image.height * scale;
+      ctx.drawImage(image, (1080 - w) / 2, 640 + (700 - h) / 2, w, h);
+      image.close();
+      ctx.font = "bold 54px Arial";
+      ctx.fillText("#allmyingidaseat", 540, 1510);
+      ctx.font = "36px Arial";
+      ctx.fillText("My INGIDA Moment", 540, 1590);
+      const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob((value) => value ? resolve(value) : reject(new Error("Export failed")), "image/png"));
+      const file = new File([blob], "my-ingida-moment.png", { type: "image/png" });
+      const shareText = `My INGIDA Moment — redeem All My Ingidas Eat socks with #allmyingidaseat ${window.location.origin}`;
+      if (share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: "My INGIDA Moment", text: shareText });
+      } else if (share && navigator.share) {
+        await navigator.share({ title: "My INGIDA Moment", text: shareText, url: window.location.origin });
+      } else {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = file.name;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        if (share) await navigator.clipboard?.writeText(shareText).catch(() => {});
+        toast.success(share ? "Sticker saved and caption copied — post it to your Story." : "Sticker saved — ready for your Instagram Story.");
+      }
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === "AbortError")) toast.error("Couldn't save your sticker. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <section className="flex flex-1 flex-col gap-5 py-7 text-center animate-in fade-in duration-300">
+      <div>
+        <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Your INGIDA Moment</p>
+        <h2 className="mt-2 font-serif text-4xl font-semibold text-primary">All My Ingidas Eat</h2>
+        <p className="mt-1 text-sm text-muted-foreground">{result.code ? "Your socks. Your welcome." : result.pending ? "We're checking your reward inventory…" : "You're on the list — today's socks are all claimed."}</p>
+      </div>
+      {result.code ? (
+        <div className="flex flex-col items-center gap-2 border-y border-border py-5" aria-label="Redemption code">
+          <div className="bg-background p-1 text-primary">
+            <QRCodeSVG value={result.code} size={160} fgColor="currentColor" bgColor="var(--background)" level="M" title="Redemption QR code — show this to an INGIDA host" />
+          </div>
+          <p className="break-all font-mono text-xl font-bold text-primary">{result.code}</p>
+          <p className="text-[10px] text-muted-foreground">Show this QR or code to an INGIDA host to collect{result.item ? ` your ${result.item}` : ""}.</p>
+        </div>
+      ) : (
+        <div className="border-y border-border py-5" role="status" aria-live="polite">
+          <p className="font-semibold text-primary">{result.pending ? "Your redemption code is being prepared." : "No redemption code is available right now."}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{result.pending ? "Keep this page open for a moment." : "Watch for the next merch drop."}</p>
+        </div>
+      )}
+      <div className="merch-stage flex items-center gap-4 p-4 text-left">
+        <img src={socks.url} alt="All My Ingidas Eat socks" className="h-28 w-28 shrink-0 object-contain" />
+        <div className="min-w-0">
+          <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{result.code ? (result.already ? "Your Saved Drop" : "Merch Drop") : "Merch Drop"}</p>
+          <p className="mt-1 font-serif text-xl font-bold text-primary">{result.item || "All My Ingidas Eat Socks"}</p>
+          <p className="mt-1 break-all text-sm font-bold text-primary">#allmyingidaseat</p>
+          <p className="mt-1 text-xs text-muted-foreground">{result.code ? "Show your code to an INGIDA host." : "Watch for the next drop."}</p>
+        </div>
+      </div>
+      <div className="flex items-center justify-between gap-3">
+        <div className="ig-sticker flex min-w-0 -rotate-2 items-center gap-2 rounded-lg border-2 border-primary px-3 py-3 text-primary">
+          <Instagram className="h-5 w-5 shrink-0" />
+          <span className="text-left text-xs font-bold leading-tight">My INGIDA Moment<br /><span className="text-[10px] font-medium">#allmyingidaseat</span></span>
+        </div>
+        <div className="flex shrink-0 gap-1">
+          <Button variant="ghost" size="icon" title="Download Instagram Story sticker" aria-label="Download Instagram Story sticker" disabled={busy} onClick={() => exportSticker(false)}><Download /></Button>
+          <Button variant="ghost" size="icon" title="Share Instagram Story sticker" aria-label="Share Instagram Story sticker" disabled={busy} onClick={() => exportSticker(true)}><Share2 /></Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import QRCode from "qrcode";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+
+type Card = { id: string; card_key: string; card_name: string; owner_name: string; owner_title: string; owner_phone: string; owner_email: string; destination_url: string; capture_mode: boolean; is_active: boolean; tap_count: number };
+type Contact = { id: string; card_id: string; full_name: string; phone: string; email: string; company: string; notes: string; created_at: string };
+
+function CardQr({ value }: { value: string }) {
+  const [src, setSrc] = useState("");
+  useEffect(() => {
+    let current = true;
+    QRCode.toDataURL(value, { margin: 1, width: 180 }).then((url) => { if (current) setSrc(url); }).catch(() => { if (current) setSrc(""); });
+    return () => { current = false; };
+  }, [value]);
+  return src ? <img src={src} alt={`QR code linking to ${value}`} className="h-28 w-28 bg-white p-1" /> : <div className="h-28 w-28 bg-muted" aria-label="Generating card QR code" />;
+}
+
+export function NfcCards({ isAdmin }: { isAdmin: boolean }) {
+  const [cards, setCards] = useState<Card[]>([]);
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [cardFilter, setCardFilter] = useState("all");
+  const [q, setQ] = useState("");
+  const [msg, setMsg] = useState("");
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+
+  const load = useCallback(async () => {
+    const [c, k] = await Promise.all([
+      supabase.from("nfc_cards").select("*").order("card_key"),
+      supabase.from("nfc_contacts").select("id, card_id, full_name, phone, email, company, notes, created_at").order("created_at", { ascending: false }),
+    ]);
+    setCards((c.data ?? []) as Card[]);
+    setContacts((k.data ?? []) as Contact[]);
+  }, []);
+  useEffect(() => { load(); }, [load]);
+
+  const totalTaps = cards.reduce((s, c) => s + c.tap_count, 0);
+  const rate = totalTaps ? Math.round((contacts.length / totalTaps) * 100) : 0;
+  const nameOf = (id: string) => cards.find((c) => c.id === id)?.card_key ?? "";
+  const shown = useMemo(() => contacts.filter((r) => (cardFilter === "all" || r.card_id === cardFilter) &&
+    (!q || `${r.full_name} ${r.email} ${r.phone} ${r.company}`.toLowerCase().includes(q.toLowerCase()))), [contacts, cardFilter, q]);
+
+  const save = async (c: Card) => {
+    const { error } = await supabase.from("nfc_cards").update({
+      card_name: c.card_name, owner_name: c.owner_name, owner_title: c.owner_title, owner_phone: c.owner_phone,
+      owner_email: c.owner_email, destination_url: c.destination_url.trim(), capture_mode: c.capture_mode, is_active: c.is_active,
+    }).eq("id", c.id);
+    setMsg(error ? "Could not save the card." : `Card ${c.card_key} saved.`);
+  };
+  const patch = (id: string, p: Partial<Card>) => setCards((cs) => cs.map((c) => (c.id === id ? { ...c, ...p } : c)));
+
+  const addCard = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const key = String(new FormData(form).get("key") ?? "").trim().toLowerCase();
+    if (!/^[a-z0-9-]{1,40}$/.test(key)) { setMsg("Use letters, numbers and dashes for the card ID."); return; }
+    const { error } = await supabase.from("nfc_cards").insert({ card_key: key, card_name: `Card ${key}` });
+    setMsg(error ? "That card ID is already taken." : `Card ${key} added.`);
+    if (!error) { form.reset(); load(); }
+  };
+
+  const exportCsv = () => {
+    const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
+    const head = ["Date", "Card", "Name", "Phone", "Email", "Company", "Notes"];
+    const lines = shown.map((r) => [new Date(r.created_at).toISOString(), nameOf(r.card_id), r.full_name, r.phone, r.email, r.company, r.notes].map((v) => esc(String(v))).join(","));
+    const url = URL.createObjectURL(new Blob([[head.join(","), ...lines].join("\n")], { type: "text/csv" }));
+    const a = document.createElement("a"); a.href = url; a.download = "ingida-nfc-contacts.csv"; a.click(); URL.revokeObjectURL(url);
+  };
+
+  const input = "w-full border-b border-border bg-transparent py-2 text-sm outline-none focus:border-gold";
+
+  return (
+    <div className="space-y-10">
+      <section>
+        <h1 className="font-serif text-3xl">NFC Smart Cards</h1>
+        <div className="mt-6 grid grid-cols-3 gap-4">
+          {[['Total taps', totalTaps], ['Contacts captured', contacts.length], ['Conversion', `${rate}%`]].map(([l, v]) => (
+            <div key={String(l)} className="border border-border p-4"><p className="text-xs uppercase text-muted-foreground">{l}</p><p className="mt-1 font-serif text-3xl">{v}</p></div>
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <h2 className="font-serif text-2xl">Cards</h2>
+          <form onSubmit={addCard} className="flex gap-2">
+            <input name="key" placeholder="New card ID e.g. investor-01" maxLength={40} className={input} />
+            <Button size="sm" type="submit" className="rounded-none">Add card</Button>
+          </form>
+        </div>
+        {msg && <p role="status" className="text-sm text-muted-foreground">{msg}</p>}
+        <div className="grid gap-4 md:grid-cols-2">
+          {cards.map((c) => {
+            const permanent = `${origin}/nfc/${c.card_key}`;
+            const destination = c.destination_url.trim() ? (/^https?:\/\//i.test(c.destination_url.trim()) ? c.destination_url.trim() : `https://${c.destination_url.trim()}`) : "";
+            return (
+              <div key={c.id} className="space-y-3 border border-border p-5">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="font-serif text-xl">{c.card_name || `Card ${c.card_key}`}</p>
+                  <span className="text-xs text-muted-foreground">{c.tap_count} taps</span>
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <CardQr value={permanent} />
+                  <div className="min-w-0 flex-1 space-y-2">
+                    <p className="text-xs text-muted-foreground">Scan to open the live card link</p>
+                    <div className="flex items-center gap-2 text-xs">
+                      <code className="truncate bg-muted px-2 py-1">{permanent}</code>
+                      <Button type="button" size="sm" variant="outline" className="rounded-none" onClick={() => { void navigator.clipboard.writeText(permanent); setMsg("Chip URL copied."); }}>Copy</Button>
+                    </div>
+                  </div>
+                </div>
+                <input className={input} value={c.card_name} onChange={(e) => patch(c.id, { card_name: e.target.value })} placeholder="Card label" />
+                <input className={input} value={c.destination_url} onChange={(e) => patch(c.id, { destination_url: e.target.value })} placeholder="Destination URL" />
+                <div className="grid grid-cols-2 gap-x-3">
+                  <input className={input} value={c.owner_name} onChange={(e) => patch(c.id, { owner_name: e.target.value })} placeholder="Owner name" />
+                  <input className={input} value={c.owner_title} onChange={(e) => patch(c.id, { owner_title: e.target.value })} placeholder="Owner title" />
+                  <input className={input} value={c.owner_phone} onChange={(e) => patch(c.id, { owner_phone: e.target.value })} placeholder="Owner phone" />
+                  <input className={input} value={c.owner_email} onChange={(e) => patch(c.id, { owner_email: e.target.value })} placeholder="Owner email" />
+                </div>
+                <div className="flex flex-wrap gap-4 pt-2 text-sm">
+                  <label className="flex items-center gap-2"><input type="checkbox" checked={c.capture_mode} onChange={(e) => patch(c.id, { capture_mode: e.target.checked })} /> Lead capture mode</label>
+                  <label className="flex items-center gap-2"><input type="checkbox" checked={c.is_active} onChange={(e) => patch(c.id, { is_active: e.target.checked })} /> Active</label>
+                </div>
+                <div className="flex flex-wrap gap-2 pt-2">
+                  <Button type="button" size="sm" className="rounded-none" onClick={() => void save(c)}>Save</Button>
+                  <Button type="button" size="sm" variant="outline" className="rounded-none" asChild><a href={`/nfc/${c.card_key}`} target="_blank" rel="noreferrer">Preview card</a></Button>
+                  {destination && <Button type="button" size="sm" variant="outline" className="rounded-none" asChild><a href={destination} target="_blank" rel="noreferrer">Open destination</a></Button>}
+                  {isAdmin && null}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <p className="text-sm text-muted-foreground">Card contacts now appear in the CRM tab under "NFC".</p>
+    </div>
+  );
+}
+
+import { useRef, useState } from "react";
+import { z } from "zod";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { formatEthiopianPhone } from "@/lib/phone";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { FortuneTeller, type Phase } from "@/components/game/FortuneTeller";
+import { Link } from "@tanstack/react-router";
+import { IngidaLogo } from "@/components/brand/ingida-logo";
+import { Reward, type MerchResult } from "@/components/game/Reward";
+import { ROUNDS, type Reveal } from "@/components/game/rounds";
+
+export const Route = createFileRoute("/quest")({
+  head: () => ({
+    meta: [
+      { title: "All My Ingidas Eat — INGIDA Quest" },
+      { name: "description", content: "Play the INGIDA paper fortune game, learn how rewards work and claim your merch." },
+      { property: "og:title", content: "INGIDA — Unfold your welcome" },
+      { property: "og:description", content: "A fast, fun paper game from INGIDA. Play, learn and win merch." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: Index,
+});
+
+type Step = "intro" | "play" | "alerts" | "form" | "done" | "bye";
+
+const formSchema = z.object({
+  name: z.string().trim().min(1, "Please enter your name").max(100),
+  phone: z.string().trim()
+    .refine((value) => formatEthiopianPhone(value) !== null, "Use an Ethiopian number, e.g. +251 911 234 567")
+    .transform((value) => formatEthiopianPhone(value)!),
+});
+
+function Index() {
+  const [step, setStep] = useState<Step>("play");
+  const [round, setRound] = useState(0);
+  const [phase, setPhase] = useState<Phase>("closed");
+  const [spinning, setSpinning] = useState(false);
+  const [picked, setPicked] = useState<number | null>(null);
+  const [reveal, setReveal] = useState<Reveal | null>(null);
+  const [score, setScore] = useState(0);
+  const answers = useRef<Record<string, string>>({});
+  const [result, setResult] = useState<MerchResult | null>(null);
+
+  const r = ROUNDS[round] ?? ROUNDS[0];
+  if (!r) return null;
+
+  function pinch(times: number, done: () => void) {
+    let n = 0;
+    const tick = () => {
+      n++;
+      setPhase(n % 2 ? "h" : "v");
+      if (n < times) setTimeout(tick, 420);
+      else setTimeout(() => { setPhase("closed"); done(); }, 420);
+    };
+    tick();
+  }
+
+  function onPick(i: number) {
+    if (!r || spinning) return;
+    setPicked(i);
+    setSpinning(true);
+    answers.current[r.key] = r.labels[i] ?? "";
+    pinch(2, () => {
+      const rv = r.reveal(i);
+      if (rv.correct) setScore((s) => s + 1);
+      setReveal(rv);
+      setSpinning(false);
+      setPicked(null);
+      if (round + 1 < ROUNDS.length) setRound(round + 1);
+      else setTimeout(() => setStep("alerts"), 1800);
+    });
+  }
+
+  const showReward = (reward: MerchResult) => {
+    setResult(reward);
+    setStep("done");
+  };
+
+  return (
+    <main className="quest-page min-h-dvh bg-background text-foreground">
+      <div className="mx-auto flex min-h-dvh max-w-md flex-col px-5 pb-4 pt-5">
+        <header className="flex items-center justify-between">
+          <Link to="/" aria-label="INGIDA home" className="text-primary"><IngidaLogo className="h-7 w-auto" /></Link>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">#ingidaMoment</span>
+        </header>
+
+        {step === "play" && (
+          <section className="flex flex-col gap-0 pt-2">
+            <div className="space-y-2">
+              <p className="text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">{r.eyebrow}</p>
+            </div>
+            <div key={round} className="mb-1 mt-5 flex items-center justify-center text-center">
+              <h2 className="font-serif text-xl font-semibold leading-[1.12] text-primary sm:text-2xl">
+                {r.key === "lifestyle" ? <><span className="block">Tell Us About Your Lifestyle.</span><span className="block text-balance">Where Do You Spend The Most?</span></> : r.prompt}
+              </h2>
+            </div>
+            <div><FortuneTeller labels={r.labels} inside={r.inside} inner={round > 0} phase={phase} disabled={spinning} picked={picked} onPick={onPick} /></div>
+            <div className="mt-4 flex gap-1 px-8" aria-label={`Progress: question ${round + 1} of ${ROUNDS.length}`}>
+              {ROUNDS.map((_, i) => <span key={i} className={`h-[3px] flex-1 transition-colors duration-150 ${i <= round ? "bg-primary" : "bg-border"}`} />)}
+            </div>
+            <div className="px-2 pt-3" aria-live="polite">
+              {reveal ? <div className="text-center"><h3 className="font-serif text-xl font-semibold leading-tight text-primary">{reveal.title}</h3><p className="mx-auto mt-1 max-w-xs text-sm leading-snug text-muted-foreground">{reveal.body}</p></div> : null}
+            </div>
+          </section>
+        )}
+
+        {step === "alerts" && (
+          <section className="flex flex-1 flex-col justify-center gap-6 py-8 text-center animate-in fade-in duration-500">
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Stay In The Loop</p>
+            <h2 className="font-serif text-4xl font-semibold capitalize leading-[0.95] text-primary">Would You Like To Receive Alerts?</h2>
+            <p className="text-muted-foreground">INGIDA turns everyday spend into rewards across partners. Get launch alerts and a gift.</p>
+            <div className="grid gap-3">
+              <Button size="lg" className="h-14 rounded-full text-base" onClick={() => setStep("form")}>Yes, send me alerts</Button>
+              <Button size="lg" variant="ghost" className="rounded-full" onClick={() => setStep("bye")}>No thanks</Button>
+            </div>
+          </section>
+        )}
+
+        {step === "form" && <SignupForm answers={{ ...answers.current, score: String(score) }} onDone={showReward} />}
+        {step === "done" && result && <Reward result={result} />}
+
+        {step === "bye" && (
+          <section className="flex flex-1 flex-col justify-center gap-6 py-8 text-center">
+            <h2 className="font-serif text-4xl font-semibold capitalize leading-[0.95] text-primary">Thanks for playing.</h2>
+            <p className="text-muted-foreground">Changed your mind? Alerts come with free merch.</p>
+            <Button size="lg" className="h-14 rounded-full" onClick={() => setStep("form")}>Sign me up</Button>
+          </section>
+        )}
+
+        <footer className="pt-3 text-center text-[11px] text-muted-foreground">Made in Addis Ababa · ingida.com</footer>
+      </div>
+    </main>
+  );
+}
+
+function SignupForm({ answers, onDone }: { answers: Record<string, string>; onDone: (r: MerchResult) => void }) {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [busy, setBusy] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (submitted) return;
+    const parsed = formSchema.safeParse({ name, phone });
+    if (!parsed.success) {
+      setErrors(Object.fromEntries(parsed.error.issues.map((i) => [String(i.path[0]), i.message])));
+      return;
+    }
+    setErrors({});
+    setBusy(true);
+    setSubmitted(true);
+
+    onDone({ code: null, item: null, already: false, pending: true });
+    try {
+      const { data, error } = await supabase.rpc("claim_quest_merch", {
+        _name: parsed.data.name,
+        _phone: parsed.data.phone,
+        _answers: answers,
+      });
+      if (error) {
+        console.error("claim_quest_merch failed", error);
+        toast.error("Your reward page is open, but we couldn't save your signup. Please try again later.");
+        onDone({ code: null, item: null, already: false, pending: false });
+        return;
+      }
+      const row = Array.isArray(data) ? data[0] : data;
+      if (!row) {
+        toast.error("Your signup was received, but no inventory result was returned.");
+        onDone({ code: null, item: null, already: false, pending: false });
+        return;
+      }
+      onDone({
+        code: typeof row.code === "string" && row.code.length > 0 ? row.code : null,
+        item: typeof row.item === "string" && row.item.length > 0 ? row.item : null,
+        already: !!row.already,
+        pending: false,
+      });
+    } catch (error) {
+      console.error("claim_quest_merch threw", error);
+      toast.error("Your reward page is open, but we couldn't save your signup. Please try again later.");
+      onDone({ code: null, item: null, already: false, pending: false });
+    }
+  }
+
+  return (
+    <form onSubmit={submit} className="flex flex-1 flex-col justify-center gap-5 py-8 animate-in fade-in duration-500">
+      <div className="space-y-2 text-center">
+        <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Last fold</p>
+        <h2 className="font-serif text-3xl font-semibold capitalize leading-[0.95] text-primary">Where should we send your alerts?</h2>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="name">Full name</Label>
+        <Input id="name" className="h-12 bg-card" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} autoComplete="name" required />
+        {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="phone">Phone number</Label>
+        <Input id="phone" className="h-12 bg-card" type="tel" inputMode="tel" placeholder="+251 9…" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={30} autoComplete="tel" required />
+        {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
+      </div>
+      <Button type="submit" size="lg" className="h-14 rounded-full text-base" disabled={busy}>
+        {busy ? "Opening your reward…" : "Reveal my merch code"}
+      </Button>
+      <p className="text-center text-xs text-muted-foreground">One code per phone number.</p>
+    </form>
+  );
+}
+
+-- The quest RPC writes the signup to waitlist_submissions (the operator CRM) and
+-- assigns one matching inventory unit in the same transaction. The function is
+-- SECURITY DEFINER so public quest signups do not need direct table write access.
+-- This replacement also ensures reused phone numbers are matched in a normalized
+-- Ethiopian format and only quest-eligible stock is assigned.
+CREATE OR REPLACE FUNCTION public.claim_quest_merch(_name text, _phone text, _answers jsonb)
+RETURNS TABLE(code text, item text, already boolean)
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+DECLARE
+  _n text := left(trim(coalesce(_name, '')), 100);
+  _digits text := regexp_replace(coalesce(_phone, ''), '[^0-9]', '', 'g');
+  _p text;
+  _u record;
+BEGIN
+  IF left(_digits, 3) = '251' THEN
+    _digits := substr(_digits, 4);
+  ELSIF left(_digits, 1) = '0' THEN
+    _digits := substr(_digits, 2);
+  END IF;
+  IF _n = '' OR _digits !~ '^[79][0-9]{8}$' THEN
+    RAISE EXCEPTION 'Enter an Ethiopian mobile number';
+  END IF;
+
+  _p := '+251' || _digits;
+  PERFORM pg_advisory_xact_lock(hashtextextended(_p, 0));
+
+  IF NOT EXISTS (
+    SELECT 1 FROM public.waitlist_submissions w
+    WHERE w.source = 'quest'
+      AND regexp_replace(w.phone, '[^0-9]', '', 'g') = '251' || _digits
+  ) THEN
+    INSERT INTO public.waitlist_submissions (name, email, phone, role, source, wants_alerts, notes)
+    VALUES (_n, '', _p, 'member', 'quest', true, left(coalesce(_answers, '{}'::jsonb)::text, 500));
+  END IF;
+
+  SELECT u.code, i.name INTO _u
+  FROM public.inventory_units u
+  JOIN public.inventory_items i ON i.id = u.item_id
+  WHERE regexp_replace(u.assigned_phone, '[^0-9]', '', 'g') IN ('251' || _digits, '0' || _digits, _digits)
+  ORDER BY u.assigned_at
+  LIMIT 1;
+  IF FOUND THEN
+    RETURN QUERY SELECT _u.code, _u.name, true;
+    RETURN;
+  END IF;
+
+  UPDATE public.inventory_units u
+  SET assigned_at = now(), assigned_name = _n, assigned_phone = _p
+  WHERE u.id = (
+    SELECT x.id
+    FROM public.inventory_units x
+    JOIN public.inventory_items i ON i.id = x.item_id
+    WHERE i.quest_reward AND x.assigned_at IS NULL AND x.claimed_at IS NULL
+    ORDER BY x.created_at
+    LIMIT 1
+    FOR UPDATE OF x SKIP LOCKED
+  )
+  RETURNING u.code, (SELECT i.name FROM public.inventory_items i WHERE i.id = u.item_id) INTO _u;
+
+  IF FOUND THEN
+    RETURN QUERY SELECT _u.code, _u.name, false;
+  ELSE
+    RETURN QUERY SELECT NULL::text, NULL::text, false;
+  END IF;
+END;
+$$;
+
+REVOKE EXECUTE ON FUNCTION public.claim_quest_merch(text, text, jsonb) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.claim_quest_merch(text, text, jsonb) TO anon, authenticated;
+
