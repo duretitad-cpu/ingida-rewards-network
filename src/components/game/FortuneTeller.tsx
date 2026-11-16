@@ -11,7 +11,7 @@ const COLOURS = ["navy", "deep", "dusk", "navy"];
 const CENTER_ICONS = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
 
 // Four connected paper pockets share their mouth vertices with adjacent folds.
-export function FortuneTeller({ labels, phase, disabled, onPick }: {
+export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }: {
   labels: string[];
   iconIndex?: number;
   inside?: string[];
