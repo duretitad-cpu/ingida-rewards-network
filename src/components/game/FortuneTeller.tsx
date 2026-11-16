@@ -1,15 +1,16 @@
 import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Link } from "@tanstack/react-router";
 import { Utensils, BedDouble, ShoppingBasket, Palmtree } from "lucide-react";
+import { IngidaLogo } from "@/components/brand/ingida-logo";
 
 export type Phase = "closed" | "h" | "v";
 type Point = [number, number];
 const point = ([x, y]: Point) => `${x} ${y}`;
 const COLOURS = ["navy", "deep", "dusk", "navy"];
 
-// Every pocket shares its mouth vertices with the adjacent pocket and valley.
-// Discrete geometry frames keep the sheet connected throughout each paper fold.
-export function FortuneTeller({ labels, phase, disabled, onPick, inside = ["Spend, Earn & Redeem"], iconIndex = 0 }: {
+// Four connected paper pockets share their mouth vertices with adjacent folds.
+export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }: {
   labels: string[];
   iconIndex?: number;
   inside?: string[];
@@ -25,7 +26,6 @@ export function FortuneTeller({ labels, phase, disabled, onPick, inside = ["Spen
   useEffect(() => {
     const target = { h: phase === "h" ? 1 : 0, v: phase === "v" ? 1 : 0 };
     let frame = 0;
-    // Functional updates allow a new phase to start from the actual paper pose.
     const timer = setInterval(() => {
       frame++;
       setFold((current) => ({
@@ -62,9 +62,8 @@ export function FortuneTeller({ labels, phase, disabled, onPick, inside = ["Spen
             </radialGradient>
           ))}
           <linearGradient id={`${id}-valley`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="var(--fold-navy-light)" />
-            <stop offset="0.65" stopColor="var(--fold-navy)" />
-            <stop offset="1" stopColor="var(--fold-navy-dark)" />
+            <stop offset="0" stopColor="var(--fold-inside)" />
+            <stop offset="1" stopColor="var(--fold-inside)" />
           </linearGradient>
         </defs>
         <g>
@@ -95,11 +94,13 @@ export function FortuneTeller({ labels, phase, disabled, onPick, inside = ["Spen
             );
           })}
         </g>
-        <g opacity={opening} className="quest-fold-mark">
-          <InteriorIcon x={91} y={82} width={18} height={18} strokeWidth={1.2} />
-          <text x={100} y={115} textAnchor="middle" fontSize="6" className="font-serif" fill="var(--fold-ink)">{inside.join(", ")}</text>
-        </g>
       </svg>
+      <div className="quest-fold-mark pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2" style={{ opacity: opening }} aria-hidden="true">
+        <Link to="/" tabIndex={-1} aria-hidden="true" className="text-[oklch(0.24_0.05_265)]">
+          <IngidaLogo className="h-auto w-16" />
+        </Link>
+        <span className="font-serif text-[10px] font-semibold tracking-wide text-[oklch(0.24_0.05_265)]">Spend, Earn &amp; Redeem</span>
+      </div>
       <div role="group" aria-label="Paper fortune teller" className="absolute inset-[10%] grid grid-cols-2 grid-rows-2 gap-1">
         {corners.map((_, i) => <Button key={i} variant="ghost" disabled={disabled || !onPick} aria-label={labels[i]} onClick={() => onPick?.(i)} className="h-full w-full rounded-[35%] border-0 bg-transparent p-0 shadow-none hover:bg-transparent focus-visible:ring-2" />)}
       </div>
