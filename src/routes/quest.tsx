@@ -156,24 +156,30 @@ function SignupForm({ answers, onDone }: { answers: Record<string, string>; onDo
     }
     setErrors({});
     setBusy(true);
+
     try {
       const { data, error } = await supabase.rpc("claim_quest_merch", {
         _name: parsed.data.name,
         _phone: parsed.data.phone,
         _answers: answers,
       });
-      if (error) {
-        toast.error("We couldn't save your signup. Please check your connection and try again.");
-        return;
-      }
+
       const row = Array.isArray(data) ? data[0] : data;
-      if (!row) {
-        toast.error("No code was returned. Please try again.");
-        return;
+      const fallback: MerchResult = { code: null, item: null, already: false };
+      const normalized: MerchResult = row && typeof row === "object"
+        ? { code: typeof row.code === "string" ? row.code : null, item: typeof row.item === "string" ? row.item : null, already: !!row.already }
+        : fallback;
+
+      if (error) {
+        console.error("claim_quest_merch failed", error);
+        toast.error("We couldn't generate your code right now, but your reward page is ready.");
       }
-      onDone({ code: row.code ?? null, item: row.item ?? null, already: !!row.already });
-    } catch {
-      toast.error("We couldn't save your signup. Please try again.");
+
+      onDone(normalized);
+    } catch (err) {
+      console.error("claim_quest_merch threw", err);
+      toast.error("We couldn't save your signup. Please check your connection and try again.");
+      onDone({ code: null, item: null, already: false });
     } finally {
       setBusy(false);
     }
