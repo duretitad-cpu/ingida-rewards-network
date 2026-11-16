@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { formatEthiopianPhone } from "@/lib/phone";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,10 +31,9 @@ type Step = "intro" | "play" | "alerts" | "form" | "done" | "bye";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, "Please enter your name").max(100),
-  phone: z
-    .string()
-    .trim()
-    .regex(/^\+?[0-9\s-]{9,16}$/, "Enter a valid phone number"),
+  phone: z.string().trim()
+    .refine((value) => formatEthiopianPhone(value) !== null, "Use an Ethiopian number, e.g. +251 911 234 567")
+    .transform((value) => formatEthiopianPhone(value)!),
 });
 
 function Index() {
@@ -47,8 +47,8 @@ function Index() {
   const answers = useRef<Record<string, string>>({});
   const [result, setResult] = useState<{ code: string | null; item: string | null; already: boolean } | null>(null);
 
-   const r = ROUNDS[round] ?? ROUNDS[0];
-   if (!r) return null;
+  const r = ROUNDS[round] ?? ROUNDS[0];
+  if (!r) return null;
 
   function pinch(times: number, done: () => void) {
     let n = 0;
@@ -77,13 +77,6 @@ function Index() {
     });
   }
 
-  function next() {
-    setReveal(null);
-    setPicked(null);
-    if (round + 1 < ROUNDS.length) setRound(round + 1);
-    else setStep("alerts");
-  }
-
   return (
     <main className="quest-page min-h-dvh bg-background text-foreground">
       <div className="mx-auto flex min-h-dvh max-w-md flex-col px-5 pb-4 pt-5">
@@ -93,28 +86,28 @@ function Index() {
         </header>
 
         {step === "play" && (
-           <section className="flex flex-col gap-0 pt-2">
+          <section className="flex flex-col gap-0 pt-2">
             <div className="space-y-2">
-              <div className="flex gap-1 px-8">
-                {ROUNDS.map((_, i) => (
-                  <span key={i} className={`h-[2px] flex-1 transition-colors duration-150 ${i <= round ? "bg-primary" : "bg-border"}`} />
-                ))}
-              </div>
               <p className="text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">{r.eyebrow}</p>
             </div>
             <div key={round} className="mb-1 mt-5 flex items-center justify-center text-center">
-              <h2 className="font-serif text-xl font-semibold leading-[1.12] sm:text-2xl text-primary">
+              <h2 className="font-serif text-xl font-semibold leading-[1.12] text-primary sm:text-2xl">
                 {r.key === "lifestyle" ? <><span className="block">Tell Us About Your Lifestyle.</span><span className="block text-balance">Where Do You Spend The Most?</span></> : r.prompt}
               </h2>
             </div>
-             <div><FortuneTeller labels={r.labels} inside={r.inside} inner={round > 0} phase={phase} disabled={spinning} picked={picked} onPick={onPick} /></div>
-             <div className="px-2 pt-1" aria-live="polite">
+            <div><FortuneTeller labels={r.labels} inside={r.inside} inner={round > 0} phase={phase} disabled={spinning} picked={picked} onPick={onPick} /></div>
+            <div className="mt-4 flex gap-1 px-8" aria-label={`Progress: question ${round + 1} of ${ROUNDS.length}`}>
+              {ROUNDS.map((_, i) => (
+                <span key={i} className={`h-[3px] flex-1 transition-colors duration-150 ${i <= round ? "bg-primary" : "bg-border"}`} />
+              ))}
+            </div>
+            <div className="px-2 pt-3" aria-live="polite">
               {reveal ? (
                 <div className="text-center">
-                  <h3 className="font-serif text-xl leading-tight font-semibold text-primary">{reveal.title}</h3>
+                  <h3 className="font-serif text-xl font-semibold leading-tight text-primary">{reveal.title}</h3>
                   <p className="mx-auto mt-1 max-w-xs text-sm leading-snug text-muted-foreground">{reveal.body}</p>
                 </div>
-               ) : null}
+              ) : null}
             </div>
           </section>
         )}
@@ -122,25 +115,16 @@ function Index() {
         {step === "alerts" && (
           <section className="flex flex-1 flex-col justify-center gap-6 py-8 text-center animate-in fade-in duration-500">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Stay In The Loop</p>
-            <h2 className="font-serif text-4xl font-semibold capitalize leading-[0.95] text-primary">
-              Would You Like To Receive Alerts?
-            </h2>
-            <p className="text-muted-foreground">
-              INGIDA turns everyday spend into rewards across partners. Get launch alerts and a gift.
-            </p>
+            <h2 className="font-serif text-4xl font-semibold capitalize leading-[0.95] text-primary">Would You Like To Receive Alerts?</h2>
+            <p className="text-muted-foreground">INGIDA turns everyday spend into rewards across partners. Get launch alerts and a gift.</p>
             <div className="grid gap-3">
-              <Button size="lg" className="h-14 rounded-full text-base" onClick={() => setStep("form")}>
-                Yes, send me alerts
-              </Button>
-              <Button size="lg" variant="ghost" className="rounded-full" onClick={() => setStep("bye")}>
-                No thanks
-              </Button>
+              <Button size="lg" className="h-14 rounded-full text-base" onClick={() => setStep("form")}>Yes, send me alerts</Button>
+              <Button size="lg" variant="ghost" className="rounded-full" onClick={() => setStep("bye")}>No thanks</Button>
             </div>
           </section>
         )}
 
         {step === "form" && <SignupForm answers={{ ...answers.current, score: String(score) }} onDone={(res) => { setResult(res); setStep("done"); }} />}
-
         {step === "done" && result && <Reward result={result} />}
 
         {step === "bye" && (
@@ -157,13 +141,7 @@ function Index() {
   );
 }
 
-function SignupForm({
-  answers,
-  onDone,
-}: {
-  answers: Record<string, string>;
-   onDone: (r: MerchResult) => void;
-}) {
+function SignupForm({ answers, onDone }: { answers: Record<string, string>; onDone: (r: MerchResult) => void }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -173,23 +151,32 @@ function SignupForm({
     e.preventDefault();
     const parsed = formSchema.safeParse({ name, phone });
     if (!parsed.success) {
-      setErrors(Object.fromEntries(parsed.error.issues.map((i) => [i.path[0], i.message])));
+      setErrors(Object.fromEntries(parsed.error.issues.map((i) => [String(i.path[0]), i.message])));
       return;
     }
     setErrors({});
     setBusy(true);
-    const { data, error } = await supabase.rpc("claim_quest_merch", {
-      _name: parsed.data.name,
-      _phone: parsed.data.phone,
-      _answers: answers,
-    });
-    setBusy(false);
-    if (error) {
-      toast.error("Something went wrong. Please try again.");
-      return;
+    try {
+      const { data, error } = await supabase.rpc("claim_quest_merch", {
+        _name: parsed.data.name,
+        _phone: parsed.data.phone,
+        _answers: answers,
+      });
+      if (error) {
+        toast.error("We couldn't save your signup. Please check your connection and try again.");
+        return;
+      }
+      const row = Array.isArray(data) ? data[0] : data;
+      if (!row) {
+        toast.error("No code was returned. Please try again.");
+        return;
+      }
+      onDone({ code: row.code ?? null, item: row.item ?? null, already: !!row.already });
+    } catch {
+      toast.error("We couldn't save your signup. Please try again.");
+    } finally {
+      setBusy(false);
     }
-    const row = Array.isArray(data) ? data[0] : data;
-    onDone({ code: row?.code ?? null, item: row?.item ?? null, already: !!row?.already });
   }
 
   return (
@@ -200,13 +187,13 @@ function SignupForm({
       </div>
       <div className="space-y-2">
         <Label htmlFor="name">Full name</Label>
-        <Input id="name" className="h-12 bg-card" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} autoComplete="name" />
-        {errors["name"] && <p className="text-sm text-destructive">{errors["name"]}</p>}
+        <Input id="name" className="h-12 bg-card" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} autoComplete="name" required />
+        {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
       </div>
       <div className="space-y-2">
         <Label htmlFor="phone">Phone number</Label>
-        <Input id="phone" className="h-12 bg-card" type="tel" inputMode="tel" placeholder="+251 9…" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={20} autoComplete="tel" />
-        {errors["phone"] && <p className="text-sm text-destructive">{errors["phone"]}</p>}
+        <Input id="phone" className="h-12 bg-card" type="tel" inputMode="tel" placeholder="+251 9…" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={30} autoComplete="tel" required />
+        {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
       </div>
       <Button type="submit" size="lg" className="h-14 rounded-full text-base" disabled={busy}>
         {busy ? "Unfolding your code…" : "Reveal my merch code"}

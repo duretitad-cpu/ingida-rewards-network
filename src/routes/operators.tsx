@@ -16,7 +16,7 @@ function OperatorTabs({ isAdmin, userId }: { isAdmin: boolean; userId: string })
         <Button size="sm" variant={tab === "nfc" ? "default" : "outline"} className="rounded-none" onClick={() => setTab("nfc")}>NFC Smart Cards</Button>
         <Button size="sm" variant={tab === "inv" ? "default" : "outline"} className="rounded-none" onClick={() => setTab("inv")}>Inventory</Button>
       </div>
-      {tab === "crm" ? <Crm isAdmin={isAdmin} userId={userId} /> : tab === "nfc" ? <NfcCards isAdmin={isAdmin} /> : <Inventory isAdmin={isAdmin} userId={userId} />}
+      {tab === "crm" ? <Crm /> : tab === "nfc" ? <NfcCards isAdmin={isAdmin} /> : <Inventory isAdmin={isAdmin} userId={userId} />}
     </div>
   );
 }
@@ -119,12 +119,17 @@ function AuthForm() {
 type Row = { id: string; kind: "wl" | "nfc"; created_at: string; name: string; email: string; phone: string; type: string; source: string; detail: string; notes: string };
 const TYPES = [["member", "User"], ["merchant", "Merchant"], ["stakeholder", "Stakeholder"]] as const;
 const SOURCES: Record<string, string> = { website: "Website", nfc: "NFC", quest: "Quest", other: "Other Links" };
+const inputClass = "w-full min-w-28 border-b border-border bg-transparent px-1 py-1 outline-none focus:border-gold";
 
-function Crm({ isAdmin, userId }: { isAdmin: boolean; userId: string }) {
+function Crm() {
   const [rows, setRows] = useState<Row[]>([]);
   const [filter, setFilter] = useState("all");
   const [src, setSrc] = useState("all");
   const [q, setQ] = useState("");
+  const [editing, setEditing] = useState<string | null>(null);
+  const [draft, setDraft] = useState<Partial<Row>>({});
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [message, setMessage] = useState("");
   const load = useCallback(async () => {
     const [w, n] = await Promise.all([
       supabase.from("waitlist_submissions").select("id, created_at, name, email, phone, role, business_name, wants_alerts, source, notes").order("created_at", { ascending: false }),
@@ -135,15 +140,45 @@ function Crm({ isAdmin, userId }: { isAdmin: boolean; userId: string }) {
     const b: Row[] = (n.data ?? []).map((r) => ({ id: r.id, kind: "nfc", created_at: r.created_at, name: r.full_name, email: r.email, phone: r.phone, type: r.contact_type, source: "nfc", notes: r.notes, detail: r.company || "—" }));
     setRows([...a, ...b].sort((x, y) => y.created_at.localeCompare(x.created_at)));
   }, []);
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => { void load(); }, [load]);
 
   const shown = useMemo(() => rows.filter((r) => (filter === "all" || r.type === filter) && (src === "all" || r.source === src) &&
     (!q || `${r.name} ${r.email} ${r.phone} ${r.detail}`.toLowerCase().includes(q.toLowerCase()))), [rows, filter, src, q]);
 
-  const update = async (r: Row, patch: { type?: string; notes?: string }) => {
-    setRows((rs) => rs.map((x) => (x.id === r.id ? { ...x, ...patch } : x)));
-    if (r.kind === "wl") await supabase.from("waitlist_submissions").update({ ...(patch.type ? { role: patch.type } : {}), ...(patch.notes != null ? { notes: patch.notes } : {}) }).eq("id", r.id);
-    else await supabase.from("nfc_contacts").update({ ...(patch.type ? { contact_type: patch.type } : {}), ...(patch.notes != null ? { notes: patch.notes } : {}) }).eq("id", r.id);
+  const beginEdit = (r: Row) => {
+    setEditing(r.id);
+    setDraft({ name: r.name, email: r.email, phone: r.phone, type: r.type, notes: r.notes, detail: r.detail === "—" || r.detail.startsWith("Alerts:") ? "" : r.detail });
+    setMessage("");
+  };
+  const save = async (r: Row) => {
+    const name = String(draft.name ?? "").trim();
+    if (!name) { setMessage("Name is required."); return; }
+    setBusyId(r.id); setMessage("");
+    const email = String(draft.email ?? "").trim();
+    const phone = String(draft.phone ?? "").trim();
+    const type = String(draft.type ?? r.type);
+    const notes = String(draft.notes ?? "").trim();
+    const detail = String(draft.detail ?? "").trim();
+    const { error } = r.kind === "wl"
+      ? await supabase.from("waitlist_submissions").update({ name, email, phone, role: type, notes, ...(type === "merchant" ? { business_name: detail } : {}) }).eq("id", r.id)
+      : await supabase.from("nfc_contacts").update({ full_name: name, email, phone, contact_type: type, company: detail, notes }).eq("id", r.id);
+    setBusyId(null);
+    if (error) { setMessage("Could not save this contact. Check operator access and try again."); return; }
+    setEditing(null); setDraft({});
+    setMessage("Contact saved.");
+    await load();
+  };
+  const remove = async (r: Row) => {
+    if (!window.confirm(`Delete ${r.name} from the CRM? This cannot be undone.`)) return;
+    setBusyId(r.id); setMessage("");
+    const { error } = r.kind === "wl"
+      ? await supabase.from("waitlist_submissions").delete().eq("id", r.id)
+      : await supabase.from("nfc_contacts").delete().eq("id", r.id);
+    setBusyId(null);
+    if (error) { setMessage("Could not delete this contact. Check operator access and try again."); return; }
+    setRows((current) => current.filter((entry) => entry.id !== r.id));
+    if (editing === r.id) setEditing(null);
+    setMessage("Contact deleted.");
   };
   const label = (t: string) => TYPES.find(([v]) => v === t)?.[1] ?? t;
 
@@ -154,9 +189,10 @@ function Crm({ isAdmin, userId }: { isAdmin: boolean; userId: string }) {
     const url = URL.createObjectURL(new Blob([[head.join(","), ...lines].join("\n")], { type: "text/csv" }));
     const a = document.createElement("a"); a.href = url; a.download = "ingida-crm.csv"; a.click(); URL.revokeObjectURL(url);
   };
+  const setField = (field: keyof Row, value: string) => setDraft((current) => ({ ...current, [field]: value }));
 
   return (
-    <div className="space-y-10">
+    <div>
       <section>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -170,77 +206,43 @@ function Crm({ isAdmin, userId }: { isAdmin: boolean; userId: string }) {
             <Button size="sm" variant="outline" className="rounded-none" onClick={exportCsv}>Export CSV</Button>
           </div>
         </div>
+        {message && <p role="status" className="mt-3 text-sm text-muted-foreground">{message}</p>}
         <div className="mt-6 overflow-x-auto">
-          <table className="w-full min-w-[860px] text-left text-sm">
+          <table className="w-full min-w-[1050px] text-left text-sm">
             <thead className="border-b border-border text-xs uppercase text-muted-foreground">
-              <tr><th className="py-2">Date</th><th>Name</th><th>Phone</th><th>Email</th><th>Type</th><th>Signed up from</th><th>Details</th><th>Notes</th></tr>
+              <tr><th className="py-2">Date</th><th>Name</th><th>Phone</th><th>Email</th><th>Type</th><th>Signed up from</th><th>Details</th><th>Notes</th><th>Actions</th></tr>
             </thead>
             <tbody>
-              {shown.map((r) => (
-                <tr key={r.id} className="border-b border-border/60 align-top">
-                  <td className="py-3 pr-3 text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</td>
-                  <td className="pr-3 py-3">{r.name}</td>
-                  <td className="pr-3 py-3">{r.phone}</td>
-                  <td className="pr-3 py-3">{r.email}</td>
-                  <td className="pr-3 py-3">
-                    <select value={r.type} onChange={(e) => update(r, { type: e.target.value })} className="border border-border bg-background px-2 py-1 text-sm">
-                      {TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-                    </select>
-                  </td>
-                  <td className="pr-3 py-3">{SOURCES[r.source] ?? r.source}</td>
-                  <td className="pr-3 py-3">{r.detail}</td>
-                  <td className="py-3"><input defaultValue={r.notes} maxLength={500} onBlur={(e) => e.target.value !== r.notes && update(r, { notes: e.target.value })} className="w-48 border-b border-border bg-transparent py-1 outline-none focus:border-gold" /></td>
-                </tr>
-              ))}
-              {!shown.length && <tr><td colSpan={8} className="py-8 text-center text-muted-foreground">No contacts yet.</td></tr>}
+              {shown.map((r) => {
+                const isEditing = editing === r.id;
+                const isBusy = busyId === r.id;
+                return (
+                  <tr key={`${r.kind}-${r.id}`} className="border-b border-border/60 align-top">
+                    <td className="py-3 pr-3 text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</td>
+                    <td className="pr-3 py-3">{isEditing ? <input aria-label="Name" className={inputClass} value={String(draft.name ?? "")} onChange={(e) => setField("name", e.target.value)} maxLength={100} /> : r.name}</td>
+                    <td className="pr-3 py-3">{isEditing ? <input aria-label="Phone" className={inputClass} value={String(draft.phone ?? "")} onChange={(e) => setField("phone", e.target.value)} maxLength={30} /> : r.phone}</td>
+                    <td className="pr-3 py-3">{isEditing ? <input aria-label="Email" type="email" className={inputClass} value={String(draft.email ?? "")} onChange={(e) => setField("email", e.target.value)} maxLength={255} /> : r.email}</td>
+                    <td className="pr-3 py-3">{isEditing ? <select aria-label="Type" value={String(draft.type ?? r.type)} onChange={(e) => setField("type", e.target.value)} className="border border-border bg-background px-2 py-1 text-sm">{TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select> : label(r.type)}</td>
+                    <td className="pr-3 py-3">{SOURCES[r.source] ?? r.source}</td>
+                    <td className="pr-3 py-3">{isEditing ? <input aria-label={r.kind === "nfc" ? "Company" : "Business name"} className={inputClass} value={String(draft.detail ?? "")} onChange={(e) => setField("detail", e.target.value)} maxLength={120} /> : r.detail}</td>
+                    <td className="py-3">{isEditing ? <input aria-label="Notes" className={`${inputClass} min-w-40`} value={String(draft.notes ?? "")} onChange={(e) => setField("notes", e.target.value)} maxLength={500} /> : r.notes}</td>
+                    <td className="py-3">
+                      <div className="flex gap-1">
+                        {isEditing ? <>
+                          <Button size="sm" className="rounded-none" disabled={isBusy} onClick={() => void save(r)}>{isBusy ? "Saving…" : "Save"}</Button>
+                          <Button size="sm" variant="outline" className="rounded-none" disabled={isBusy} onClick={() => { setEditing(null); setDraft({}); }}>Cancel</Button>
+                        </> : <Button size="sm" variant="outline" className="rounded-none" onClick={() => beginEdit(r)}>Edit</Button>}
+                        <Button size="sm" variant="ghost" className="rounded-none text-destructive hover:text-destructive" disabled={isBusy} onClick={() => void remove(r)}>{isBusy && !isEditing ? "Deleting…" : "Delete"}</Button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+              {!shown.length && <tr><td colSpan={9} className="py-8 text-center text-muted-foreground">No contacts yet.</td></tr>}
             </tbody>
           </table>
         </div>
       </section>
-      {isAdmin && <AdminInvites userId={userId} />}
     </div>
-  );
-}
-
-type Invite = { id: string; email: string; created_at: string; accepted_at: string | null };
-
-function AdminInvites({ userId }: { userId: string }) {
-  const [list, setList] = useState<Invite[]>([]);
-  const [email, setEmail] = useState("connect@ingida.com");
-  const [msg, setMsg] = useState("");
-  const load = useCallback(async () => {
-    const { data } = await supabase.from("admin_invites").select("id, email, created_at, accepted_at").order("created_at", { ascending: false });
-    setList(data ?? []);
-  }, []);
-  useEffect(() => { load(); }, [load]);
-  const send = async (e: FormEvent) => {
-    e.preventDefault();
-    const v = email.trim().toLowerCase();
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) { setMsg("Enter a valid email."); return; }
-    const { error } = await supabase.from("admin_invites").insert({ email: v, invited_by: userId });
-    setMsg(error ? "Could not invite (maybe already invited)." : `Invited ${v}. They can now create an account on this page with that email.`);
-    load();
-  };
-  const remove = async (id: string) => { await supabase.from("admin_invites").delete().eq("id", id); load(); };
-  return (
-    <section>
-      <h2 className="font-serif text-2xl">Admin invites</h2>
-      <p className="text-sm text-muted-foreground">An invited email becomes an admin when it creates an account here.</p>
-      <form onSubmit={send} className="mt-3 flex flex-wrap gap-2">
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="border-b border-border bg-transparent px-1 py-2 text-sm outline-none focus:border-gold" />
-        <Button size="sm" type="submit" className="rounded-none">Send admin invite</Button>
-      </form>
-      {msg && <p className="mt-2 text-sm text-muted-foreground">{msg}</p>}
-      <ul className="mt-4 divide-y divide-border border-y border-border text-sm">
-        {list.map((c) => (
-          <li key={c.id} className="flex items-center justify-between py-3">
-            <span>{c.email}</span>
-            {c.accepted_at ? <span className="text-muted-foreground">Joined {new Date(c.accepted_at).toLocaleDateString()}</span>
-              : <Button size="sm" variant="ghost" onClick={() => remove(c.id)}>Revoke</Button>}
-          </li>
-        ))}
-        {!list.length && <li className="py-3 text-muted-foreground">No invites yet.</li>}
-      </ul>
-    </section>
   );
 }
