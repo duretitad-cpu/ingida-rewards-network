@@ -84,6 +84,7 @@ function AuthForm() {
   const [mode, setMode] = useState<"in" | "up">("in");
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState(false);
+
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
@@ -101,12 +102,13 @@ function AuthForm() {
     }
     setBusy(false);
   };
+
   return (
     <form onSubmit={submit} className="mx-auto mt-10 max-w-sm space-y-4">
       <h1 className="font-serif text-3xl">{mode === "in" ? "Operator sign in" : "Create operator account"}</h1>
       <input name="email" type="email" required placeholder="Email" autoComplete="email" className="w-full border-b border-border bg-transparent py-3 outline-none focus:border-gold" />
       <input name="password" type="password" required minLength={8} placeholder="Password" autoComplete={mode === "in" ? "current-password" : "new-password"} className="w-full border-b border-border bg-transparent py-3 outline-none focus:border-gold" />
-      {mode === "up" && <input name="code" placeholder="Invite code (not needed for the first admin)" maxLength={40} className="w-full border-b border-border bg-transparent py-3 uppercase outline-none focus:border-gold" />}
+      {mode === "up" && <input name="code" placeholder="Invite code (not needed for first admin)" maxLength={40} className="w-full border-b border-border bg-transparent py-3 uppercase outline-none focus:border-gold" />}
       <Button type="submit" disabled={busy} className="w-full rounded-none">{busy ? "Please wait…" : mode === "in" ? "Sign in" : "Create account"}</Button>
       {msg && <p role="alert" className="text-sm text-muted-foreground">{msg}</p>}
       <button type="button" className="text-xs text-muted-foreground underline" onClick={() => { setMode(mode === "in" ? "up" : "in"); setMsg(""); }}>
@@ -130,26 +132,36 @@ function Crm() {
   const [draft, setDraft] = useState<Partial<Row>>({});
   const [busyId, setBusyId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
+
   const load = useCallback(async () => {
     const [w, n] = await Promise.all([
       supabase.from("waitlist_submissions").select("id, created_at, name, email, phone, role, business_name, wants_alerts, source, notes").order("created_at", { ascending: false }),
       supabase.from("nfc_contacts").select("id, created_at, full_name, email, phone, company, contact_type, notes"),
     ]);
-    const a: Row[] = (w.data ?? []).map((r) => ({ id: r.id, kind: "wl", created_at: r.created_at, name: r.name, email: r.email, phone: r.phone, type: r.role, source: r.source, notes: r.notes,
-      detail: r.role === "merchant" ? r.business_name : r.wants_alerts == null ? "—" : r.wants_alerts ? "Alerts: yes" : "Alerts: no" }));
-    const b: Row[] = (n.data ?? []).map((r) => ({ id: r.id, kind: "nfc", created_at: r.created_at, name: r.full_name, email: r.email, phone: r.phone, type: r.contact_type, source: "nfc", notes: r.notes, detail: r.company || "—" }));
+    const a: Row[] = (w.data ?? []).map((r) => ({
+      id: r.id, kind: "wl", created_at: r.created_at, name: r.name, email: r.email, phone: r.phone, type: r.role, source: r.source, notes: r.notes,
+      detail: r.role === "merchant" ? r.business_name : r.wants_alerts == null ? "—" : r.wants_alerts ? "Alerts: yes" : "Alerts: no",
+    }));
+    const b: Row[] = (n.data ?? []).map((r) => ({
+      id: r.id, kind: "nfc", created_at: r.created_at, name: r.full_name, email: r.email, phone: r.phone, type: r.contact_type, source: "nfc", notes: r.notes, detail: r.company || "—",
+    }));
     setRows([...a, ...b].sort((x, y) => y.created_at.localeCompare(x.created_at)));
   }, []);
+
   useEffect(() => { void load(); }, [load]);
 
-  const shown = useMemo(() => rows.filter((r) => (filter === "all" || r.type === filter) && (src === "all" || r.source === src) &&
-    (!q || `${r.name} ${r.email} ${r.phone} ${r.detail}`.toLowerCase().includes(q.toLowerCase()))), [rows, filter, src, q]);
+  const shown = useMemo(() => rows.filter((r) =>
+    (filter === "all" || r.type === filter) &&
+    (src === "all" || r.source === src) &&
+    (!q || `${r.name} ${r.email} ${r.phone} ${r.detail}`.toLowerCase().includes(q.toLowerCase()))
+  ), [rows, filter, src, q]);
 
   const beginEdit = (r: Row) => {
     setEditing(r.id);
     setDraft({ name: r.name, email: r.email, phone: r.phone, type: r.type, notes: r.notes, detail: r.detail === "—" || r.detail.startsWith("Alerts:") ? "" : r.detail });
     setMessage("");
   };
+
   const save = async (r: Row) => {
     const name = String(draft.name ?? "").trim();
     if (!name) { setMessage("Name is required."); return; }
@@ -163,11 +175,12 @@ function Crm() {
       ? await supabase.from("waitlist_submissions").update({ name, email, phone, role: type, notes, ...(type === "merchant" ? { business_name: detail } : {}) }).eq("id", r.id)
       : await supabase.from("nfc_contacts").update({ full_name: name, email, phone, contact_type: type, company: detail, notes }).eq("id", r.id);
     setBusyId(null);
-    if (error) { setMessage("Could not save this contact. Check operator access and try again."); return; }
+    if (error) { setMessage("Could not save this contact."); return; }
     setEditing(null); setDraft({});
     setMessage("Contact saved.");
     await load();
   };
+
   const remove = async (r: Row) => {
     if (!window.confirm(`Delete ${r.name} from the CRM? This cannot be undone.`)) return;
     setBusyId(r.id); setMessage("");
@@ -175,11 +188,12 @@ function Crm() {
       ? await supabase.from("waitlist_submissions").delete().eq("id", r.id)
       : await supabase.from("nfc_contacts").delete().eq("id", r.id);
     setBusyId(null);
-    if (error) { setMessage("Could not delete this contact. Check operator access and try again."); return; }
+    if (error) { setMessage("Could not delete contact. Check operator permissions."); return; }
     setRows((current) => current.filter((entry) => entry.id !== r.id));
     if (editing === r.id) setEditing(null);
     setMessage("Contact deleted.");
   };
+
   const label = (t: string) => TYPES.find(([v]) => v === t)?.[1] ?? t;
 
   const exportCsv = () => {
@@ -189,6 +203,7 @@ function Crm() {
     const url = URL.createObjectURL(new Blob([[head.join(","), ...lines].join("\n")], { type: "text/csv" }));
     const a = document.createElement("a"); a.href = url; a.download = "ingida-crm.csv"; a.click(); URL.revokeObjectURL(url);
   };
+
   const setField = (field: keyof Row, value: string) => setDraft((current) => ({ ...current, [field]: value }));
 
   return (
@@ -224,21 +239,27 @@ function Crm() {
                     <td className="pr-3 py-3">{isEditing ? <input aria-label="Email" type="email" className={inputClass} value={String(draft.email ?? "")} onChange={(e) => setField("email", e.target.value)} maxLength={255} /> : r.email}</td>
                     <td className="pr-3 py-3">{isEditing ? <select aria-label="Type" value={String(draft.type ?? r.type)} onChange={(e) => setField("type", e.target.value)} className="border border-border bg-background px-2 py-1 text-sm">{TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select> : label(r.type)}</td>
                     <td className="pr-3 py-3">{SOURCES[r.source] ?? r.source}</td>
-                    <td className="pr-3 py-3">{isEditing ? <input aria-label={r.kind === "nfc" ? "Company" : "Business name"} className={inputClass} value={String(draft.detail ?? "")} onChange={(e) => setField("detail", e.target.value)} maxLength={120} /> : r.detail}</td>
+                    <td className="pr-3 py-3">{isEditing ? <input aria-label="Details" className={inputClass} value={String(draft.detail ?? "")} onChange={(e) => setField("detail", e.target.value)} maxLength={120} /> : r.detail}</td>
                     <td className="py-3">{isEditing ? <input aria-label="Notes" className={`${inputClass} min-w-40`} value={String(draft.notes ?? "")} onChange={(e) => setField("notes", e.target.value)} maxLength={500} /> : r.notes}</td>
                     <td className="py-3">
                       <div className="flex gap-1">
-                        {isEditing ? <>
-                          <Button size="sm" className="rounded-none" disabled={isBusy} onClick={() => void save(r)}>{isBusy ? "Saving…" : "Save"}</Button>
-                          <Button size="sm" variant="outline" className="rounded-none" disabled={isBusy} onClick={() => { setEditing(null); setDraft({}); }}>Cancel</Button>
-                        </> : <Button size="sm" variant="outline" className="rounded-none" onClick={() => beginEdit(r)}>Edit</Button>}
-                        <Button size="sm" variant="ghost" className="rounded-none text-destructive hover:text-destructive" disabled={isBusy} onClick={() => void remove(r)}>{isBusy && !isEditing ? "Deleting…" : "Delete"}</Button>
+                        {isEditing ? (
+                          <>
+                            <Button size="sm" className="h-7 rounded-none px-2 text-xs" disabled={isBusy} onClick={() => void save(r)}>Save</Button>
+                            <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={() => { setEditing(null); setDraft({}); }}>Cancel</Button>
+                          </>
+                        ) : (
+                          <>
+                            <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={() => beginEdit(r)}>Edit</Button>
+                            <Button size="sm" variant="ghost" className="h-7 px-2 text-xs text-destructive hover:text-destructive" disabled={isBusy} onClick={() => void remove(r)}>Delete</Button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>
                 );
               })}
-              {!shown.length && <tr><td colSpan={9} className="py-8 text-center text-muted-foreground">No contacts yet.</td></tr>}
+              {!shown.length && <tr><td colSpan={9} className="py-8 text-center text-sm text-muted-foreground">No contacts match.</td></tr>}
             </tbody>
           </table>
         </div>
