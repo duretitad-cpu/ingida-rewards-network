@@ -1,16 +1,17 @@
 import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { Utensils, BedDouble, ShoppingBasket, Palmtree } from "lucide-react";
+import { Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket } from "lucide-react";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 
 export type Phase = "closed" | "h" | "v";
 type Point = [number, number];
 const point = ([x, y]: Point) => `${x} ${y}`;
 const COLOURS = ["navy", "deep", "dusk", "navy"];
+const CENTER_ICONS = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
 
 // Four connected paper pockets share their mouth vertices with adjacent folds.
-export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }: {
+export function FortuneTeller({ labels, phase, disabled, onPick }: {
   labels: string[];
   iconIndex?: number;
   inside?: string[];
@@ -48,7 +49,6 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
   const controls: Point[] = [[52, 10], [190, 52], [148, 190], [10, 148]];
   const endControls: Point[] = [[10, 52], [148, 10], [190, 148], [52, 190]];
   const opening = Math.max(h, v);
-  const InteriorIcon = [Utensils, BedDouble, ShoppingBasket, Palmtree][iconIndex % 4] ?? Utensils;
 
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[min(380px,48dvh)] select-none">
@@ -67,9 +67,7 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
           </linearGradient>
         </defs>
         <g>
-          {tips.map((tip, i) => (
-            <path key={`valley-${i}`} d={`M${point(tip)} L${point(tips[(i + 1) % 4] ?? top)} L100 100Z`} fill={`url(#${id}-valley)`} />
-          ))}
+          {tips.map((tip, i) => <path key={`valley-${i}`} d={`M${point(tip)} L${point(tips[(i + 1) % 4] ?? top)} L100 100Z`} fill={`url(#${id}-valley)`} />)}
           {corners.map((corner, i) => {
             const previous = (i + 3) % 4;
             const seam = seams[i] ?? top;
@@ -96,9 +94,10 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
         </g>
       </svg>
       <div className="quest-fold-mark pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2" style={{ opacity: opening }} aria-hidden="true">
-        <Link to="/" tabIndex={-1} aria-hidden="true" className="text-[oklch(0.24_0.05_265)]">
-          <IngidaLogo className="h-auto w-16" />
-        </Link>
+        <Link to="/" tabIndex={-1} aria-hidden="true" className="text-[oklch(0.24_0.05_265)]"><IngidaLogo className="h-auto w-16" /></Link>
+        <div className="flex items-center justify-center gap-2 text-gold" aria-hidden="true">
+          {CENTER_ICONS.map((Icon, index) => <Icon key={index} className="h-4 w-4" strokeWidth={1.7} />)}
+        </div>
         <span className="font-serif text-[10px] font-semibold tracking-wide text-[oklch(0.24_0.05_265)]">Spend, Earn &amp; Redeem</span>
       </div>
       <div role="group" aria-label="Paper fortune teller" className="absolute inset-[10%] grid grid-cols-2 grid-rows-2 gap-1">
