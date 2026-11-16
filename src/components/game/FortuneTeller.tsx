@@ -62,8 +62,8 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
             </radialGradient>
           ))}
           <linearGradient id={`${id}-valley`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="var(--fold-inside)" />
-            <stop offset="1" stopColor="var(--fold-inside)" />
+            <stop offset="0" stopColor="var(--fold-paper-highlight)" />
+            <stop offset="1" stopColor="var(--fold-edge)" />
           </linearGradient>
         </defs>
         <g>
