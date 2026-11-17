@@ -43,6 +43,7 @@ export type Database = {
           code_prefix: string
           created_at: string
           created_by: string | null
+          description: string
           id: string
           image_path: string
           name: string
@@ -54,6 +55,7 @@ export type Database = {
           code_prefix?: string
           created_at?: string
           created_by?: string | null
+          description?: string
           id?: string
           image_path?: string
           name: string
@@ -65,6 +67,7 @@ export type Database = {
           code_prefix?: string
           created_at?: string
           created_by?: string | null
+          description?: string
           id?: string
           image_path?: string
           name?: string
@@ -316,6 +319,16 @@ export type Database = {
         Returns: {
           already: boolean
           code: string
+          item: string
+        }[]
+      }
+      claim_quest_prize: {
+        Args: { _answers: Json; _name: string; _phone: string }
+        Returns: {
+          already: boolean
+          code: string
+          description: string
+          image: string
           item: string
         }[]
       }
