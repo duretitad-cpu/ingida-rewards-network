@@ -84,7 +84,7 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
                 <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill={`url(#${id}-${colour})`} />
                 <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)}Z`} fill="var(--fold-sheen)" opacity="0.16" />
                 <path d={`M${point(corner)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill="var(--fold-shade)" opacity="0.18" />
-                <text x={x} y={y - (lines.length > 1 ? 5 : 0)} textAnchor="middle" dominantBaseline="middle" fontSize={label.length > 7 ? 8.5 : 10} className="font-serif font-semibold" fill="var(--fold-ink)">
+                <text x={x} y={y - (lines.length > 1 ? 5 : 0)} textAnchor="middle" dominantBaseline="middle" fontSize={label.length > 7 ? 8.5 : 10} className="font-serif font-semibold" fill={colour === "dusk" ? "var(--fold-ink-dark)" : "var(--fold-ink)"}>
                   {lines.map((line, j) => <tspan key={j} x={x} dy={j ? 10 : 0}>{line}</tspan>)}
                 </text>
               </g>
@@ -93,7 +93,7 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
         </g>
       </svg>
       <div className="quest-fold-mark pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1.5" style={{ opacity: opening }} aria-hidden="true">
-        {(() => { const Icon = CENTER_ICONS[((iconIndex % CENTER_ICONS.length) + CENTER_ICONS.length) % CENTER_ICONS.length] ?? Utensils; return <Icon key={iconIndex} className="h-6 w-6 text-gold animate-in fade-in zoom-in-75 duration-300" strokeWidth={1.7} />; })()}
+        {(() => { const Icon = CENTER_ICONS[((iconIndex % CENTER_ICONS.length) + CENTER_ICONS.length) % CENTER_ICONS.length] ?? Utensils; return <Icon key={iconIndex} className="h-8 w-8 text-gold animate-in fade-in zoom-in-75 duration-300" strokeWidth={1.7} />; })()}
         <span className="text-[oklch(0.24_0.05_265)]"><IngidaLogo className="h-auto w-16" /></span>
         <span className="font-serif text-[10px] font-semibold tracking-wide text-[oklch(0.24_0.05_265)]">Spend, Earn &amp; Redeem</span>
       </div>
