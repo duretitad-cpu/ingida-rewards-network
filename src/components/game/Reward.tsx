@@ -81,7 +81,7 @@ export function Reward({ result }: { result: MerchResult }) {
     <section className="flex flex-1 flex-col gap-5 py-7 text-center animate-in fade-in duration-300">
       <div>
         <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Your INGIDA Moment</p>
-        <h2 className="mt-2 font-serif text-4xl font-semibold text-primary">All My Ingidas Eat</h2>
+        <h2 className="mt-2 font-serif text-4xl font-normal text-primary">All My Ingidas Eat</h2>
         <p className="mt-1 text-sm text-muted-foreground">{result.pending ? "We're checking your reward inventory…" : result.code ? "Your socks. Your welcome." : "You're on the list — today's socks are all claimed."}</p>
       </div>
       {result.code ? (

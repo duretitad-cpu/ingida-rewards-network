@@ -6,7 +6,7 @@ import { IngidaLogo } from "@/components/brand/ingida-logo";
 export type Phase = "closed" | "h" | "v";
 type Point = [number, number];
 const point = ([x, y]: Point) => `${x} ${y}`;
-const COLOURS = ["navy", "deep", "navy", "dusk"];
+const COLOURS = ["navy", "paper", "navy", "paper"];
 const CENTER_ICONS = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
 
 // Four connected paper pockets share their mouth vertices with adjacent folds.
@@ -53,7 +53,7 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
     <div className="relative mx-auto aspect-square w-full max-w-[min(380px,48dvh)] select-none">
       <svg viewBox="4 4 192 192" className="block h-full w-full overflow-visible" aria-hidden="true">
         <defs>
-          {["navy", "deep", "dusk"].map((colour) => (
+          {["navy", "paper"].map((colour) => (
             <radialGradient key={colour} id={`${id}-${colour}`} cx="28%" cy="18%" r="100%">
               <stop offset="0" stopColor={`var(--fold-${colour}-light)`} />
               <stop offset="0.48" stopColor={`var(--fold-${colour})`} />
@@ -81,10 +81,10 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
             const y = i < 2 ? 66 - h * 15 : 137 + h * 15;
             return (
               <g key={i}>
-                <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill={`url(#${id}-${colour})`} />
-                <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)}Z`} fill="var(--fold-sheen)" opacity="0.16" />
-                <path d={`M${point(corner)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill="var(--fold-shade)" opacity="0.18" />
-                <text x={x} y={y - (lines.length > 1 ? 5 : 0)} textAnchor="middle" dominantBaseline="middle" fontSize={label.length > 7 ? 8.5 : 10} className="font-serif font-semibold" fill={colour === "dusk" ? "var(--fold-ink-dark)" : "var(--fold-ink)"}>
+                <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill={`url(#${id}-${colour})`} stroke={colour === "paper" ? "var(--fold-outline)" : "none"} strokeWidth={colour === "paper" ? 1.2 : 0} strokeOpacity={colour === "paper" ? 0.85 : 0} />
+                <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)}Z`} fill={colour === "paper" ? "var(--fold-paper-shade)" : "var(--fold-sheen)"} opacity={colour === "paper" ? 0.1 : 0.16} />
+                <path d={`M${point(corner)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill="var(--fold-shade)" opacity={colour === "paper" ? 0.07 : 0.18} />
+                <text x={x} y={y - (lines.length > 1 ? 5 : 0)} textAnchor="middle" dominantBaseline="middle" fontSize={label.length > 7 ? 8.5 : 10} className="font-serif font-semibold" fill={colour === "paper" ? "var(--fold-ink-dark)" : "var(--fold-gold-text)"}>
                   {lines.map((line, j) => <tspan key={j} x={x} dy={j ? 10 : 0}>{line}</tspan>)}
                 </text>
               </g>

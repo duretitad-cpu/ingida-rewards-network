@@ -97,7 +97,7 @@ function Index() {
               <p className="text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">{r.eyebrow}</p>
             </div>
             <div key={round} className="mb-1 mt-5 flex items-center justify-center text-center">
-              <h2 className="font-serif text-xl font-semibold leading-[1.12] text-primary sm:text-2xl">
+              <h2 className="font-serif text-xl font-normal leading-[1.12] text-primary sm:text-2xl">
                 {r.key === "lifestyle" ? <><span className="block">Tell Us About Your Lifestyle.</span><span className="block text-balance">Where Do You Spend The Most?</span></> : r.prompt}
               </h2>
             </div>
@@ -105,7 +105,7 @@ function Index() {
             <div className="px-2 pt-3" aria-live="polite">
               {reveal ? (
                 <div className="text-center">
-                  <h3 className="font-serif text-xl font-semibold leading-tight text-primary">{reveal.title}</h3>
+                  <h3 className="font-serif text-xl font-normal leading-tight text-primary">{reveal.title}</h3>
                   <p className="mx-auto mt-1 max-w-xs text-sm leading-snug text-muted-foreground">{reveal.body}</p>
                 </div>
               ) : null}
@@ -121,7 +121,7 @@ function Index() {
         {step === "alerts" && (
           <section className="flex flex-1 flex-col justify-center gap-6 py-8 text-center animate-in fade-in duration-500">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Stay In The Loop</p>
-            <h2 className="font-serif text-4xl font-semibold capitalize leading-[0.95] text-primary">Would You Like To Receive Alerts?</h2>
+            <h2 className="font-serif text-4xl font-normal capitalize leading-[0.95] text-primary">Would You Like To Receive Alerts?</h2>
             <p className="text-muted-foreground">INGIDA turns everyday spend into rewards across partners. Get launch alerts and a gift.</p>
             <div className="grid gap-3">
               <Button size="lg" className="h-14 rounded-full text-base" onClick={() => go("form")}>Yes, send me alerts</Button>
@@ -135,7 +135,7 @@ function Index() {
 
         {step === "bye" && (
           <section className="flex flex-1 flex-col justify-center gap-6 py-8 text-center">
-            <h2 className="font-serif text-4xl font-semibold capitalize leading-[0.95] text-primary">Thanks for playing.</h2>
+            <h2 className="font-serif text-4xl font-normal capitalize leading-[0.95] text-primary">Thanks for playing.</h2>
             <p className="text-muted-foreground">Changed your mind? Alerts come with free merch.</p>
             <Button size="lg" className="h-14 rounded-full" onClick={() => go("form")}>Sign me up</Button>
           </section>
@@ -187,7 +187,7 @@ function SignupForm({ answers, onDone }: { answers: Record<string, string>; onDo
     <form onSubmit={submit} className="flex flex-1 flex-col justify-center gap-5 py-8 animate-in fade-in duration-500">
       <div className="space-y-2 text-center">
         <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Last fold</p>
-        <h2 className="font-serif text-3xl font-semibold capitalize leading-[0.95] text-primary">Where should we send your alerts?</h2>
+        <h2 className="font-serif text-3xl font-normal capitalize leading-[0.95] text-primary">Where should we send your alerts?</h2>
       </div>
       <div className="space-y-2">
         <Label htmlFor="name">Full name</Label>
