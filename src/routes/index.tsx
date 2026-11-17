@@ -91,7 +91,7 @@ const copy = {
     roleMember: "Member",
     roleMerchant: "Merchant",
     submit: "Request invite",
-    submitted: "Your invitation request has been received.",
+    submitted: "Your request is in. Follow us on our socials for updates as invitations open.",
     footNote: "Made in Addis Ababa",
     footAdmin: "Operators",
   },
@@ -144,7 +144,7 @@ const copy = {
     roleMember: "ደንበኛ",
     roleMerchant: "ነጋዴ",
     submit: "ተጋበዙ",
-    submitted: "በዝርዝሩ ውስጥ ተካትተዋል። በቅርቡ እናገኝዎታለን።",
+    submitted: "ጥያቄዎ ደርሶናል። ግብዣዎች ሲከፈቱ መረጃ ለማግኘት በማኅበራዊ ገጾቻችን ይከተሉን።",
     footNote: "ከአዲስ አበባ የተሠራ",
     footAdmin: "ኦፕሬተሮች",
   },
@@ -417,7 +417,7 @@ function PortalRow({ p, t }: { p: Copy["portals"][number]; t: Copy }) {
     <div className="portal-row group block pt-5 text-center md:pt-6">
       <div className="flex flex-col items-center gap-1.5">
         <p className="text-[9.5px] font-medium tracking-[0.28em] uppercase text-gold">{p.tag}</p>
-        <a href={p.href} target={p.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer"><h3 className="font-serif text-[22px] italic leading-tight text-navy-deep md:text-[28px]">
+        <a href={p.href} target={p.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer"><h3 className="font-serif text-[22px] italic leading-tight text-navy-deep md:text-[28px]">
           {(() => {
             const parts = p.name.split(" ");
             const last = parts.pop() ?? "";
@@ -511,13 +511,13 @@ function Waitlist({ t, role, setRole }: { t: Copy; role: Role; setRole: (role: R
           {state === "done" ? (
             <div role="status" className="flex min-h-[140px] flex-col items-center justify-center border-t border-primary-foreground/20 pt-4">
               <div className="mb-3 h-px w-8 bg-gold" aria-hidden />
-              <p className="font-serif text-lg italic text-gold md:text-xl">{t === copy.en ? "Thank you!" : "እናመሰግናለን!"}</p>
+              <p className="font-serif text-lg italic text-gold md:text-xl">{t === copy.en ? "Thank you for your interest." : "ስለፍላጎትዎ እናመሰግናለን።"}</p>
               <p className="mt-2 text-sm text-primary-foreground/80">{t.submitted}</p>
-              <p className="mt-4 text-[10px] uppercase tracking-[0.3em] text-primary-foreground/70">{t === copy.en ? "Follow us on social" : "በማኅበራዊ ሚዲያ ይከተሉን"}</p>
+              <p className="mt-4 text-[10px] uppercase tracking-[0.3em] text-primary-foreground/70">{t === copy.en ? "Follow us on our socials" : "በማኅበራዊ ገጾቻችን ይከተሉን"}</p>
               <div className="mt-2 flex gap-4 text-sm text-gold">
-                <a href="https://www.instagram.com/ingida.bet" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">Instagram</a>
-                <a href="https://www.tiktok.com/@ingidabet" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">TikTok</a>
-                <a href="https://www.linkedin.com/company/ingida/" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">LinkedIn</a>
+                <a href="https://www.instagram.com/ingida.bet" target="_blank" rel="noopener noreferrer" aria-label="INGIDA on Instagram (opens in a new tab)" className="underline-offset-4 hover:underline">Instagram</a>
+                <a href="https://www.tiktok.com/@ingidabet" target="_blank" rel="noopener noreferrer" aria-label="INGIDA on TikTok (opens in a new tab)" className="underline-offset-4 hover:underline">TikTok</a>
+                <a href="https://www.linkedin.com/company/ingida/" target="_blank" rel="noopener noreferrer" aria-label="INGIDA on LinkedIn (opens in a new tab)" className="underline-offset-4 hover:underline">LinkedIn</a>
               </div>
             </div>
           ) : (
@@ -641,13 +641,13 @@ function Footer({ t }: { t: Copy }) {
     <footer className="border-t border-border/60 bg-background py-8">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-5 text-center md:px-8">
         <div className="flex items-center justify-center gap-4">
-          <a href="https://www.instagram.com/ingida.bet?utm_source=qr" target="_blank" rel="noreferrer" aria-label="Instagram" className="text-muted-foreground transition-colors hover:text-gold">
+          <a href="https://www.instagram.com/ingida.bet?utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-muted-foreground transition-colors hover:text-gold">
             <Instagram className="h-4 w-4" strokeWidth={1.5} />
           </a>
-          <a href="https://www.tiktok.com/@ingidabet?_r=1&_t=ZS-9BN5QCSMkBY" target="_blank" rel="noreferrer" aria-label="TikTok" className="text-muted-foreground transition-colors hover:text-gold">
+          <a href="https://www.tiktok.com/@ingidabet?_r=1&_t=ZS-9BN5QCSMkBY" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="text-muted-foreground transition-colors hover:text-gold">
             <Music2 className="h-4 w-4" strokeWidth={1.5} />
           </a>
-          <a href="https://www.linkedin.com/company/ingida/" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-muted-foreground transition-colors hover:text-gold">
+          <a href="https://www.linkedin.com/company/ingida/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-muted-foreground transition-colors hover:text-gold">
             <Linkedin className="h-4 w-4" strokeWidth={1.5} />
           </a>
         </div>

@@ -44,6 +44,7 @@ function Index() {
   const [picked, setPicked] = useState<number | null>(null);
   const [reveal, setReveal] = useState<Reveal | null>(null);
   const [score, setScore] = useState(0);
+  const [iconIndex, setIconIndex] = useState(0);
   const answers = useRef<Record<string, string>>({});
   const [result, setResult] = useState<MerchResult | null>(null);
   const finished = useRef(false);
@@ -59,6 +60,7 @@ function Index() {
     const tick = () => {
       n++;
       setPhase(n % 2 ? "h" : "v");
+      setIconIndex((i) => i + 1);
       if (n < times) setTimeout(tick, 420);
       else setTimeout(() => { setPhase("closed"); done(); }, 420);
     };
@@ -99,7 +101,7 @@ function Index() {
                 {r.key === "lifestyle" ? <><span className="block">Tell Us About Your Lifestyle.</span><span className="block text-balance">Where Do You Spend The Most?</span></> : r.prompt}
               </h2>
             </div>
-            <div><FortuneTeller labels={r.labels} inside={r.inside} inner={round > 0} phase={phase} disabled={spinning || finished.current} picked={picked} onPick={onPick} /></div>
+            <div><FortuneTeller labels={r.labels} inside={r.inside} inner={round > 0} phase={phase} iconIndex={iconIndex} disabled={spinning || finished.current} picked={picked} onPick={onPick} /></div>
             <div className="px-2 pt-3" aria-live="polite">
               {reveal ? (
                 <div className="text-center">
