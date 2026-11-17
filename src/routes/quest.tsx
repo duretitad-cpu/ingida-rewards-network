@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -45,7 +45,11 @@ function Index() {
   const [reveal, setReveal] = useState<Reveal | null>(null);
   const [score, setScore] = useState(0);
   const answers = useRef<Record<string, string>>({});
-  const [result, setResult] = useState<{ code: string | null; item: string | null; already: boolean } | null>(null);
+  const [result, setResult] = useState<MerchResult | null>(null);
+  const finished = useRef(false);
+  const alertTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (alertTimer.current) clearTimeout(alertTimer.current); }, []);
+  const go = (next: Step) => { if (alertTimer.current) { clearTimeout(alertTimer.current); alertTimer.current = null; } setStep(next); };
 
   const r = ROUNDS[round] ?? ROUNDS[0];
   if (!r) return null;
@@ -62,7 +66,7 @@ function Index() {
   }
 
   function onPick(i: number) {
-    if (!r || spinning) return;
+    if (!r || spinning || finished.current) return;
     setPicked(i);
     setSpinning(true);
     answers.current[r.key] = r.labels[i] ?? "";
@@ -73,7 +77,7 @@ function Index() {
       setSpinning(false);
       setPicked(null);
       if (round + 1 < ROUNDS.length) setRound(round + 1);
-      else setTimeout(() => setStep("alerts"), 1800);
+      else { finished.current = true; alertTimer.current = setTimeout(() => { alertTimer.current = null; setStep((s) => (s === "play" ? "alerts" : s)); }, 1800); }
     });
   }
 
@@ -95,12 +99,7 @@ function Index() {
                 {r.key === "lifestyle" ? <><span className="block">Tell Us About Your Lifestyle.</span><span className="block text-balance">Where Do You Spend The Most?</span></> : r.prompt}
               </h2>
             </div>
-            <div><FortuneTeller labels={r.labels} inside={r.inside} inner={round > 0} phase={phase} disabled={spinning} picked={picked} onPick={onPick} /></div>
-            <div className="mt-4 flex gap-1 px-8" aria-label={`Progress: question ${round + 1} of ${ROUNDS.length}`}>
-              {ROUNDS.map((_, i) => (
-                <span key={i} className={`h-[3px] flex-1 transition-colors duration-150 ${i <= round ? "bg-primary" : "bg-border"}`} />
-              ))}
-            </div>
+            <div><FortuneTeller labels={r.labels} inside={r.inside} inner={round > 0} phase={phase} disabled={spinning || finished.current} picked={picked} onPick={onPick} /></div>
             <div className="px-2 pt-3" aria-live="polite">
               {reveal ? (
                 <div className="text-center">
@@ -108,6 +107,11 @@ function Index() {
                   <p className="mx-auto mt-1 max-w-xs text-sm leading-snug text-muted-foreground">{reveal.body}</p>
                 </div>
               ) : null}
+            </div>
+            <div className="mt-4 flex gap-1 px-8" aria-label={`Progress: question ${round + 1} of ${ROUNDS.length}`}>
+              {ROUNDS.map((_, i) => (
+                <span key={i} className={`h-[3px] flex-1 transition-colors duration-150 ${i <= round ? "bg-primary" : "bg-border"}`} />
+              ))}
             </div>
           </section>
         )}
@@ -118,20 +122,20 @@ function Index() {
             <h2 className="font-serif text-4xl font-semibold capitalize leading-[0.95] text-primary">Would You Like To Receive Alerts?</h2>
             <p className="text-muted-foreground">INGIDA turns everyday spend into rewards across partners. Get launch alerts and a gift.</p>
             <div className="grid gap-3">
-              <Button size="lg" className="h-14 rounded-full text-base" onClick={() => setStep("form")}>Yes, send me alerts</Button>
-              <Button size="lg" variant="ghost" className="rounded-full" onClick={() => setStep("bye")}>No thanks</Button>
+              <Button size="lg" className="h-14 rounded-full text-base" onClick={() => go("form")}>Yes, send me alerts</Button>
+              <Button size="lg" variant="ghost" className="rounded-full" onClick={() => go("bye")}>No thanks</Button>
             </div>
           </section>
         )}
 
-        {step === "form" && <SignupForm answers={{ ...answers.current, score: String(score) }} onDone={(res) => { setResult(res); setStep("done"); }} />}
+        {step === "form" && <SignupForm answers={{ ...answers.current, score: String(score) }} onDone={(res) => { setResult(res); go("done"); }} />}
         {step === "done" && result && <Reward result={result} />}
 
         {step === "bye" && (
           <section className="flex flex-1 flex-col justify-center gap-6 py-8 text-center">
             <h2 className="font-serif text-4xl font-semibold capitalize leading-[0.95] text-primary">Thanks for playing.</h2>
             <p className="text-muted-foreground">Changed your mind? Alerts come with free merch.</p>
-            <Button size="lg" className="h-14 rounded-full" onClick={() => setStep("form")}>Sign me up</Button>
+            <Button size="lg" className="h-14 rounded-full" onClick={() => go("form")}>Sign me up</Button>
           </section>
         )}
 
@@ -158,28 +162,20 @@ function SignupForm({ answers, onDone }: { answers: Record<string, string>; onDo
     setBusy(true);
 
     try {
-      const { data, error } = await supabase.rpc("claim_quest_merch", {
+      const { data, error } = await supabase.rpc("claim_quest_prize", {
         _name: parsed.data.name,
         _phone: parsed.data.phone,
         _answers: answers,
       });
 
-      const row = Array.isArray(data) ? data[0] : data;
-      const fallback: MerchResult = { code: null, item: null, already: false };
-      const normalized: MerchResult = row && typeof row === "object"
-        ? { code: typeof row.code === "string" ? row.code : null, item: typeof row.item === "string" ? row.item : null, already: !!row.already }
-        : fallback;
-
       if (error) {
-        console.error("claim_quest_merch failed", error);
-        toast.error("We couldn't generate your code right now, but your reward page is ready.");
+        toast.error("We couldn't save your signup. Please check your number and try again.");
+        return;
       }
-
-      onDone(normalized);
-    } catch (err) {
-      console.error("claim_quest_merch threw", err);
+      const row = Array.isArray(data) ? data[0] : data;
+      onDone({ code: row?.code ?? null, item: row?.item ?? null, description: row?.description ?? null, image: row?.image || null, already: !!row?.already });
+    } catch {
       toast.error("We couldn't save your signup. Please check your connection and try again.");
-      onDone({ code: null, item: null, already: false });
     } finally {
       setBusy(false);
     }

@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import socks from "@/assets/ingida-socks.png.asset.json";
 
-export type MerchResult = { code: string | null; item: string | null; already: boolean; pending?: boolean };
+export type MerchResult = { code: string | null; item: string | null; already: boolean; pending?: boolean; description?: string | null; image?: string | null };
 
 export function Reward({ result }: { result: MerchResult }) {
   const [busy, setBusy] = useState(false);
@@ -85,10 +85,11 @@ export function Reward({ result }: { result: MerchResult }) {
         </div>
       )}
       <div className="merch-stage flex items-center gap-4 p-4 text-left">
-        <img src={socks.url} alt="All My Ingidas Eat socks" className="h-28 w-28 shrink-0 object-contain" />
+        <img src={result.image || socks.url} alt={result.item || "All My Ingidas Eat socks"} className="h-28 w-28 shrink-0 object-contain" />
         <div className="min-w-0">
           <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{result.code ? (result.already ? "Your Saved Drop" : "Merch Drop") : "Merch Drop"}</p>
           <p className="mt-1 font-serif text-xl font-bold text-primary">{result.item || "All My Ingidas Eat Socks"}</p>
+          {result.description ? <p className="mt-1 text-sm text-muted-foreground">{result.description}</p> : null}
           <p className="mt-1 break-all text-sm font-bold text-primary">#allmyingidaseat</p>
           <p className="mt-1 text-xs text-muted-foreground">{result.code ? "Show your code to an INGIDA host." : "Watch for the next drop."}</p>
         </div>

@@ -7,7 +7,7 @@ import { tapNfcCard, submitNfcContact, nfcContactSchema, type PublicNfcCard } fr
 export const Route = createFileRoute("/nfc/$cardId")({
   loader: async ({ params }) => {
     const result = await tapNfcCard({ data: { cardKey: params.cardId } });
-    if (result.status === "ok" && !result.card.capture_mode && result.card.destination_url) {
+    if (result.status === "ok" && result.card.destination_url) {
       throw redirect({ href: result.card.destination_url, statusCode: 302, headers: { "Cache-Control": "no-store" } });
     }
     return result;
