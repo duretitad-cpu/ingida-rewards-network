@@ -903,20 +903,20 @@ a.store-mark:hover { opacity: 0.75; }
   --fold-dusk: oklch(0.8 0.045 235);
   --fold-dusk-light: oklch(0.9 0.03 230);
   --fold-dusk-dark: oklch(0.7 0.05 240);
-  /* White paper folds: near-white face, navy outline, navy text. */
-  --fold-paper: oklch(0.988 0.006 90);
+  /* White paper folds: pure-white face, thin navy outline, navy text. */
+  --fold-paper: oklch(0.995 0.003 260);
   --fold-paper-light: oklch(1 0 0);
-  --fold-paper-dark: oklch(0.965 0.008 90);
+  --fold-paper-dark: oklch(0.965 0.006 260);
   --fold-paper-shade: oklch(0.72 0.04 260);
   --fold-outline: oklch(0.28 0.065 265);
   --fold-gold-text: oklch(0.835 0.05 91);
   --fold-ink-dark: oklch(0.22 0.05 265);
   --fold-ink: oklch(0.8 0.06 85);
-  --fold-edge: oklch(0.97 0.01 85);
-  --fold-inside: oklch(0.21 0.028 110);
+  --fold-edge: oklch(0.965 0.006 260);
+  --fold-inside: oklch(0.995 0.003 260);
   --fold-gold: oklch(0.96 0.03 85);
   --fold-gold-dark: oklch(0.86 0.04 80);
-  --fold-paper-highlight: oklch(0.985 0.018 85);
+  --fold-paper-highlight: oklch(1 0 0);
   --fold-sheen: oklch(0.73 0.055 260);
   --fold-shade: oklch(0.08 0.025 270);
 }
