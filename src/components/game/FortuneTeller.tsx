@@ -48,6 +48,9 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
   const controls: Point[] = [[52, 10], [190, 52], [148, 190], [10, 148]];
   const endControls: Point[] = [[10, 52], [148, 10], [190, 148], [52, 190]];
   const opening = Math.max(h, v);
+  // Hairline rim sits just inside the revealed centre.
+  const rim = tips.map(([x, y]) => [100 + (x - 100) * 0.86, 100 + (y - 100) * 0.86] as Point);
+  const [rimTop, rimRight, rimBottom, rimLeft] = rim;
 
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[min(380px,48dvh)] select-none">
@@ -63,6 +66,12 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
           <linearGradient id={`${id}-valley`} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stopColor="var(--fold-paper-highlight)" />
             <stop offset="1" stopColor="var(--fold-edge)" />
+          </linearGradient>
+          {/* Silk hairline: deep at the ends, lighter through the middle. */}
+          <linearGradient id={`${id}-edge`} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="var(--fold-outline)" />
+            <stop offset="0.5" stopColor="var(--fold-outline-soft)" />
+            <stop offset="1" stopColor="var(--fold-outline)" />
           </linearGradient>
         </defs>
         <g>
@@ -81,7 +90,7 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
             const y = i < 2 ? 66 - h * 15 : 137 + h * 15;
             return (
               <g key={i}>
-                <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill={`url(#${id}-${colour})`} stroke={colour === "paper" ? "var(--fold-outline)" : "none"} strokeWidth={colour === "paper" ? 0.55 : 0} strokeOpacity={colour === "paper" ? 0.8 : 0} />
+                <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill={`url(#${id}-${colour})`} stroke={colour === "paper" ? `url(#${id}-edge)` : "none"} strokeWidth={colour === "paper" ? 0.3 + opening * 0.12 : 0} strokeOpacity={colour === "paper" ? 0.55 + opening * 0.35 : 0} strokeLinejoin="round" strokeLinecap="round" />
                 <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)}Z`} fill={colour === "paper" ? "var(--fold-paper-shade)" : "var(--fold-sheen)"} opacity={colour === "paper" ? 0.045 : 0.16} />
                 <path d={`M${point(corner)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill="var(--fold-shade)" opacity={colour === "paper" ? 0.03 : 0.18} />
                 <text x={x} y={y - (lines.length > 1 ? 5 : 0)} textAnchor="middle" dominantBaseline="middle" fontSize={label.length > 7 ? 8.5 : 10} className="font-serif font-semibold" fill={colour === "paper" ? "var(--fold-ink-dark)" : "var(--fold-gold-text)"}>
@@ -90,6 +99,8 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
               </g>
             );
           })}
+          {/* Gold hairline rim just inside the revealed centre. */}
+          <path d={`M${point(rimTop)} L${point(rimRight)} L${point(rimBottom)} L${point(rimLeft)} Z`} fill="none" stroke="var(--fold-gold-hairline)" strokeWidth={0.35} strokeOpacity={0.6 * opening} strokeLinejoin="round" />
         </g>
       </svg>
       <div className="quest-fold-mark pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1.5" style={{ opacity: opening }} aria-hidden="true">
