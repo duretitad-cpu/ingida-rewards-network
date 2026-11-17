@@ -194,6 +194,20 @@ function Crm() {
     setMessage("Contact deleted.");
   };
 
+  const addContact = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const f = new FormData(form);
+    const name = String(f.get("name") ?? "").trim();
+    if (!name) { setMessage("Name is required."); return; }
+    const { error } = await supabase.from("waitlist_submissions").insert({
+      name: name.slice(0, 100), phone: String(f.get("phone") ?? "").trim().slice(0, 30), email: String(f.get("email") ?? "").trim().slice(0, 255),
+      role: String(f.get("type") ?? "member"), source: "other", notes: String(f.get("notes") ?? "").trim().slice(0, 1000),
+    });
+    if (error) { setMessage("Could not add this contact."); return; }
+    form.reset(); setMessage("Contact added."); await load();
+  };
+
   const label = (t: string) => TYPES.find(([v]) => v === t)?.[1] ?? t;
 
   const exportCsv = () => {
@@ -221,6 +235,14 @@ function Crm() {
             <Button size="sm" variant="outline" className="rounded-none" onClick={exportCsv}>Export CSV</Button>
           </div>
         </div>
+        <form onSubmit={addContact} className="mt-4 flex flex-wrap items-end gap-2 text-sm">
+          <input name="name" placeholder="Full name" maxLength={100} required className={inputClass + " max-w-44"} />
+          <input name="phone" placeholder="Phone" maxLength={30} className={inputClass + " max-w-36"} />
+          <input name="email" type="email" placeholder="Email" maxLength={255} className={inputClass + " max-w-48"} />
+          <select name="type" className="border border-border bg-background px-2 py-1">{TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>
+          <input name="notes" placeholder="Notes" maxLength={1000} className={inputClass + " max-w-48"} />
+          <Button type="submit" size="sm" className="rounded-none">Add contact</Button>
+        </form>
         {message && <p role="status" className="mt-3 text-sm text-muted-foreground">{message}</p>}
         <div className="mt-6 overflow-x-auto">
           <table className="w-full min-w-[1050px] text-left text-sm">

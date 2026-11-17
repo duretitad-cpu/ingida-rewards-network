@@ -93,6 +93,13 @@ export function NfcCards({ isAdmin }: { isAdmin: boolean }) {
     setMsg(error ? "Could not save the card." : `Card ${c.card_key} saved.`);
   };
 
+  const removeCard = async (c: Card) => {
+    if (!window.confirm(`Delete card ${c.card_key}? Its link will stop working.`)) return;
+    const { error } = await supabase.from("nfc_cards").delete().eq("id", c.id);
+    setMsg(error ? "Could not delete the card." : `Card ${c.card_key} deleted.`);
+    if (!error) await load();
+  };
+
   const patch = (id: string, value: Partial<Card>) => setCards((list) => list.map((c) => c.id === id ? { ...c, ...value } : c));
 
   const addCard = async (e: FormEvent<HTMLFormElement>) => {
@@ -168,6 +175,7 @@ export function NfcCards({ isAdmin }: { isAdmin: boolean }) {
                 </div>
                 <div className="flex flex-wrap gap-2 pt-2">
                   <Button type="button" size="sm" className="rounded-none" onClick={() => void save(c)}>Save</Button>
+                  <Button type="button" size="sm" variant="destructive" className="rounded-none" onClick={() => void removeCard(c)}>Delete card</Button>
                   {destination && (
                     <Button type="button" size="sm" variant="outline" className="rounded-none" asChild>
                       <a href={destination} target="_blank" rel="noreferrer">Preview Link Page</a>

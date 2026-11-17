@@ -511,7 +511,14 @@ function Waitlist({ t, role, setRole }: { t: Copy; role: Role; setRole: (role: R
           {state === "done" ? (
             <div role="status" className="flex min-h-[140px] flex-col items-center justify-center border-t border-primary-foreground/20 pt-4">
               <div className="mb-3 h-px w-8 bg-gold" aria-hidden />
-              <p className="font-serif text-lg italic text-gold md:text-xl">{t.submitted}</p>
+              <p className="font-serif text-lg italic text-gold md:text-xl">{t === copy.en ? "Thank you!" : "እናመሰግናለን!"}</p>
+              <p className="mt-2 text-sm text-primary-foreground/80">{t.submitted}</p>
+              <p className="mt-4 text-[10px] uppercase tracking-[0.3em] text-primary-foreground/70">{t === copy.en ? "Follow us on social" : "በማኅበራዊ ሚዲያ ይከተሉን"}</p>
+              <div className="mt-2 flex gap-4 text-sm text-gold">
+                <a href="https://www.instagram.com/ingida.bet" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">Instagram</a>
+                <a href="https://www.tiktok.com/@ingidabet" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">TikTok</a>
+                <a href="https://www.linkedin.com/company/ingida/" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">LinkedIn</a>
+              </div>
             </div>
           ) : (
            <form onSubmit={onSubmit} className="space-y-3 text-left">
