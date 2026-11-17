@@ -16,7 +16,7 @@ import { ROUNDS, type Reveal } from "@/components/game/rounds";
 export const Route = createFileRoute("/quest")({
   head: () => ({
     meta: [
-      { title: "All My Ingidas Eat — INGIDA Quest" },
+      { title: "Unfold Your Welcome — INGIDA Quest" },
       { name: "description", content: "Play the INGIDA paper fortune game, learn how rewards work and claim your merch." },
       { property: "og:title", content: "INGIDA — Unfold your welcome" },
       { property: "og:description", content: "A fast, fun paper game from INGIDA. Play, learn and win merch." },
