@@ -515,9 +515,9 @@ function Waitlist({ t, role, setRole }: { t: Copy; role: Role; setRole: (role: R
               <p className="mt-2 text-sm text-primary-foreground/80">{t.submitted}</p>
               <p className="mt-4 text-[10px] uppercase tracking-[0.3em] text-primary-foreground/70">{t === copy.en ? "Follow us on social" : "በማኅበራዊ ሚዲያ ይከተሉን"}</p>
               <div className="mt-2 flex gap-4 text-sm text-gold">
-                <a href="https://instagram.com/ingida" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">Instagram</a>
-                <a href="https://tiktok.com/@ingida" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">TikTok</a>
-                <a href="https://t.me/ingida" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">Telegram</a>
+                <a href="https://www.instagram.com/ingida.bet" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">Instagram</a>
+                <a href="https://www.tiktok.com/@ingidabet" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">TikTok</a>
+                <a href="https://www.linkedin.com/company/ingida/" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">LinkedIn</a>
               </div>
             </div>
           ) : (
