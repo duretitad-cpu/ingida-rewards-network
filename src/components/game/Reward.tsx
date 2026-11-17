@@ -10,54 +10,68 @@ export type MerchResult = { code: string | null; item: string | null; already: b
 export function Reward({ result }: { result: MerchResult }) {
   const [busy, setBusy] = useState(false);
 
-  async function exportSticker(share: boolean) {
+  async function exportSticker(target: "instagram" | "snapchat" | "download") {
     setBusy(true);
     try {
-      const image = await createImageBitmap(await (await fetch(socks.url)).blob());
+      const image = await createImageBitmap(await (await fetch(result.image || socks.url)).blob());
       const canvas = document.createElement("canvas");
-      canvas.width = 1080;
-      canvas.height = 1920;
+      canvas.width = 1000;
+      canvas.height = 1000;
       const ctx = canvas.getContext("2d");
       if (!ctx) throw new Error("Canvas unavailable");
       const tokens = getComputedStyle(document.documentElement);
-      ctx.fillStyle = tokens.getPropertyValue("--background").trim();
-      ctx.fillRect(0, 0, 1080, 1920);
-      ctx.fillStyle = tokens.getPropertyValue("--primary").trim();
+      const paper = tokens.getPropertyValue("--background").trim();
+      const ink = tokens.getPropertyValue("--primary").trim();
+      // Transparent canvas: only the tilted sticker is painted.
+      ctx.translate(500, 500);
+      ctx.rotate(-0.06);
+      ctx.shadowColor = "rgba(0,0,0,0.25)";
+      ctx.shadowBlur = 30;
+      ctx.beginPath();
+      ctx.roundRect(-400, -330, 800, 660, 60);
+      ctx.fillStyle = paper;
+      ctx.fill();
+      ctx.shadowColor = "transparent";
+      ctx.lineWidth = 14;
+      ctx.strokeStyle = ink;
+      ctx.stroke();
+      ctx.fillStyle = ink;
       ctx.textAlign = "center";
-      ctx.font = "bold 112px Georgia";
-      ctx.fillText("ingida", 540, 340);
-      ctx.font = "bold 64px Arial";
-      ctx.fillText("ALL MY INGIDAS EAT", 540, 540);
-      const scale = Math.min(800 / image.width, 700 / image.height);
+      ctx.font = "bold 92px Georgia";
+      ctx.fillText("ingida", 0, -210);
+      ctx.font = "bold 46px Arial";
+      ctx.fillText("MY INGIDA MOMENT", 0, -140);
+      const scale = Math.min(420 / image.width, 300 / image.height);
       const w = image.width * scale;
       const h = image.height * scale;
-      ctx.drawImage(image, (1080 - w) / 2, 640 + (700 - h) / 2, w, h);
+      ctx.drawImage(image, -w / 2, -110 + (300 - h) / 2, w, h);
       image.close();
-      ctx.font = "bold 54px Arial";
-      ctx.fillText("#allmyingidaseat", 540, 1510);
-      ctx.font = "36px Arial";
-      ctx.fillText("My INGIDA Moment", 540, 1590);
+      ctx.font = "bold 50px Arial";
+      ctx.fillText("#ingidamoment", 0, 260);
       const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob((value) => value ? resolve(value) : reject(new Error("Export failed")), "image/png"));
       const file = new File([blob], "my-ingida-moment.png", { type: "image/png" });
-      const shareText = `My INGIDA Moment — redeem All My Ingidas Eat socks with #allmyingidaseat ${window.location.origin}`;
-      if (share && navigator.canShare?.({ files: [file] })) {
+      const shareText = `My INGIDA Moment #ingidamoment ${window.location.origin}/quest`;
+      if (target !== "download" && navigator.canShare?.({ files: [file] })) {
+        toast.message(`Pick ${target === "instagram" ? "Instagram → Story" : "Snapchat"} in the share menu.`);
         await navigator.share({ files: [file], title: "My INGIDA Moment", text: shareText });
-      } else if (share && navigator.share) {
-        await navigator.share({ title: "My INGIDA Moment", text: shareText, url: window.location.origin });
-      } else {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = file.name;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-        if (share) await navigator.clipboard?.writeText(shareText).catch(() => {});
-        toast.success(share ? "Sticker saved and caption copied — post it to your Story." : "Sticker saved — ready for your Instagram Story.");
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = file.name;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      await navigator.clipboard?.writeText(shareText).catch(() => {});
+      if (target === "download") toast.success("Sticker saved.");
+      else {
+        toast.success(`Sticker saved — add it from your photos in ${target === "instagram" ? "your Instagram Story" : "Snapchat"}.`);
+        window.location.href = target === "instagram" ? "instagram://story-camera" : "snapchat://";
       }
     } catch (error) {
-      if (!(error instanceof DOMException && error.name === "AbortError")) toast.error("Couldn't save your sticker. Please try again.");
+      if (!(error instanceof DOMException && error.name === "AbortError")) toast.error("Couldn't make your sticker. Please try again.");
     } finally {
       setBusy(false);
     }
@@ -99,10 +113,11 @@ export function Reward({ result }: { result: MerchResult }) {
           <Instagram className="h-5 w-5 shrink-0" />
           <span className="text-left text-xs font-bold leading-tight">My INGIDA Moment<br /><span className="text-[10px] font-medium">#allmyingidaseat</span></span>
         </div>
-        <div className="flex shrink-0 gap-1">
-          <Button variant="ghost" size="icon" title="Download Instagram Story sticker" aria-label="Download Instagram Story sticker" disabled={busy} onClick={() => exportSticker(false)}><Download /></Button>
-          <Button variant="ghost" size="icon" title="Share Instagram Story sticker" aria-label="Share Instagram Story sticker" disabled={busy} onClick={() => exportSticker(true)}><Share2 /></Button>
-        </div>
+        <Button variant="ghost" size="icon" title="Save sticker" aria-label="Save transparent sticker" disabled={busy} onClick={() => exportSticker("download")}><Download /></Button>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        <Button className="rounded-full" disabled={busy} onClick={() => exportSticker("instagram")}><Instagram /> IG Story</Button>
+        <Button variant="outline" className="rounded-full" disabled={busy} onClick={() => exportSticker("snapchat")}><Share2 /> Snapchat</Button>
       </div>
     </section>
   );
