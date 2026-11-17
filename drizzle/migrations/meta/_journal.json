@@ -50,6 +50,13 @@
       "when": 1794916369219,
       "tag": "0006_inventory_crm_quest_fixes",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794916440314,
+      "tag": "0007_allow_contacts_without_email",
+      "breakpoints": true
     }
   ]
 }
