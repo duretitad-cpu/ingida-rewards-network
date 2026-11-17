@@ -1,6 +1,5 @@
 import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "@tanstack/react-router";
 import { Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket } from "lucide-react";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 
@@ -93,11 +92,9 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
           })}
         </g>
       </svg>
-      <div className="quest-fold-mark pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2" style={{ opacity: opening }} aria-hidden="true">
-        <Link to="/" tabIndex={-1} aria-hidden="true" className="text-[oklch(0.24_0.05_265)]"><IngidaLogo className="h-auto w-16" /></Link>
-        <div className="flex items-center justify-center gap-2 text-gold" aria-hidden="true">
-          {CENTER_ICONS.map((Icon, index) => <Icon key={index} className="h-4 w-4" strokeWidth={1.7} />)}
-        </div>
+      <div className="quest-fold-mark pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1.5" style={{ opacity: opening }} aria-hidden="true">
+        {(() => { const Icon = CENTER_ICONS[((iconIndex % CENTER_ICONS.length) + CENTER_ICONS.length) % CENTER_ICONS.length] ?? Utensils; return <Icon key={iconIndex} className="h-6 w-6 text-gold animate-in fade-in zoom-in-75 duration-300" strokeWidth={1.7} />; })()}
+        <span className="text-[oklch(0.24_0.05_265)]"><IngidaLogo className="h-auto w-16" /></span>
         <span className="font-serif text-[10px] font-semibold tracking-wide text-[oklch(0.24_0.05_265)]">Spend, Earn &amp; Redeem</span>
       </div>
       <div role="group" aria-label="Paper fortune teller" className="absolute inset-[10%] grid grid-cols-2 grid-rows-2 gap-1">

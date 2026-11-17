@@ -156,7 +156,7 @@ export function NfcCards({ isAdmin }: { isAdmin: boolean }) {
                     <div className="mt-2 flex gap-2">
                       <Button type="button" size="sm" variant="outline" className="rounded-none text-xs" onClick={() => { void navigator.clipboard.writeText(permanent); setMsg("Card URL copied."); }}>Copy URL</Button>
                       <Button type="button" size="sm" variant="outline" className="rounded-none text-xs" asChild>
-                        <a href={permanent} target="_blank" rel="noreferrer">Preview Card Page</a>
+                        <a href={permanent} target="_blank" rel="noopener noreferrer">Preview Card Page</a>
                       </Button>
                     </div>
                   </div>
@@ -178,7 +178,7 @@ export function NfcCards({ isAdmin }: { isAdmin: boolean }) {
                   <Button type="button" size="sm" variant="destructive" className="rounded-none" onClick={() => void removeCard(c)}>Delete card</Button>
                   {destination && (
                     <Button type="button" size="sm" variant="outline" className="rounded-none" asChild>
-                      <a href={destination} target="_blank" rel="noreferrer">Preview Link Page</a>
+                      <a href={destination} target="_blank" rel="noopener noreferrer">Preview Link Page</a>
                     </Button>
                   )}
                 </div>
