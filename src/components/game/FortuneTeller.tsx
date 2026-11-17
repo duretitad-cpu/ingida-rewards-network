@@ -82,8 +82,8 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
             return (
               <g key={i}>
                 <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill={`url(#${id}-${colour})`} stroke={colour === "paper" ? "var(--fold-outline)" : "none"} strokeWidth={colour === "paper" ? 0.55 : 0} strokeOpacity={colour === "paper" ? 0.8 : 0} />
-                <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)}Z`} fill={colour === "paper" ? "var(--fold-paper-shade)" : "var(--fold-sheen)"} opacity={colour === "paper" ? 0.1 : 0.16} />
-                <path d={`M${point(corner)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill="var(--fold-shade)" opacity={colour === "paper" ? 0.07 : 0.18} />
+                <path d={`M${point(corner)} Q${point(controls[i] ?? corner)} ${point(seam)} L${point(tip)} L${point(lastTip)}Z`} fill={colour === "paper" ? "var(--fold-paper-shade)" : "var(--fold-sheen)"} opacity={colour === "paper" ? 0.045 : 0.16} />
+                <path d={`M${point(corner)} L${point(lastTip)} L${point(lastSeam)} Q${point(endControls[i] ?? corner)} ${point(corner)}Z`} fill="var(--fold-shade)" opacity={colour === "paper" ? 0.03 : 0.18} />
                 <text x={x} y={y - (lines.length > 1 ? 5 : 0)} textAnchor="middle" dominantBaseline="middle" fontSize={label.length > 7 ? 8.5 : 10} className="font-serif font-semibold" fill={colour === "paper" ? "var(--fold-ink-dark)" : "var(--fold-gold-text)"}>
                   {lines.map((line, j) => <tspan key={j} x={x} dy={j ? 10 : 0}>{line}</tspan>)}
                 </text>
