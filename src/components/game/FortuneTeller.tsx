@@ -6,7 +6,7 @@ import { IngidaLogo } from "@/components/brand/ingida-logo";
 export type Phase = "closed" | "h" | "v";
 type Point = [number, number];
 const point = ([x, y]: Point) => `${x} ${y}`;
-const COLOURS = ["navy", "deep", "dusk", "navy"];
+const COLOURS = ["navy", "deep", "navy", "dusk"];
 const CENTER_ICONS = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
 
 // Four connected paper pockets share their mouth vertices with adjacent folds.
@@ -53,7 +53,7 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
     <div className="relative mx-auto aspect-square w-full max-w-[min(380px,48dvh)] select-none">
       <svg viewBox="4 4 192 192" className="block h-full w-full overflow-visible" aria-hidden="true">
         <defs>
-          {COLOURS.slice(0, 3).map((colour) => (
+          {["navy", "deep", "dusk"].map((colour) => (
             <radialGradient key={colour} id={`${id}-${colour}`} cx="28%" cy="18%" r="100%">
               <stop offset="0" stopColor={`var(--fold-${colour}-light)`} />
               <stop offset="0.48" stopColor={`var(--fold-${colour})`} />
