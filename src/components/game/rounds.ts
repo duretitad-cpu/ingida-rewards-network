@@ -40,9 +40,9 @@ export const ROUNDS: Round[] = [
     eyebrow: "Inner Fold · 3 of 4",
     prompt: "How Would You Like To Earn?",
     parts: ["How Would You Like To ", "Earn", "?"],
-    labels: ["Daily Coffee", "Big Dinners", "Groceries", "Takeout"],
+    labels: ["Daily Coffee", "Dining Out", "Groceries", "Takeout"],
     labelsByCategory: [
-      ["Daily Coffee", "Big Dinners", "Groceries", "Takeout"],
+      ["Daily Coffee", "Dining Out", "Groceries", "Takeout"],
       ["Weekend Getaways", "Business Stays", "Monthly Rent", "Spa Days"],
       ["Daily Commute", "City Rides", "Road Trips", "Flights"],
       ["Concerts", "Nightlife", "Wellness", "Private Events"],
