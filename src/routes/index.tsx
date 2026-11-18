@@ -46,7 +46,7 @@ const copy = {
     tagline: "Guest",
     heroHeadline: null,
     ctaJoin: "Request Invitation",
-    howEyebrow: "Capture this #ingidaMoment",
+    howEyebrow: "Capture this #MyingidaMoment",
     howTitle: "With Every Rewarded Experiance.",
     howLead: "Honoring Ethiopian Hospitality ",
     howBody: "",

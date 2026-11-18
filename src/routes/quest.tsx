@@ -68,7 +68,14 @@ function Index() {
   }
 
   function onPick(i: number) {
-    if (!r || spinning || finished.current) return;
+    if (!r || spinning) return;
+    if (finished.current) {
+      // Final fold: the player picks one more fold, it opens, then alerts.
+      setPicked(i);
+      setSpinning(true);
+      pinch(3, () => { setSpinning(false); go("alerts"); });
+      return;
+    }
     setPicked(i);
     setSpinning(true);
     answers.current[r.key] = r.labels[i] ?? "";
@@ -79,7 +86,7 @@ function Index() {
       setSpinning(false);
       setPicked(null);
       if (round + 1 < ROUNDS.length) setRound(round + 1);
-      else { finished.current = true; alertTimer.current = setTimeout(() => { alertTimer.current = null; setStep((s) => (s === "play" ? "alerts" : s)); }, 1800); }
+      else finished.current = true;
     });
   }
 
@@ -88,7 +95,7 @@ function Index() {
       <div className="mx-auto flex min-h-dvh max-w-md flex-col px-5 pb-4 pt-5">
         <header className="flex items-center justify-between">
           <Link to="/" aria-label="INGIDA home" className="text-primary"><IngidaLogo className="h-7 w-auto" /></Link>
-          <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">#ingidaMoment</span>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">#MyingidaMoment</span>
         </header>
 
         {step === "play" && (
@@ -101,7 +108,7 @@ function Index() {
                 {r.key === "lifestyle" ? <><span className="block">Tell Us About Your Lifestyle.</span><span className="block text-balance">Where Do You Spend The Most?</span></> : r.prompt}
               </h2>
             </div>
-            <div><FortuneTeller labels={r.labels} inside={r.inside} inner={round > 0} phase={phase} iconIndex={iconIndex} disabled={spinning || finished.current} picked={picked} onPick={onPick} /></div>
+            <div><FortuneTeller labels={r.labels} inside={r.inside} inner={round > 0} phase={phase} iconIndex={iconIndex} disabled={spinning} picked={picked} onPick={onPick} /></div>
             <div className="px-2 pt-3" aria-live="polite">
               {reveal ? (
                 <div className="text-center">
@@ -109,6 +116,7 @@ function Index() {
                   <p className="mx-auto mt-1 max-w-xs text-sm leading-snug text-muted-foreground">{reveal.body}</p>
                 </div>
               ) : null}
+              {finished.current && !spinning ? <p className="mt-3 text-center text-xs uppercase tracking-[0.25em] text-gold">Pick a fold to unfold your reward</p> : null}
             </div>
             <div className="mt-4 flex gap-1 px-8" aria-label={`Progress: question ${round + 1} of ${ROUNDS.length}`}>
               {ROUNDS.map((_, i) => (

@@ -48,9 +48,6 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
   const controls: Point[] = [[52, 10], [190, 52], [148, 190], [10, 148]];
   const endControls: Point[] = [[10, 52], [148, 10], [190, 148], [52, 190]];
   const opening = Math.max(h, v);
-  // Hairline rim sits just inside the revealed centre.
-  const rim = tips.map(([x, y]) => [100 + (x - 100) * 0.86, 100 + (y - 100) * 0.86] as Point);
-  const [rimTop, rimRight, rimBottom, rimLeft] = rim;
 
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[min(380px,48dvh)] select-none">
@@ -99,8 +96,6 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
               </g>
             );
           })}
-          {/* Gold hairline rim just inside the revealed centre. */}
-          <path d={`M${point(rimTop)} L${point(rimRight)} L${point(rimBottom)} L${point(rimLeft)} Z`} fill="none" stroke="var(--fold-gold-hairline)" strokeWidth={0.35} strokeOpacity={0.6 * opening} strokeLinejoin="round" />
         </g>
       </svg>
       <div className="quest-fold-mark pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1.5" style={{ opacity: opening }} aria-hidden="true">

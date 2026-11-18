@@ -340,6 +340,15 @@ export type Database = {
         Returns: boolean
       }
       is_operator: { Args: { _user_id: string }; Returns: boolean }
+      quest_prize_preview: {
+        Args: never
+        Returns: {
+          description: string
+          image: string
+          item: string
+          remaining: number
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "operator"

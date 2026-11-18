@@ -774,7 +774,7 @@ video.addis-skyline { object-fit: cover; }
 .wallet-feature-copy .hero-categories { color: var(--primary-foreground); }
 html[lang="am"] body { font-weight: 400; }
 html[lang="am"] :is(h1, h2, h3, p, span, a, label, button, input) { font-weight: 400; }
-html[lang="am"] .wallet-feature-labels { font-size: 20px; line-height: 1.6; }
+html[lang="am"] .wallet-feature-labels { font-size: 30px; line-height: 1.6; }
 html[lang="am"] .am-hero-title { font-size: 60px; }
 html[lang="am"] .wallet-feature-copy .hero-categories { gap: 10px; }
 html[lang="am"] .hero-categories li { min-width: 36px; max-width: 96px; text-align: center; }

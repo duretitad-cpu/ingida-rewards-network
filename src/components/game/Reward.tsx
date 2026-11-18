@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { QRCodeSVG } from "qrcode.react";
 import { Download, Instagram, Share2 } from "lucide-react";
 import { toast } from "sonner";
@@ -9,11 +10,22 @@ export type MerchResult = { code: string | null; item: string | null; already: b
 
 export function Reward({ result }: { result: MerchResult }) {
   const [busy, setBusy] = useState(false);
+  // Merch Drop always reflects the live inventory Quest prize.
+  const [drop, setDrop] = useState<{ item: string; description: string; image: string } | null>(null);
+  useEffect(() => {
+    supabase.rpc("quest_prize_preview").then(({ data }) => {
+      const row = Array.isArray(data) ? data[0] : data;
+      if (row) setDrop({ item: row.item, description: row.description, image: row.image });
+    });
+  }, []);
+  const item = result.item || drop?.item || "INGIDA Merch";
+  const description = result.description || drop?.description || "";
+  const image = result.image || drop?.image || socks.url;
 
   async function exportSticker(target: "instagram" | "snapchat" | "download") {
     setBusy(true);
     try {
-      const image = await createImageBitmap(await (await fetch(result.image || socks.url)).blob());
+      const bitmap = await createImageBitmap(await (await fetch(image)).blob());
       const canvas = document.createElement("canvas");
       canvas.width = 1000;
       canvas.height = 1000;
@@ -41,19 +53,21 @@ export function Reward({ result }: { result: MerchResult }) {
       ctx.fillText("ingida", 0, -210);
       ctx.font = "bold 46px Arial";
       ctx.fillText("MY INGIDA MOMENT", 0, -140);
-      const scale = Math.min(420 / image.width, 300 / image.height);
-      const w = image.width * scale;
-      const h = image.height * scale;
-      ctx.drawImage(image, -w / 2, -110 + (300 - h) / 2, w, h);
-      image.close();
+      const scale = Math.min(420 / bitmap.width, 300 / bitmap.height);
+      const w = bitmap.width * scale;
+      const h = bitmap.height * scale;
+      ctx.drawImage(bitmap, -w / 2, -110 + (300 - h) / 2, w, h);
+      bitmap.close();
       ctx.font = "bold 50px Arial";
-      ctx.fillText("#ingidamoment", 0, 260);
+      ctx.fillText("#MyingidaMoment", 0, 260);
       const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob((value) => value ? resolve(value) : reject(new Error("Export failed")), "image/png"));
       const file = new File([blob], "my-ingida-moment.png", { type: "image/png" });
-      const shareText = `My INGIDA Moment #ingidamoment ${window.location.origin}/quest`;
+      const shareText = `My INGIDA Moment #MyingidaMoment ${window.location.origin}/quest`;
       if (target !== "download" && navigator.canShare?.({ files: [file] })) {
         toast.message(`Pick ${target === "instagram" ? "Instagram → Story" : "Snapchat"} in the share menu.`);
-        await navigator.share({ files: [file], title: "My INGIDA Moment", text: shareText });
+        // Instagram and Snapchat only accept the image; the caption goes to the clipboard.
+        await navigator.clipboard?.writeText(shareText).catch(() => {});
+        await navigator.share({ files: [file] });
         return;
       }
       const url = URL.createObjectURL(blob);
@@ -81,8 +95,8 @@ export function Reward({ result }: { result: MerchResult }) {
     <section className="flex flex-1 flex-col gap-5 py-7 text-center animate-in fade-in duration-300">
       <div>
         <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Your INGIDA Moment</p>
-        <h2 className="mt-2 font-serif text-4xl font-normal text-primary">All My Ingidas Eat</h2>
-        <p className="mt-1 text-sm text-muted-foreground">{result.pending ? "We're checking your reward inventory…" : result.code ? "Your socks. Your welcome." : "You're on the list — today's socks are all claimed."}</p>
+        <h2 className="mt-2 font-serif text-4xl font-normal text-primary">MendSpace x Lock In</h2>
+        <p className="mt-1 text-sm text-muted-foreground">{result.pending ? "We're checking your reward inventory…" : result.code ? `Your ${item}. Your welcome.` : "You're on the list — today's drop is all claimed."}</p>
       </div>
       {result.code ? (
         <div className="flex flex-col items-center gap-2 border-y border-border py-5" aria-label="Redemption code">
@@ -99,19 +113,19 @@ export function Reward({ result }: { result: MerchResult }) {
         </div>
       )}
       <div className="merch-stage flex items-center gap-4 p-4 text-left">
-        <img src={result.image || socks.url} alt={result.item || "All My Ingidas Eat socks"} className="h-28 w-28 shrink-0 object-contain" />
+        <img src={image} alt={item} className="h-28 w-28 shrink-0 object-contain" />
         <div className="min-w-0">
           <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{result.code ? (result.already ? "Your Saved Drop" : "Merch Drop") : "Merch Drop"}</p>
-          <p className="mt-1 font-serif text-xl font-bold text-primary">{result.item || "All My Ingidas Eat Socks"}</p>
-          {result.description ? <p className="mt-1 text-sm text-muted-foreground">{result.description}</p> : null}
-          <p className="mt-1 break-all text-sm font-bold text-primary">#allmyingidaseat</p>
+          <p className="mt-1 font-serif text-xl font-normal text-primary">{item}</p>
+          {description ? <p className="mt-1 text-sm text-muted-foreground">{description}</p> : null}
+          <p className="mt-1 break-all text-sm font-bold text-primary">#MyingidaMoment</p>
           <p className="mt-1 text-xs text-muted-foreground">{result.code ? "Show your code to an INGIDA host." : "Watch for the next drop."}</p>
         </div>
       </div>
       <div className="flex items-center justify-between gap-3">
         <div className="ig-sticker flex min-w-0 -rotate-2 items-center gap-2 rounded-lg border-2 border-primary px-3 py-3 text-primary">
           <Instagram className="h-5 w-5 shrink-0" />
-          <span className="text-left text-xs font-bold leading-tight">My INGIDA Moment<br /><span className="text-[10px] font-medium">#allmyingidaseat</span></span>
+          <span className="text-left text-xs font-bold leading-tight">My INGIDA Moment<br /><span className="text-[10px] font-medium">#MyingidaMoment</span></span>
         </div>
         <Button variant="ghost" size="icon" title="Save sticker" aria-label="Save transparent sticker" disabled={busy} onClick={() => exportSticker("download")}><Download /></Button>
       </div>
