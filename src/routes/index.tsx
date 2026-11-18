@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 
 import appPhones from "@/assets/ingida-wallet-navy.jpg";
-const membershipLoop = { url: "/Main2.mp4" };
-const membershipWebm = { url: "/Main2.mp4" };
+const membershipLoop = { url: "/Main3.mp4" };
+const membershipWebm = { url: "/Main3.mp4" };
 import membershipPoster from "@/assets/membership-poster.jpg.asset.json";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { StoreMarks } from "@/components/brand/store-marks";
@@ -360,7 +360,7 @@ function How({ t }: { t: Copy }) {
           preload="auto"
           aria-hidden="true"
         >
-          <source src="/Main2.mp4" type="video/mp4" />
+          <source src="/Main3.mp4" type="video/mp4" />
           <source src={membershipWebm.url} type="video/webm" />
         </video>
         <div className="membership-wash" aria-hidden="true" />
