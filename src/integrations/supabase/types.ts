@@ -314,14 +314,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      claim_quest_merch: {
-        Args: { _answers: Json; _name: string; _phone: string }
-        Returns: {
-          already: boolean
-          code: string
-          item: string
-        }[]
-      }
       claim_quest_prize: {
         Args: { _answers: Json; _name: string; _phone: string }
         Returns: {

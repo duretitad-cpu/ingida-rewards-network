@@ -159,7 +159,8 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
       const images = await Promise.all(availableUnits.map((u) => QRCode.toDataURL(u.code, { margin: 1, width: 200 })));
       const win = window.open("", "_blank");
       if (!win) { setMsg("Allow pop-ups to print inventory codes."); return; }
-      win.document.write(`<title>${item.name} codes</title><body style="font-family:sans-serif;display:flex;flex-wrap:wrap;gap:16px">${images.map((src, i) => `<div style="text-align:center;font-size:11px"><img src="${src}" width="120"/><br/>${availableUnits[i]?.code ?? ""}</div>`).join("")}</body>`);
+      const h = (v: string) => v.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+      win.document.write(`<title>${h(item.name)} codes</title><body style="font-family:sans-serif;display:flex;flex-wrap:wrap;gap:16px">${images.map((src, i) => `<div style="text-align:center;font-size:11px"><img src="${src}" width="120"/><br/>${h(availableUnits[i]?.code ?? "")}</div>`).join("")}</body>`);
       win.document.close();
       win.print();
     } catch {

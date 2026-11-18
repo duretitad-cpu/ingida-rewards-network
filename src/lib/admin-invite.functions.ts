@@ -2,12 +2,21 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
+const ALLOWED = ["https://www.ingida.com", "https://ingida.com", "https://ingida-rewards-network.lovable.app"];
+function safeRedirect(raw: string) {
+  try {
+    const u = new URL(raw);
+    if (ALLOWED.includes(u.origin) || u.hostname.endsWith(".lovable.app")) return `${u.origin}/operators`;
+  } catch { /* fall through */ }
+  return "https://www.ingida.com/operators";
+}
+
 /** Admin-only: records an admin invitation and emails a sign-in invite link. */
 export const sendAdminInvite = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { email: string; redirectTo: string }) => ({
     email: z.string().trim().toLowerCase().email().max(255).parse(input.email),
-    redirectTo: z.string().url().max(300).parse(input.redirectTo),
+    redirectTo: safeRedirect(input.redirectTo),
   }))
   .handler(async ({ data, context }) => {
     const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });

@@ -51,19 +51,13 @@ export const ROUNDS: Round[] = [
     reveal: () => ({ title: "Earn Your Way", body: "Every Spend Adds Up To Rewards You Choose." }),
   },
   {
-    key: "redeem",
+    key: "alerts",
     eyebrow: "Last Fold · 4 of 4",
-    prompt: "If You Could, Where Would You Redeem?",
-    parts: ["How Would You Like To ", "Redeem", "?"],
-    labels: ["Coffee", "Restaurant", "Delivery", "Groceries"],
-    labelsByCategory: [
-      ["Coffee", "Restaurant", "Delivery", "Groceries"],
-      ["Rent", "Hotel Room", "Resort", "Spa"],
-      ["Taxi", "Bus", "Ride", "Flight"],
-      ["Events", "Appointments", "Places", "Invitations"],
-    ],
+    prompt: "Would You Like To Receive Alerts For INGIDA?",
+    parts: ["Would You Like To Receive ", "Alerts", " For INGIDA?"],
+    labels: ["Yes Please", "No Thanks", "እሺ", "አይ፣ አመሰግናለሁ"],
     inside: ["SPEND", "EARN", "REDEEM"],
-    reveal: () => ({ title: "One Network, Everywhere", body: "Earn At One Partner, Redeem At Any Other Across INGIDA." }),
+    reveal: () => ({ title: "", body: "" }),
   },
 ];
 

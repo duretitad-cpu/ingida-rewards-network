@@ -83,6 +83,12 @@ function Index() {
     setPicked(i);
     setSpinning(true);
     answers.current[r.key] = r.labels[i] ?? "";
+    if (r.key === "alerts") {
+      // Yes Please / እሺ go straight to name + phone; the no options end politely.
+      const yes = i === 0 || i === 2;
+      pinch(2, () => { setSpinning(false); go(yes ? "form" : "bye"); });
+      return;
+    }
     if (round === 0) setCatIdx(i);
     pinch(2, () => {
       const rv = r.reveal(i);

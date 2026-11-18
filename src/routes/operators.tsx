@@ -212,7 +212,7 @@ function Crm() {
 
   const exportCsv = () => {
     const head = ["Date", "Name", "Phone", "Email", "Type", "Signed up from", "Details", "Notes"];
-    const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
+    const esc = (v: string) => { const safe = /^[=+\-@\t\r]/.test(v) ? `'${v}` : v; return `"${safe.replace(/"/g, '""')}"`; };
     const lines = shown.map((r) => [new Date(r.created_at).toISOString(), r.name, r.phone, r.email, label(r.type), SOURCES[r.source] ?? r.source, r.detail, r.notes].map((v) => esc(String(v))).join(","));
     const url = URL.createObjectURL(new Blob([[head.join(","), ...lines].join("\n")], { type: "text/csv" }));
     const a = document.createElement("a"); a.href = url; a.download = "ingida-crm.csv"; a.click(); URL.revokeObjectURL(url);

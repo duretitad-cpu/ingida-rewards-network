@@ -14,4 +14,4 @@
 - [x] Store waitlist in an exportable Cloud CRM list.
 - [ ] Send waitlist owner updates to home@ingida.com (requires verified email domain).
 - [x] Optimize Ethiopia, hospitality, merchants, tourism and rewards search metadata without unverified financial claims.
-- [x] Verify mobile layout and a real waitlist submission.
+- [x] Verify mobile layout and a real waitlist submission.- [ ] Quest: last fold = 'Would you like to receive alerts for INGIDA?' with Yes Please / No Thanks / እሺ, then straight to name + phone
