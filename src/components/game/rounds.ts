@@ -38,9 +38,15 @@ export const ROUNDS: Round[] = [
   {
     key: "earn",
     eyebrow: "Inner Fold · 3 of 4",
-    prompt: "What Would You Like To Earn?",
-    parts: ["What Would You Like To ", "Earn", "?"],
-    labels: ["Cashback", "Points", "Perks", "Upgrades"],
+    prompt: "How Would You Like To Earn?",
+    parts: ["How Would You Like To ", "Earn", "?"],
+    labels: ["Daily Coffee", "Big Dinners", "Groceries", "Takeout"],
+    labelsByCategory: [
+      ["Daily Coffee", "Big Dinners", "Groceries", "Takeout"],
+      ["Weekend Getaways", "Business Stays", "Monthly Rent", "Spa Days"],
+      ["Daily Commute", "City Rides", "Road Trips", "Flights"],
+      ["Concerts", "Nightlife", "Wellness", "Private Events"],
+    ],
     inside: ["SPEND", "EARN", "REDEEM"],
     reveal: () => ({ title: "Earn Your Way", body: "Every Spend Adds Up To Rewards You Choose." }),
   },
