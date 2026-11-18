@@ -13,7 +13,7 @@ import {
 
 import appPhones from "@/assets/ingida-wallet-navy.jpg";
 import main3Video from "@/assets/main3-fast.mp4.asset.json";
-const membershipLoop = main3Video;
+const membershipLoop = { ...main3Video, url: "/main3-fast.mp4" };
 import membershipPoster from "@/assets/membership-poster.jpg.asset.json";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { StoreMarks } from "@/components/brand/store-marks";
