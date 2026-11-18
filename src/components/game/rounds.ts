@@ -6,35 +6,58 @@ export type Round = {
   labels: string[];
   inside: string[];
   reveal: (i: number) => Reveal;
+  /** Prompt split around a highlighted word; "{cat}" becomes the chosen category. */
+  parts?: [string, string, string];
+  /** Options that depend on the category picked in the first fold. */
+  labelsByCategory?: string[][];
 };
+
+export const CATEGORIES = ["Dine", "Stay", "Travel", "Access"];
 
 export const ROUNDS: Round[] = [
   {
     key: "lifestyle",
-    eyebrow: "Welcome · Fold 1 of 3",
+    eyebrow: "Welcome · Fold 1 of 4",
     prompt: "Tell Us About Your Lifestyle. Where Do You Spend The Most?",
-    labels: ["Dine", "Stay", "Shop", "Travel"],
+    labels: CATEGORIES,
     inside: ["SPEND", "EARN", "REDEEM"],
     reveal: (i) => ({
-      title: ["A True Foodie", "Home Away From Home", "Made For The Hunt", "Always On The Move"][i] ?? "Welcome",
-      body: "Join with your Fayda ID and spend with telebirr, right in your wallet.",
+      title: ["A True Foodie", "Home Away From Home", "Always On The Move", "First In Line"][i] ?? "Welcome",
+      body: "Join With Your Fayda ID And Spend With Telebirr, Right In Your Wallet.",
     }),
   },
   {
     key: "monthly",
-    eyebrow: "Inner Fold · 2 of 3",
-    prompt: "How Much Do You Spend On It Monthly?",
+    eyebrow: "Inner Fold · 2 of 4",
+    prompt: "How Much Do You Spend On {cat} Monthly?",
+    parts: ["How Much Do You ", "Spend", " On {cat} Monthly?"],
     labels: ["Under 5K", "5K–15K", "15K–30K", "30K+"],
     inside: ["SPEND", "EARN", "REDEEM"],
-    reveal: () => ({ title: "2% Back, Every Time", body: "Earn 2% cashback on every eligible spend." }),
+    reveal: () => ({ title: "2% Back, Every Time", body: "Earn 2% Cashback On Every Eligible Spend." }),
   },
   {
-    key: "favorite",
-    eyebrow: "Last Fold · 3 of 3",
-    prompt: "What's Your Favorite Place To Earn And Redeem At?",
-    labels: ["Hotels", "Cafés", "Lounges", "Retail"],
+    key: "earn",
+    eyebrow: "Inner Fold · 3 of 4",
+    prompt: "What Would You Like To Earn?",
+    parts: ["What Would You Like To ", "Earn", "?"],
+    labels: ["Cashback", "Points", "Perks", "Upgrades"],
     inside: ["SPEND", "EARN", "REDEEM"],
-    reveal: () => ({ title: "One Network, Everywhere", body: "Earn at one partner, redeem at any other across INGIDA." }),
+    reveal: () => ({ title: "Earn Your Way", body: "Every Spend Adds Up To Rewards You Choose." }),
+  },
+  {
+    key: "redeem",
+    eyebrow: "Last Fold · 4 of 4",
+    prompt: "If You Could, Where Would You Redeem?",
+    parts: ["How Would You Like To ", "Redeem", "?"],
+    labels: ["Coffee", "Restaurant", "Delivery", "Groceries"],
+    labelsByCategory: [
+      ["Coffee", "Restaurant", "Delivery", "Groceries"],
+      ["Rent", "Hotel Room", "Resort", "Spa"],
+      ["Taxi", "Bus", "Ride", "Flight"],
+      ["Events", "Appointments", "Places", "Invitations"],
+    ],
+    inside: ["SPEND", "EARN", "REDEEM"],
+    reveal: () => ({ title: "One Network, Everywhere", body: "Earn At One Partner, Redeem At Any Other Across INGIDA." }),
   },
 ];
 
