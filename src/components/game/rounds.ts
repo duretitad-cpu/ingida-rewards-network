@@ -17,7 +17,7 @@ export const CATEGORIES = ["Dine", "Stay", "Travel", "Access"];
 export const ROUNDS: Round[] = [
   {
     key: "lifestyle",
-    eyebrow: "Welcome · Fold 1 of 4",
+    eyebrow: "Welcome · Fold 1 of 5",
     prompt: "Tell Us About Your Lifestyle. Where Do You Spend The Most?",
     labels: CATEGORIES,
     inside: ["SPEND", "EARN", "REDEEM"],
@@ -28,7 +28,7 @@ export const ROUNDS: Round[] = [
   },
   {
     key: "monthly",
-    eyebrow: "Inner Fold · 2 of 4",
+    eyebrow: "Inner Fold · 2 of 5",
     prompt: "How Much Do You Spend On {cat} Monthly?",
     parts: ["How Much Do You ", "Spend", " On {cat} Monthly?"],
     labels: ["Under 5K", "5K–15K", "15K–30K", "30K+"],
@@ -37,7 +37,7 @@ export const ROUNDS: Round[] = [
   },
   {
     key: "earn",
-    eyebrow: "Inner Fold · 3 of 4",
+    eyebrow: "Inner Fold · 3 of 5",
     prompt: "How Would You Like To Earn?",
     parts: ["How Would You Like To ", "Earn", "?"],
     labels: ["Daily Coffee", "Dining Out", "Groceries", "Takeout"],
@@ -51,8 +51,23 @@ export const ROUNDS: Round[] = [
     reveal: () => ({ title: "Earn Your Way", body: "Every Spend Adds Up To Rewards You Choose." }),
   },
   {
+    key: "redeem",
+    eyebrow: "Inner Fold · 4 of 5",
+    prompt: "If You Could Redeem Anywhere, Where Would You Go?",
+    parts: ["If You Could ", "Redeem", " Anywhere, Where Would You Go?"],
+    labels: ["Coffee On Us", "Dinner For Two", "Grocery Run", "Dessert Night"],
+    labelsByCategory: [
+      ["Coffee On Us", "Dinner For Two", "Grocery Run", "Dessert Night"],
+      ["A Night Out", "Weekend Escape", "Rent Support", "Spa Day"],
+      ["Free Rides", "Airport Transfer", "Road Trip Fuel", "Flight Credit"],
+      ["Concert Tickets", "Lounge Access", "Event Invites", "Wellness Pass"],
+    ],
+    inside: ["SPEND", "EARN", "REDEEM"],
+    reveal: () => ({ title: "One Network, Every Partner", body: "Spend With One Partner, Redeem With Another." }),
+  },
+  {
     key: "alerts",
-    eyebrow: "Last Fold · 4 of 4",
+    eyebrow: "Last Fold · 5 of 5",
     prompt: "Would You Like To Receive Alerts For INGIDA?",
     parts: ["Would You Like To Receive ", "Alerts", " For INGIDA?"],
     labels: ["Yes Please", "No Thanks", "እሺ", "አይ፣ አመሰግናለሁ"],
