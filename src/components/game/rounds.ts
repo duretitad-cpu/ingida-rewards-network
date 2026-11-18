@@ -12,7 +12,7 @@ export type Round = {
   labelsByCategory?: string[][];
 };
 
-export const CATEGORIES = ["Dine", "Stay", "Access", "Travel"];
+export const CATEGORIES = ["Dine", "Stay", "Travel", "Access"];
 
 export const ROUNDS: Round[] = [
   {
