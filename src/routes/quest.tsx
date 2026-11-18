@@ -137,8 +137,8 @@ function Index() {
             <h2 className="font-serif text-4xl font-normal capitalize leading-[0.95] text-primary">Would You Like To Receive Alerts?</h2>
             <p className="text-muted-foreground">INGIDA turns everyday spend into rewards across partners. Get launch alerts and a gift.</p>
             <div className="grid gap-3">
-              <Button size="lg" className="h-14 rounded-full text-base" onClick={() => go("form")}>Yes, send me alerts</Button>
-              <Button size="lg" variant="ghost" className="rounded-full" onClick={() => go("bye")}>No thanks</Button>
+              <Button size="lg" className="h-14 rounded-full text-base" onClick={() => go("form")}>Yes, Send me Alerts</Button>
+              <Button size="lg" variant="ghost" className="rounded-full" onClick={() => go("bye")}>No Thanks</Button>
             </div>
           </section>
         )}
