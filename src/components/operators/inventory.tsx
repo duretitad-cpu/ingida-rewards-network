@@ -13,6 +13,8 @@ type Item = {
   code_prefix: string;
   created_at: string;
   quest_reward: boolean;
+  sticker_title: string;
+  sticker_hashtag: string;
 };
 
 type Unit = {
@@ -139,6 +141,12 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
     }
   };
 
+  const saveSticker = async (item: Item, patch: Partial<Pick<Item, "sticker_title" | "sticker_hashtag">>) => {
+    const { error } = await supabase.from("inventory_items").update(patch).eq("id", item.id);
+    setMsg(error ? "Could not save sticker text." : "Sticker text saved.");
+    if (!error) await load();
+  };
+
   const toggleQuest = async (item: Item) => {
     const { error } = await supabase.from("inventory_items").update({ quest_reward: !item.quest_reward }).eq("id", item.id);
     if (error) setMsg("Could not update Quest Prize status.");
@@ -177,7 +185,7 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
           <input name="name" required maxLength={80} placeholder="Product name" className="border-b border-border bg-transparent py-2 outline-none focus:border-gold" />
           <input name="qty" type="number" min={1} max={1000} required placeholder="Quantity" className="border-b border-border bg-transparent py-2 outline-none focus:border-gold" />
           <input name="prefix" maxLength={8} placeholder="Code prefix (e.g. STK)" className="border-b border-border bg-transparent py-2 uppercase outline-none focus:border-gold" />
-          <label className="flex items-center gap-2 text-sm"><input name="quest" type="checkbox" /> Quest Prize (eligible for All My Ingidas Eat claims)</label>
+          <label className="flex items-center gap-2 text-sm"><input name="quest" type="checkbox" /> Quest Prize (given out in Unfold Your Welcome)</label>
           <label className="text-sm md:col-span-2">Product image<input name="image" type="file" accept="image/*" className="block py-2 text-sm" /></label>
           <textarea name="description" maxLength={1000} placeholder="Product description (shown to winners)" className="border-b border-border bg-transparent py-2 outline-none focus:border-gold md:col-span-2" />
           <textarea name="notes" maxLength={500} placeholder="Internal notes" className="border-b border-border bg-transparent py-2 outline-none focus:border-gold md:col-span-2" />
@@ -197,6 +205,14 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
                     {item.description && <p className="text-sm text-muted-foreground">{item.description}</p>}
                     <p className="text-sm text-muted-foreground">{itemUnits.length - checkedOut} in stock · {checkedOut} checked out · {itemUnits.length} total</p>
                     {item.notes && <p className="text-xs text-muted-foreground">Notes: {item.notes}</p>}
+                    <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                      <label className="text-xs text-muted-foreground">IG sticker title
+                        <input defaultValue={item.sticker_title} maxLength={60} onBlur={(e) => { if (e.target.value !== item.sticker_title) void saveSticker(item, { sticker_title: e.target.value.trim() }); }} className="block w-full border-b border-border bg-transparent py-1 text-sm text-foreground outline-none focus:border-gold" />
+                      </label>
+                      <label className="text-xs text-muted-foreground">IG sticker hashtag
+                        <input defaultValue={item.sticker_hashtag} maxLength={40} onBlur={(e) => { if (e.target.value !== item.sticker_hashtag) void saveSticker(item, { sticker_hashtag: e.target.value.trim() }); }} className="block w-full border-b border-border bg-transparent py-1 text-sm text-foreground outline-none focus:border-gold" />
+                      </label>
+                    </div>
                   </div>
                   <Button size="sm" variant="outline" className="rounded-none" onClick={() => setOpen(open === item.id ? null : item.id)}>{open === item.id ? "Hide codes" : "View codes"}</Button>
                   <Button size="sm" variant={item.quest_reward ? "default" : "outline"} className="rounded-none" onClick={() => void toggleQuest(item)}>{item.quest_reward ? "Quest Prize ✓" : "Make Quest Prize"}</Button>

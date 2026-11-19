@@ -140,7 +140,7 @@ export function NfcCards({ isAdmin }: { isAdmin: boolean }) {
 
         <div className="grid gap-4 md:grid-cols-2">
           {cards.map((c) => {
-            const permanent = `${origin}/nfc/${c.card_key}`;
+            const permanent = `https://www.ingida.com/nfc/${c.card_key}`;
             const destination = asWebUrl(c.destination_url);
             return (
               <article key={c.id} className="space-y-3 border border-border p-5">
@@ -149,9 +149,9 @@ export function NfcCards({ isAdmin }: { isAdmin: boolean }) {
                   <span className="text-xs text-muted-foreground">{c.tap_count} taps</span>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
-                  <CardQr value={permanent} cardKey={c.card_key} />
+                  <CardQr value={destination || permanent} cardKey={c.card_key} />
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs text-muted-foreground">Permanent Card URL:</p>
+                    <p className="text-xs text-muted-foreground">QR opens the destination link directly. Physical NFC card URL:</p>
                     <code className="block truncate bg-muted px-2 py-1 text-xs">{permanent}</code>
                     <div className="mt-2 flex gap-2">
                       <Button type="button" size="sm" variant="outline" className="rounded-none text-xs" onClick={() => { void navigator.clipboard.writeText(permanent); setMsg("Card URL copied."); }}>Copy URL</Button>

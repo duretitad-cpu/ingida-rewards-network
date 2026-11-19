@@ -96,9 +96,8 @@ function AuthForm() {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) setMsg(error.message);
     } else {
-      const invite_code = String(f.get("code") ?? "").trim().toUpperCase();
-      const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${window.location.origin}/operators`, data: { invite_code } } });
-      setMsg(error ? "Sign-up failed. Check your invite code and try again." : "Check your email to confirm your account, then sign in.");
+      const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${window.location.origin}/operators` } });
+      setMsg(error ? "Sign-up failed. Only invited emails can create an operator account." : "Check your email to confirm your account, then sign in.");
     }
     setBusy(false);
   };
@@ -108,11 +107,10 @@ function AuthForm() {
       <h1 className="font-serif text-3xl">{mode === "in" ? "Operator sign in" : "Create operator account"}</h1>
       <input name="email" type="email" required placeholder="Email" autoComplete="email" className="w-full border-b border-border bg-transparent py-3 outline-none focus:border-gold" />
       <input name="password" type="password" required minLength={8} placeholder="Password" autoComplete={mode === "in" ? "current-password" : "new-password"} className="w-full border-b border-border bg-transparent py-3 outline-none focus:border-gold" />
-      {mode === "up" && <input name="code" placeholder="Invite code (not needed for first admin)" maxLength={40} className="w-full border-b border-border bg-transparent py-3 uppercase outline-none focus:border-gold" />}
       <Button type="submit" disabled={busy} className="w-full rounded-none">{busy ? "Please wait…" : mode === "in" ? "Sign in" : "Create account"}</Button>
       {msg && <p role="alert" className="text-sm text-muted-foreground">{msg}</p>}
       <button type="button" className="text-xs text-muted-foreground underline" onClick={() => { setMode(mode === "in" ? "up" : "in"); setMsg(""); }}>
-        {mode === "in" ? "Have an invite code? Create an account" : "Already have an account? Sign in"}
+        {mode === "in" ? "Invited? Create your operator account" : "Already have an account? Sign in"}
       </button>
     </form>
   );
