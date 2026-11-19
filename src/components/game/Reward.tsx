@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { SocialLinks } from "@/components/brand/social-links";
 import { supabase } from "@/integrations/supabase/client";
 import { QRCodeSVG } from "qrcode.react";
 import { Download, Instagram, Share2 } from "lucide-react";
@@ -11,20 +12,29 @@ export type MerchResult = { code: string | null; item: string | null; already: b
 export function Reward({ result }: { result: MerchResult }) {
   const [busy, setBusy] = useState(false);
   // Merch Drop always reflects the live inventory Quest prize.
-  const [drop, setDrop] = useState<{ item: string; description: string; image: string } | null>(null);
+  const [drop, setDrop] = useState<{ item: string; description: string; image: string; title: string; tag: string } | null>(null);
+  const fileRef = useRef<File | null>(null);
   useEffect(() => {
     supabase.rpc("quest_prize_preview").then(({ data }) => {
       const row = Array.isArray(data) ? data[0] : data;
-      if (row) setDrop({ item: row.item, description: row.description, image: row.image });
+      if (row) setDrop({ item: row.item, description: row.description, image: row.image, title: row.sticker_title, tag: row.sticker_hashtag });
     });
   }, []);
   const item = result.item || drop?.item || "INGIDA Merch";
   const description = result.description || drop?.description || "";
   const image = result.image || drop?.image || socks.url;
+  const title = drop?.title ?? "MendSpace x Lock In";
+  const tag = drop?.tag || "#MyingidaMoment";
 
-  async function exportSticker(target: "instagram" | "snapchat" | "download") {
-    setBusy(true);
-    try {
+  // Build the sticker ahead of time so a tap can open the share menu instantly.
+  useEffect(() => {
+    let live = true;
+    buildSticker().then((f) => { if (live) fileRef.current = f; }).catch(() => {});
+    return () => { live = false; };
+  }, [image, title, tag]);
+
+  async function buildSticker() {
+
       const bitmap = await createImageBitmap(await (await fetch(image)).blob());
       const canvas = document.createElement("canvas");
       canvas.width = 1000;
@@ -52,24 +62,34 @@ export function Reward({ result }: { result: MerchResult }) {
       ctx.font = "bold 92px Georgia";
       ctx.fillText("ingida", 0, -210);
       ctx.font = "bold 46px Arial";
-      ctx.fillText("MY INGIDA MOMENT", 0, -140);
+      ctx.fillText(title ? title.toUpperCase() : "MY INGIDA MOMENT", 0, -140);
       const scale = Math.min(420 / bitmap.width, 300 / bitmap.height);
       const w = bitmap.width * scale;
       const h = bitmap.height * scale;
       ctx.drawImage(bitmap, -w / 2, -110 + (300 - h) / 2, w, h);
       bitmap.close();
       ctx.font = "bold 50px Arial";
-      ctx.fillText("#MyingidaMoment", 0, 260);
+      ctx.fillText(tag, 0, 260);
       const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob((value) => value ? resolve(value) : reject(new Error("Export failed")), "image/png"));
-      const file = new File([blob], "my-ingida-moment.png", { type: "image/png" });
-      const shareText = `My INGIDA Moment #MyingidaMoment ${window.location.origin}/quest`;
-      if (target !== "download" && navigator.canShare?.({ files: [file] })) {
-        toast.message(`Pick ${target === "instagram" ? "Instagram → Story" : "Snapchat"} in the share menu.`);
-        // Instagram and Snapchat only accept the image; the caption goes to the clipboard.
-        await navigator.clipboard?.writeText(shareText).catch(() => {});
-        await navigator.share({ files: [file] });
-        return;
-      }
+      return new File([blob], "my-ingida-moment.png", { type: "image/png" });
+  }
+
+  async function exportSticker(target: "instagram" | "snapchat" | "download") {
+    const shareText = `My INGIDA Moment ${tag} ${window.location.origin}/quest`;
+    const ready = fileRef.current;
+    // Share synchronously inside the tap so phones allow the share sheet.
+    if (target !== "download" && ready && navigator.canShare?.({ files: [ready] })) {
+      navigator.clipboard?.writeText(shareText).catch(() => {});
+      navigator.share({ files: [ready] }).catch((e) => {
+        if (!(e instanceof DOMException && e.name === "AbortError")) toast.error("Sharing was blocked. Try Save, then add it from your photos.");
+      });
+      toast.message(`Pick ${target === "instagram" ? "Instagram → Story" : "Snapchat"} in the share menu.`);
+      return;
+    }
+    setBusy(true);
+    try {
+      const file = ready ?? await buildSticker();
+      const blob = file;
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -96,7 +116,7 @@ export function Reward({ result }: { result: MerchResult }) {
       <div>
         <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Your INGIDA Moment</p>
         <h2 className="mt-2 font-serif text-4xl font-normal text-primary">Capture this #ingidaMoment</h2>
-        <p className="mt-1 text-sm text-muted-foreground">{result.pending ? "We're checking your reward inventory…" : result.code ? `Your ${item}. Your welcome.` : "You're on the list — today's drop is all claimed."}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{result.pending ? "We're checking your reward inventory…" : result.code ? `Your ${item} is ready.` : "You're on the list — today's drop is all claimed."}</p>
       </div>
       {result.code ? (
         <div className="flex flex-col items-center gap-2 border-y border-border py-5" aria-label="Redemption code">
@@ -125,7 +145,7 @@ export function Reward({ result }: { result: MerchResult }) {
       <div className="flex items-center justify-between gap-3">
         <div className="ig-sticker flex min-w-0 -rotate-2 items-center gap-2 rounded-lg border-2 border-primary px-3 py-3 text-primary">
           <Instagram className="h-5 w-5 shrink-0" />
-          <span className="text-left text-xs font-bold leading-tight">My INGIDA Moment<br /><span className="text-[10px] font-medium">#MyingidaMoment</span></span>
+          <span className="text-left text-xs font-bold leading-tight">{title || "My INGIDA Moment"}<br /><span className="text-[10px] font-medium">{tag}</span></span>
         </div>
         <Button variant="ghost" size="icon" title="Save sticker" aria-label="Save transparent sticker" disabled={busy} onClick={() => exportSticker("download")}><Download /></Button>
       </div>
@@ -133,6 +153,7 @@ export function Reward({ result }: { result: MerchResult }) {
         <Button className="rounded-full" disabled={busy} onClick={() => exportSticker("instagram")}><Instagram /> IG Story</Button>
         <Button variant="outline" className="rounded-full" disabled={busy} onClick={() => exportSticker("snapchat")}><Share2 /> Snapchat</Button>
       </div>
+      <SocialLinks />
     </section>
   );
 }
