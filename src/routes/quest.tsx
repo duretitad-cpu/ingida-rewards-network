@@ -1,4 +1,3 @@
-import { SocialLinks } from "@/components/brand/social-links";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
@@ -85,7 +84,7 @@ function Index() {
     setSpinning(true);
     answers.current[r.key] = r.labels[i] ?? "";
     if (r.key === "alerts") {
-      // Yes, Please / እሺ go straight to name + phone; the no options end politely.
+      // Yes Please / እሺ go straight to name + phone; the no options end politely.
       const yes = i === 0 || i === 2;
       pinch(2, () => { setSpinning(false); go(yes ? "form" : "bye"); });
       return;
@@ -144,8 +143,8 @@ function Index() {
             <h2 className="font-serif text-4xl font-normal capitalize leading-[0.95] text-primary">Would You Like To Receive Alerts?</h2>
             <p className="text-muted-foreground">INGIDA turns everyday spend into rewards across partners. Get launch alerts and a gift.</p>
             <div className="grid gap-3">
-              <Button size="lg" className="h-14 rounded-full text-base" onClick={() => go("form")}>Yes, Please</Button>
-              <Button size="lg" variant="ghost" className="rounded-full" onClick={() => go("bye")}>No, Thanks</Button>
+              <Button size="lg" className="h-14 rounded-full text-base" onClick={() => go("form")}>Yes, Send me Alerts</Button>
+              <Button size="lg" variant="ghost" className="rounded-full" onClick={() => go("bye")}>No Thanks</Button>
             </div>
           </section>
         )}
@@ -155,10 +154,9 @@ function Index() {
 
         {step === "bye" && (
           <section className="flex flex-1 flex-col justify-center gap-6 py-8 text-center">
-            <h2 className="text-balance font-serif text-4xl font-normal leading-[1.05] text-primary">Thanks For Playing.</h2>
-            <p className="mx-auto max-w-[18rem] text-balance text-muted-foreground">Changed your mind? Alerts come with free merch.</p>
-            <Button size="lg" className="h-14 rounded-full" onClick={() => go("form")}>Sign Me Up</Button>
-            <SocialLinks />
+            <h2 className="font-serif text-4xl font-normal capitalize leading-[0.95] text-primary">Thanks for playing.</h2>
+            <p className="text-muted-foreground">Changed your mind? Alerts come with free merch.</p>
+            <Button size="lg" className="h-14 rounded-full" onClick={() => go("form")}>Sign me up</Button>
           </section>
         )}
 
@@ -208,7 +206,7 @@ function SignupForm({ answers, onDone }: { answers: Record<string, string>; onDo
     <form onSubmit={submit} className="flex flex-1 flex-col justify-center gap-5 py-8 animate-in fade-in duration-500">
       <div className="space-y-2 text-center">
         <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Last fold</p>
-        <h2 className="text-balance font-serif text-3xl font-normal leading-[1.05] text-primary">Where Should We Send Your Alerts?</h2>
+        <h2 className="font-serif text-3xl font-normal capitalize leading-[0.95] text-primary">Where should we send your alerts?</h2>
       </div>
       <div className="space-y-2">
         <Label htmlFor="name">Full name</Label>

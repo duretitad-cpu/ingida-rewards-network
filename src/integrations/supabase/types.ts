@@ -50,8 +50,6 @@ export type Database = {
           notes: string
           quantity: number
           quest_reward: boolean
-          sticker_hashtag: string
-          sticker_title: string
         }
         Insert: {
           code_prefix?: string
@@ -64,8 +62,6 @@ export type Database = {
           notes?: string
           quantity?: number
           quest_reward?: boolean
-          sticker_hashtag?: string
-          sticker_title?: string
         }
         Update: {
           code_prefix?: string
@@ -78,8 +74,6 @@ export type Database = {
           notes?: string
           quantity?: number
           quest_reward?: boolean
-          sticker_hashtag?: string
-          sticker_title?: string
         }
         Relationships: []
       }
@@ -345,8 +339,6 @@ export type Database = {
           image: string
           item: string
           remaining: number
-          sticker_hashtag: string
-          sticker_title: string
         }[]
       }
     }

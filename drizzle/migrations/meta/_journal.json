@@ -71,13 +71,6 @@
       "when": 1794993961032,
       "tag": "0009_quest_claim_hardening",
       "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "7",
-      "when": 1795067306819,
-      "tag": "0010_sticker_fields_claim_throttle",
-      "breakpoints": true
     }
   ]
 }
