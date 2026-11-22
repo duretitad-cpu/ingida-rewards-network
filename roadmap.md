@@ -1,6 +1,6 @@
 # Website refresh
 - [x] Verify early-access requests save to the CRM on the preview and published Lovable site (real form submission and stored-row check).
-- [ ] Connect www.ingida.com to this working site; signup fails on the version currently served there. Requires domain connection confirmation.
+- [ ] Resolve early-access saving on www.ingida.com; the version served there differs from this project's working published site. Requires access to the project serving that domain; no domain changes requested.
 - [ ] Update Amharic wallet title and sizing; refresh bilingual Quest typography, folds, bottom progress and Ethiopian signup with CRM verification.
 - [ ] Tighten video framing and optimize playback; move desktop blue icons under cashback and make first-section icons and labels brand gold.
 - [x] Tighten Amharic icons and logo spacing, enlarge regular-weight Amharic text, and verify a proportion-preserving autoplay video with white text overlay on desktop/mobile.
