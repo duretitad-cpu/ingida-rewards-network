@@ -349,6 +349,17 @@ export type Database = {
           sticker_title: string
         }[]
       }
+      submit_early_access: {
+        Args: {
+          _business_name: string
+          _email: string
+          _name: string
+          _phone: string
+          _role: string
+          _wants_alerts: boolean
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "operator"

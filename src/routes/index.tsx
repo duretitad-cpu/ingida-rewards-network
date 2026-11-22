@@ -18,8 +18,7 @@ import membershipPoster from "@/assets/membership-poster.jpg.asset.json";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { StoreMarks } from "@/components/brand/store-marks";
 import { Button } from "@/components/ui/button";
-import { useServerFn } from "@tanstack/react-start";
-import { submitWaitlist } from "@/lib/waitlist.functions";
+import { supabase } from "@/integrations/supabase/client";
 import { waitlistSchema } from "@/lib/waitlist-schema";
 
 export const Route = createFileRoute("/")({
@@ -462,7 +461,6 @@ function renderWaitlistTitle(title: string) {
 function Waitlist({ t, role, setRole }: { t: Copy; role: Role; setRole: (role: Role) => void }) {
   const [state, setState] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState("");
-  const saveRequest = useServerFn(submitWaitlist);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -477,7 +475,12 @@ function Waitlist({ t, role, setRole }: { t: Copy; role: Role; setRole: (role: R
     setState("sending");
     setError("");
     try {
-      await saveRequest({ data: raw });
+      const d = result.data;
+      const { error: rpcError } = await supabase.rpc("submit_early_access", {
+        _name: d.name, _email: d.email, _phone: d.phone, _role: d.role,
+        _business_name: d.business_name, _wants_alerts: d.wants_alerts ?? false,
+      });
+      if (rpcError) throw rpcError;
       setState("done");
     } catch {
       setState("idle");
