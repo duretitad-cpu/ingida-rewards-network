@@ -38,8 +38,8 @@ export const ROUNDS: Round[] = [
   {
     key: "earn",
     eyebrow: "Inner Fold · 3 of 5",
-    prompt: "How Would You Like To Earn?",
-    parts: ["How Would You Like To ", "Earn", "?"],
+    prompt: "Where Would You Like To Earn INGIDA Points?",
+    parts: ["Where Would You Like To ", "Earn", " INGIDA Points?"],
     labels: ["Daily Coffee", "Dining Out", "Groceries", "Takeout"],
     labelsByCategory: [
       ["Daily Coffee", "Dining Out", "Groceries", "Takeout"],
@@ -76,20 +76,31 @@ export const ROUNDS: Round[] = [
   },
 ];
 
+export const AM_INSIDE = ["ይግዙ", "ነጥብ ያግኙ", "ይሸለሙ"];
 export const AM_ROUNDS: Round[] = [
   {
-    key: "lifestyle", eyebrow: "እንኳን ደህና መጡ", prompt: "ብዙ ጊዜ ወጪዎን የት ያደርጋሉ?",
-    labels: ["ምግብ", "ማረፊያ", "ግዢ", "ጉዞ"], inside: ["ይግዙ፣ ነጥብ ያግኙ፣ ይሸለሙ"],
-    reveal: (i) => ({ title: ["የምግብ አፍቃሪ", "ከቤት ውጭ እንደ ቤት", "ለግዢ የተዘጋጁ", "ሁሌም በጉዞ"][i] ?? "እንኳን ደህና መጡ", body: "በፋይዳ መታወቂያዎ ይመዝገቡ፤ በዋሌትዎ ውስጥ በቴሌብር ይክፈሉ።" }),
+    key: "lifestyle", eyebrow: "እንኳን ደህና መጡ · 1 ከ 5", prompt: "ገንዘብዎን በብዛት በምን ላይ ያወጣሉ?",
+    labels: ["ምግብ እና መጠጥ", "ማረፊያ እና ሆቴሎች", "ጉዞ", "ልዩ መግቢያ"], inside: AM_INSIDE,
+    reveal: (i) => ({ title: ["የምግብ አፍቃሪ", "ከቤት ውጭ እንደ ቤት", "ሁሌም በጉዞ", "ቀድመው የሚገቡ"][i] ?? "እንኳን ደህና መጡ", body: "በፋይዳ መታወቂያዎ ይመዝገቡ፤ በዋሌትዎ ውስጥ በቴሌብር ይክፈሉ።" }),
   },
   {
-    key: "monthly", eyebrow: "ሁለተኛው እጥፋት", prompt: "በወር ምን ያህል ወጪ ያደርጋሉ?",
-    labels: ["ከ5 ሺህ በታች", "5–15 ሺህ", "15–30 ሺህ", "ከ30 ሺህ በላይ"], inside: ["ይግዙ፣ ነጥብ ያግኙ፣ ይሸለሙ"],
+    key: "monthly", eyebrow: "2 ከ 5", prompt: "በየወሩ ለማረፊያ እና ጉዞ ምን ያህል ገንዘብ ያወጣሉ?",
+    labels: ["ከ5,000 ብር በታች", "ከ5,000–15,000 ብር", "ከ15,000–30,000 ብር", "30,000 ብር እና ከዚያ በላይ"], inside: AM_INSIDE,
     reveal: () => ({ title: "በእያንዳንዱ ክፍያ 2% ይመለሳል", body: "ብቁ በሆነ እያንዳንዱ ወጪ 2% ተመላሽ ያግኙ።" }),
   },
   {
-    key: "favorite", eyebrow: "የመጨረሻው እጥፋት", prompt: "ነጥብ ለማግኘትና ለመሸለም የሚወዱት ቦታ የት ነው?",
-    labels: ["ሆቴሎች", "ካፌዎች", "ላውንጆች", "ሱቆች"], inside: ["ይግዙ፣ ነጥብ ያግኙ፣ ይሸለሙ"],
+    key: "earn", eyebrow: "3 ከ 5", prompt: "በምን ላይ ሲያወጡ ነጥብ ማግኘት ይፈልጋሉ?",
+    labels: ["የሳምንት መጨረሻ ጉዞ", "የሥራ ጉዞ ማረፊያ", "የቤት አስቤዛ", "የቤት ኪራይ"], inside: AM_INSIDE,
+    reveal: () => ({ title: "በፈለጉት መንገድ ያግኙ", body: "እያንዳንዱ ወጪ እርስዎ ወደሚመርጡት ሽልማት ይደመራል።" }),
+  },
+  {
+    key: "redeem", eyebrow: "4 ከ 5", prompt: "የሽልማት ነጥቦችዎን በማንኛውም ቦታ መጠቀም ቢችሉ የት መሄድ ይመርጣሉ?",
+    labels: ["የምሽት መዝናኛ", "የሳምንት መጨረሻ ጉዞ", "የስፓ ቀን", "የቤት ኪራይ"], inside: AM_INSIDE,
     reveal: () => ({ title: "አንድ ኔትወርክ፣ በሁሉም ቦታ", body: "በአንድ አጋር ነጥብ ያግኙ፤ በሌላ የእንግዳ አጋር ይሸለሙ።" }),
+  },
+  {
+    key: "alerts", eyebrow: "የመጨረሻው እጥፋት · 5 ከ 5", prompt: "ከእንግዳ ማሳወቂያዎችን መቀበል ይፈልጋሉ?",
+    labels: ["Yes Please", "No Thanks", "እሺ", "አይ፣ አመሰግናለሁ"], inside: AM_INSIDE,
+    reveal: () => ({ title: "", body: "" }),
   },
 ];

@@ -11,7 +11,7 @@ import { FortuneTeller, type Phase } from "@/components/game/FortuneTeller";
 import { Link } from "@tanstack/react-router";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { Reward, type MerchResult } from "@/components/game/Reward";
-import { ROUNDS, CATEGORIES, type Reveal } from "@/components/game/rounds";
+import { ROUNDS as EN_ROUNDS, AM_ROUNDS, CATEGORIES, type Reveal } from "@/components/game/rounds";
 
 export const Route = createFileRoute("/quest")({
   head: () => ({
@@ -24,6 +24,8 @@ export const Route = createFileRoute("/quest")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  validateSearch: (search: Record<string, unknown>): { lang?: "en" | "am" } =>
+    search["lang"] === "am" ? { lang: "am" } : search["lang"] === "en" ? { lang: "en" } : {},
   component: Index,
 });
 
@@ -37,6 +39,9 @@ const formSchema = z.object({
 });
 
 function Index() {
+  const { lang } = Route.useSearch();
+  const am = lang === "am";
+  const ROUNDS = am ? AM_ROUNDS : EN_ROUNDS;
   const [step, setStep] = useState<Step>("play");
   const [round, setRound] = useState(0);
   const [phase, setPhase] = useState<Phase>("closed");
@@ -116,7 +121,7 @@ function Index() {
             </div>
             <div key={round} className="mb-1 mt-5 flex items-center justify-center text-center">
               <h2 className="font-serif text-xl font-normal leading-[1.12] text-primary sm:text-2xl">
-                {r.key === "lifestyle" ? <><span className="block">Tell Us About Your Lifestyle.</span><span className="block text-balance">Where Do You Spend The Most?</span></> : r.parts ? <>{r.parts[0].replace("{cat}", catName)}<em className="italic text-gold">{r.parts[1]}</em>{r.parts[2].replace("{cat}", catName)}</> : r.prompt}
+                {r.key === "lifestyle" && !am ? <><span className="block">Tell Us About Your Lifestyle.</span><span className="block text-balance">Where Do You Spend The Most?</span></> : r.parts && !am ? <>{r.parts[0].replace("{cat}", catName)}<em className="italic text-gold">{r.parts[1]}</em>{r.parts[2].replace("{cat}", catName)}</> : r.prompt}
               </h2>
             </div>
             <div><FortuneTeller labels={r.labels} inside={r.inside} inner={round > 0} phase={phase} iconIndex={iconIndex} disabled={spinning} picked={picked} onPick={onPick} /></div>
