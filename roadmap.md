@@ -1,4 +1,5 @@
 # Website refresh
+- [ ] Fix early-access submission errors and verify requests appear in the Operators CRM.
 - [ ] Update Amharic wallet title and sizing; refresh bilingual Quest typography, folds, bottom progress and Ethiopian signup with CRM verification.
 - [ ] Tighten video framing and optimize playback; move desktop blue icons under cashback and make first-section icons and labels brand gold.
 - [x] Tighten Amharic icons and logo spacing, enlarge regular-weight Amharic text, and verify a proportion-preserving autoplay video with white text overlay on desktop/mobile.
