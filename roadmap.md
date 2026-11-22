@@ -1,5 +1,6 @@
 # Website refresh
-- [ ] Fix early-access submission errors and verify requests appear in the Operators CRM.
+- [x] Verify early-access requests save to the CRM on the preview and published Lovable site (real form submission and stored-row check).
+- [ ] Connect www.ingida.com to this working site; signup fails on the version currently served there. Requires domain connection confirmation.
 - [ ] Update Amharic wallet title and sizing; refresh bilingual Quest typography, folds, bottom progress and Ethiopian signup with CRM verification.
 - [ ] Tighten video framing and optimize playback; move desktop blue icons under cashback and make first-section icons and labels brand gold.
 - [x] Tighten Amharic icons and logo spacing, enlarge regular-weight Amharic text, and verify a proportion-preserving autoplay video with white text overlay on desktop/mobile.
