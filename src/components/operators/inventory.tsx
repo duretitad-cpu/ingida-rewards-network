@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from "react"
 import QRCode from "qrcode";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type Item = {
   id: string;
@@ -52,7 +53,9 @@ async function shrinkImage(file: File): Promise<string> {
   const canvas = document.createElement("canvas");
   canvas.width = Math.round(bmp.width * scale);
   canvas.height = Math.round(bmp.height * scale);
-  canvas.getContext("2d")!.drawImage(bmp, 0, 0, canvas.width, canvas.height);
+  const context = canvas.getContext("2d");
+  if (!context) { bmp.close(); throw new Error("Image unavailable"); }
+  context.drawImage(bmp, 0, 0, canvas.width, canvas.height);
   bmp.close();
   return canvas.toDataURL("image/jpeg", 0.82);
 }
@@ -66,7 +69,7 @@ function Qr({ value }: { value: string }) {
       .catch(() => { if (active) setSrc(""); });
     return () => { active = false; };
   }, [value]);
-  return src ? <img src={src} alt={`QR ${value}`} className="h-24 w-24 bg-white" /> : <div className="h-24 w-24 bg-muted" />;
+  return src ? <img src={src} alt={`QR ${value}`} className="h-24 w-24 bg-background" /> : <div className="h-24 w-24 bg-muted" />;
 }
 
 export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: string }) {
@@ -75,12 +78,18 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
   const [open, setOpen] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
+  const [rewardsEnabled, setRewardsEnabled] = useState<boolean | null>(null);
+  const [modeBusy, setModeBusy] = useState(false);
+  const [modeError, setModeError] = useState("");
 
   const load = useCallback(async () => {
-    const [itemResult, unitResult] = await Promise.all([
+    const [itemResult, unitResult, modeResult] = await Promise.all([
       supabase.from("inventory_items").select("*").order("created_at", { ascending: false }),
       supabase.from("inventory_units").select("id, item_id, code, claimed_at, claim_note, assigned_name, assigned_phone").order("created_at"),
+      supabase.from("quest_settings").select("rewards_enabled").eq("id", "quest").maybeSingle(),
     ]);
+    if (modeResult.error) setModeError("Could not load game mode. Try refreshing.");
+    else setRewardsEnabled(modeResult.data?.rewards_enabled ?? true);
     if (itemResult.error || unitResult.error) {
       setMsg("Could not load inventory.");
       return;
@@ -90,6 +99,16 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
   }, []);
 
   useEffect(() => { void load(); }, [load]);
+
+  const saveMode = async (value: string) => {
+    setModeBusy(true);
+    setModeError("");
+    const enabled = value === "rewards";
+    const { error } = await supabase.from("quest_settings").upsert({ id: "quest", rewards_enabled: enabled });
+    if (error) setModeError("Could not save game mode. Please try again.");
+    else setRewardsEnabled(enabled);
+    setModeBusy(false);
+  };
 
   const add = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -170,6 +189,14 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
 
   return (
     <div className="space-y-10">
+      <section className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-5">
+        <h2 className="font-serif text-2xl">Quest Game Rewards</h2>
+        <Select value={rewardsEnabled === null ? "" : rewardsEnabled ? "rewards" : "none"} disabled={modeBusy || rewardsEnabled === null} onValueChange={(value) => void saveMode(value)}>
+          <SelectTrigger className="w-full sm:w-72" aria-label="Quest game rewards"><SelectValue placeholder="Loading Game Mode…" /></SelectTrigger>
+          <SelectContent><SelectItem value="rewards">Game + Signup + Merch Rewards</SelectItem><SelectItem value="none">No Rewards — Game + Signup</SelectItem></SelectContent>
+        </Select>
+        {modeError && <p role="alert" className="w-full text-sm text-destructive">{modeError}</p>}
+      </section>
       <Scanner units={units} items={items} userId={userId} onDone={load} />
       <section>
         <h1 className="font-serif text-3xl">Merch inventory</h1>
@@ -177,7 +204,7 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
           <input name="name" required maxLength={80} placeholder="Product name" className="border-b border-border bg-transparent py-2 outline-none focus:border-gold" />
           <input name="qty" type="number" min={1} max={1000} required placeholder="Quantity" className="border-b border-border bg-transparent py-2 outline-none focus:border-gold" />
           <input name="prefix" maxLength={8} placeholder="Code prefix (e.g. STK)" className="border-b border-border bg-transparent py-2 uppercase outline-none focus:border-gold" />
-          <label className="flex items-center gap-2 text-sm"><input name="quest" type="checkbox" /> Quest Prize (eligible for All My Ingidas Eat claims)</label>
+          <label className="flex items-center gap-2 text-sm"><input name="quest" type="checkbox" /> Quest Prize (Unfold Your Welcome)</label>
           <label className="text-sm md:col-span-2">Product image<input name="image" type="file" accept="image/*" className="block py-2 text-sm" /></label>
           <textarea name="description" maxLength={1000} placeholder="Product description (shown to winners)" className="border-b border-border bg-transparent py-2 outline-none focus:border-gold md:col-span-2" />
           <textarea name="notes" maxLength={500} placeholder="Internal notes" className="border-b border-border bg-transparent py-2 outline-none focus:border-gold md:col-span-2" />

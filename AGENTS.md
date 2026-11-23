@@ -21,3 +21,5 @@
 - The waitlist owner reviews and exports records through Lovable Cloud rather than a public export endpoint; this avoids exposing the CRM without an established owner login.
 - Quest language uses a validated URL search parameter shared by the footer and game; reloads and shared links retain the selected language.
 - Quest signup validates phones through the shared Ethiopian formatter and a matching database RPC; CRM writes and inventory assignment stay atomic and phone-scoped.
+- Quest reward mode is operator-managed and enforced in the signup RPC; no-rewards signup must save to CRM without returning or allocating a stock code.
+- Keep bilingual Quest UI copy together and pass the selected language into folds, signup, and completion views so the experience stays translated end to end.

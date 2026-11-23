@@ -2,6 +2,7 @@ import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket } from "lucide-react";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
+import { questCopy } from "@/lib/quest-copy";
 
 export type Phase = "closed" | "h" | "v";
 type Point = [number, number];
@@ -10,7 +11,8 @@ const COLOURS = ["paper", "paper", "paper", "paper"];
 const CENTER_ICONS = [Utensils, BedDouble, ShoppingBasket, Palmtree, Ticket];
 
 // Four connected paper pockets share their mouth vertices with adjacent folds.
-export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }: {
+export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0, am = false }: {
+  am?: boolean;
   labels: string[];
   iconIndex?: number;
   inside?: string[];
@@ -100,10 +102,10 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
       </svg>
       <div className="quest-fold-mark pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1.5" style={{ opacity: opening }} aria-hidden="true">
         {(() => { const Icon = CENTER_ICONS[((iconIndex % CENTER_ICONS.length) + CENTER_ICONS.length) % CENTER_ICONS.length] ?? Utensils; return <Icon key={iconIndex} className="h-8 w-8 text-gold animate-in fade-in zoom-in-75 duration-300" strokeWidth={1.7} />; })()}
-        <span className="text-[oklch(0.24_0.05_265)]"><IngidaLogo className="h-auto w-16" /></span>
-        <span className="font-serif text-[10px] font-semibold tracking-wide text-[oklch(0.24_0.05_265)]">Spend, Earn &amp; Redeem</span>
+        <span className="text-primary"><IngidaLogo amharic={am} className="h-auto w-16" /></span>
+        <span className="max-w-36 text-center font-serif text-[10px] font-normal text-primary">{questCopy[am ? "am" : "en"].inside}</span>
       </div>
-      <div role="group" aria-label="Paper fortune teller" className="absolute inset-[10%] grid grid-cols-2 grid-rows-2 gap-1">
+      <div role="group" aria-label={questCopy[am ? "am" : "en"].paper} className="absolute inset-[10%] grid grid-cols-2 grid-rows-2 gap-1">
         {corners.map((_, i) => <Button key={i} variant="ghost" disabled={disabled || !onPick} aria-label={labels[i]} onClick={() => onPick?.(i)} className="h-full w-full rounded-[35%] border-0 bg-transparent p-0 shadow-none hover:bg-transparent focus-visible:ring-2" />)}
       </div>
     </div>
