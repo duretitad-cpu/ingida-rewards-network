@@ -1,4 +1,8 @@
 # Website refresh
+- [ ] Replace prize social sharing buttons with follow icons; add editable inventory sticker fields and transparent PNG save/copy/share.
+- [ ] Remove duplicate prize instructions and public operator account creation.
+- [ ] Secure role checks, invitations, reward recovery and game settings; update NFC to direct validated CRM submission.
+- [ ] Verify updated flows and record any remaining security limitations.
 - [x] Verify early-access requests save to the CRM on the preview and published Lovable site (real form submission and stored-row check).
 - [ ] Resolve early-access saving on www.ingida.com; the version served there differs from this project's working published site. Requires access to the project serving that domain; no domain changes requested.
 - [ ] Update Amharic wallet title and sizing; refresh bilingual Quest typography, folds, bottom progress and Ethiopian signup with CRM verification.
