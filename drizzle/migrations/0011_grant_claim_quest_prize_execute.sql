@@ -1,0 +1,1 @@
+GRANT EXECUTE ON FUNCTION public.claim_quest_prize(text, text, jsonb) TO anon, authenticated;

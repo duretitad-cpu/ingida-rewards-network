@@ -78,6 +78,13 @@
       "when": 1795338028761,
       "tag": "0010_submit_early_access",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1795850085792,
+      "tag": "0011_grant_claim_quest_prize_execute",
+      "breakpoints": true
     }
   ]
 }
