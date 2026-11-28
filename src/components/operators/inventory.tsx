@@ -75,11 +75,15 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
   const [open, setOpen] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
+  const [rewardsEnabled, setRewardsEnabled] = useState(true);
+  const [modeBusy, setModeBusy] = useState(false);
+  const [modeMsg, setModeMsg] = useState("");
 
   const load = useCallback(async () => {
-    const [itemResult, unitResult] = await Promise.all([
+    const [itemResult, unitResult, modeResult] = await Promise.all([
       supabase.from("inventory_items").select("*").order("created_at", { ascending: false }),
       supabase.from("inventory_units").select("id, item_id, code, claimed_at, claim_note, assigned_name, assigned_phone").order("created_at"),
+      supabase.from("quest_settings").select("rewards_enabled").eq("id", "quest").maybeSingle(),
     ]);
     if (itemResult.error || unitResult.error) {
       setMsg("Could not load inventory.");
@@ -87,7 +91,25 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
     }
     setItems((itemResult.data ?? []) as Item[]);
     setUnits((unitResult.data ?? []) as Unit[]);
+    if (!modeResult.error && typeof modeResult.data?.rewards_enabled === "boolean") {
+      setRewardsEnabled(modeResult.data.rewards_enabled);
+    }
   }, []);
+
+  const toggleGameMode = async () => {
+    if (modeBusy) return;
+    const next = !rewardsEnabled;
+    setModeBusy(true);
+    setModeMsg("");
+    const { error } = await supabase.from("quest_settings").upsert({ id: "quest", rewards_enabled: next }, { onConflict: "id" });
+    setModeBusy(false);
+    if (error) {
+      setModeMsg("Could not update game mode.");
+      return;
+    }
+    setRewardsEnabled(next);
+    setModeMsg(next ? "Rewards mode is on — players receive a merch code after sign-up." : "Non-reward mode is on — players see Thank You and social links after sign-up.");
+  };
 
   useEffect(() => { void load(); }, [load]);
 
@@ -170,6 +192,20 @@ export function Inventory({ isAdmin, userId }: { isAdmin: boolean; userId: strin
 
   return (
     <div className="space-y-10">
+      <section className="flex flex-wrap items-center justify-between gap-4 border border-border p-5">
+        <div>
+          <h2 className="font-serif text-2xl">Game mode</h2>
+          <p className="text-sm text-muted-foreground">
+            {rewardsEnabled
+              ? "Rewards mode is active — players get a merch code after signing up."
+              : "Non-reward mode is active — players see a Thank You screen with social icons after signing up."}
+          </p>
+          {modeMsg && <p role="status" className="mt-1 text-xs text-muted-foreground">{modeMsg}</p>}
+        </div>
+        <Button size="sm" variant={rewardsEnabled ? "outline" : "default"} className="rounded-none" disabled={modeBusy} onClick={() => void toggleGameMode()}>
+          {modeBusy ? "Saving…" : rewardsEnabled ? "Turn on non-reward mode" : "Non-reward mode on · Switch to rewards"}
+        </Button>
+      </section>
       <Scanner units={units} items={items} userId={userId} onDone={load} />
       <section>
         <h1 className="font-serif text-3xl">Merch inventory</h1>

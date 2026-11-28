@@ -38,8 +38,8 @@ export const ROUNDS: Round[] = [
   {
     key: "earn",
     eyebrow: "Inner Fold · 3 of 5",
-    prompt: "How Would You Like To Earn?",
-    parts: ["How Would You Like To ", "Earn", "?"],
+    prompt: "Where Would You Like To Earn INGIDA Points?",
+    parts: ["Where Would You Like To ", "Earn", " INGIDA Points?"],
     labels: ["Daily Coffee", "Dining Out", "Groceries", "Takeout"],
     labelsByCategory: [
       ["Daily Coffee", "Dining Out", "Groceries", "Takeout"],

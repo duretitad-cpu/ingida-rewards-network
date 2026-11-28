@@ -14,4 +14,9 @@ describe("Quest fold order", () => {
     assert.equal(redeem?.labelsByCategory?.length, 4);
     for (const set of redeem?.labelsByCategory ?? []) assert.equal(set.length, 4);
   });
+  it("asks where players want to earn INGIDA points", () => {
+    const earn = ROUNDS.find((r) => r.key === "earn");
+    assert.equal(earn?.prompt, "Where Would You Like To Earn INGIDA Points?");
+    assert.deepEqual(earn?.parts, ["Where Would You Like To ", "Earn", " INGIDA Points?"]);
+  });
 });

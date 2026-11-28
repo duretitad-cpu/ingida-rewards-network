@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
+import { Instagram, Linkedin, Music2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatEthiopianPhone } from "@/lib/phone";
 import { Button } from "@/components/ui/button";
@@ -47,10 +48,15 @@ function Index() {
   const [iconIndex, setIconIndex] = useState(0);
   const [category, setCategory] = useState(0);
   const answers = useRef<Record<string, string>>({});
-  const [result, setResult] = useState<MerchResult | null>(null);
+  const [result, setResult] = useState<(MerchResult & { rewardsEnabled: boolean }) | null>(null);
+  const [rewardsEnabled, setRewardsEnabled] = useState(true);
   const finished = useRef(false);
   const alertTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => { if (alertTimer.current) clearTimeout(alertTimer.current); }, []);
+  useEffect(() => {
+    supabase.from("quest_settings").select("rewards_enabled").eq("id", "quest").maybeSingle()
+      .then(({ data }) => { if (typeof data?.rewards_enabled === "boolean") setRewardsEnabled(data.rewards_enabled); });
+  }, []);
   const go = (next: Step) => { if (alertTimer.current) { clearTimeout(alertTimer.current); alertTimer.current = null; } setStep(next); };
 
   const base = ROUNDS[round] ?? ROUNDS[0];
@@ -141,7 +147,11 @@ function Index() {
           <section className="flex flex-1 flex-col justify-center gap-6 py-8 text-center animate-in fade-in duration-500">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Stay In The Loop</p>
             <h2 className="font-serif text-4xl font-normal capitalize leading-[0.95] text-primary">Would You Like To Receive Alerts?</h2>
-            <p className="text-muted-foreground">INGIDA turns everyday spend into rewards across partners. Get launch alerts and a gift.</p>
+            <p className="text-muted-foreground">
+              {rewardsEnabled
+                ? "INGIDA turns everyday spend into rewards across partners. Get launch alerts and a gift."
+                : "INGIDA turns everyday spend into rewards across partners. Get launch alerts as invitations open."}
+            </p>
             <div className="grid gap-3">
               <Button size="lg" className="h-14 rounded-full text-base" onClick={() => go("form")}>Yes, Send me Alerts</Button>
               <Button size="lg" variant="ghost" className="rounded-full" onClick={() => go("bye")}>No Thanks</Button>
@@ -149,13 +159,19 @@ function Index() {
           </section>
         )}
 
-        {step === "form" && <SignupForm answers={{ ...answers.current, score: String(score) }} onDone={(res) => { setResult(res); go("done"); }} />}
-        {step === "done" && result && <Reward result={result} />}
+        {step === "form" && (
+          <SignupForm
+            answers={{ ...answers.current, score: String(score) }}
+            rewardsEnabled={rewardsEnabled}
+            onDone={(res) => { setResult(res); setRewardsEnabled(res.rewardsEnabled); go("done"); }}
+          />
+        )}
+        {step === "done" && result && (result.rewardsEnabled ? <Reward result={result} /> : <ThankYouSocials />)}
 
         {step === "bye" && (
           <section className="flex flex-1 flex-col justify-center gap-6 py-8 text-center">
             <h2 className="font-serif text-4xl font-normal capitalize leading-[0.95] text-primary">Thanks for playing.</h2>
-            <p className="text-muted-foreground">Changed your mind? Alerts come with free merch.</p>
+            <p className="text-muted-foreground">{rewardsEnabled ? "Changed your mind? Alerts come with free merch." : "Changed your mind? Sign up to hear when INGIDA launches."}</p>
             <Button size="lg" className="h-14 rounded-full" onClick={() => go("form")}>Sign me up</Button>
           </section>
         )}
@@ -166,7 +182,30 @@ function Index() {
   );
 }
 
-function SignupForm({ answers, onDone }: { answers: Record<string, string>; onDone: (r: MerchResult) => void }) {
+function ThankYouSocials() {
+  return (
+    <section role="status" className="flex flex-1 flex-col items-center justify-center gap-5 py-8 text-center animate-in fade-in duration-500">
+      <div className="h-px w-8 bg-gold" aria-hidden />
+      <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">#MyingidaMoment</p>
+      <h2 className="font-serif text-4xl font-normal leading-[0.95] text-primary">Thank you for playing.</h2>
+      <p className="max-w-xs text-sm text-muted-foreground">You're on the list. Follow us on our socials for updates as invitations open.</p>
+      <p className="pt-2 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Follow us on our socials</p>
+      <div className="flex items-center justify-center gap-5">
+        <a href="https://www.instagram.com/ingida.bet" target="_blank" rel="noopener noreferrer" aria-label="INGIDA on Instagram (opens in a new tab)" className="flex h-11 w-11 items-center justify-center rounded-full border border-border text-primary transition-colors hover:border-gold hover:text-gold">
+          <Instagram className="h-5 w-5" strokeWidth={1.6} />
+        </a>
+        <a href="https://www.tiktok.com/@ingidabet" target="_blank" rel="noopener noreferrer" aria-label="INGIDA on TikTok (opens in a new tab)" className="flex h-11 w-11 items-center justify-center rounded-full border border-border text-primary transition-colors hover:border-gold hover:text-gold">
+          <Music2 className="h-5 w-5" strokeWidth={1.6} />
+        </a>
+        <a href="https://www.linkedin.com/company/ingida/" target="_blank" rel="noopener noreferrer" aria-label="INGIDA on LinkedIn (opens in a new tab)" className="flex h-11 w-11 items-center justify-center rounded-full border border-border text-primary transition-colors hover:border-gold hover:text-gold">
+          <Linkedin className="h-5 w-5" strokeWidth={1.6} />
+        </a>
+      </div>
+    </section>
+  );
+}
+
+function SignupForm({ answers, rewardsEnabled, onDone }: { answers: Record<string, string>; rewardsEnabled: boolean; onDone: (r: MerchResult & { rewardsEnabled: boolean }) => void }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -183,7 +222,7 @@ function SignupForm({ answers, onDone }: { answers: Record<string, string>; onDo
     setBusy(true);
 
     try {
-      const { data, error } = await supabase.rpc("claim_quest_prize", {
+      const { data, error } = await supabase.rpc("submit_quest_signup", {
         _name: parsed.data.name,
         _phone: parsed.data.phone,
         _answers: answers,
@@ -194,7 +233,14 @@ function SignupForm({ answers, onDone }: { answers: Record<string, string>; onDo
         return;
       }
       const row = Array.isArray(data) ? data[0] : data;
-      onDone({ code: row?.code ?? null, item: row?.item ?? null, description: row?.description ?? null, image: row?.image || null, already: !!row?.already });
+      onDone({
+        code: row?.code ?? null,
+        item: row?.item ?? null,
+        description: row?.description ?? null,
+        image: row?.image || null,
+        already: !!row?.already,
+        rewardsEnabled: row?.rewards_enabled ?? rewardsEnabled,
+      });
     } catch {
       toast.error("We couldn't save your signup. Please check your connection and try again.");
     } finally {
@@ -219,9 +265,9 @@ function SignupForm({ answers, onDone }: { answers: Record<string, string>; onDo
         {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
       </div>
       <Button type="submit" size="lg" className="h-14 rounded-full text-base" disabled={busy}>
-        {busy ? "Unfolding your code…" : "Reveal my merch code"}
+        {rewardsEnabled ? (busy ? "Unfolding your code…" : "Reveal my merch code") : (busy ? "Saving…" : "Sign up")}
       </Button>
-      <p className="text-center text-xs text-muted-foreground">One code per phone number.</p>
+      {rewardsEnabled ? <p className="text-center text-xs text-muted-foreground">One code per phone number.</p> : null}
     </form>
   );
 }
