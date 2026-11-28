@@ -104,7 +104,16 @@ export function FortuneTeller({ labels, phase, disabled, onPick, iconIndex = 0 }
         <span className="font-serif text-[10px] font-semibold tracking-wide text-[oklch(0.24_0.05_265)]">Spend, Earn &amp; Redeem</span>
       </div>
       <div role="group" aria-label="Paper fortune teller" className="absolute inset-[10%] grid grid-cols-2 grid-rows-2 gap-1">
-        {corners.map((_, i) => <Button key={i} variant="ghost" disabled={disabled || !onPick} aria-label={labels[i]} onClick={() => onPick?.(i)} className="h-full w-full rounded-[35%] border-0 bg-transparent p-0 shadow-none hover:bg-transparent focus-visible:ring-2" />)}
+        {[0, 1, 3, 2].map((i) => (
+          <Button
+            key={i}
+            variant="ghost"
+            disabled={disabled || !onPick}
+            aria-label={labels[i]}
+            onClick={() => onPick?.(i)}
+            className="h-full w-full rounded-[35%] border-0 bg-transparent p-0 shadow-none hover:bg-transparent focus-visible:ring-2"
+          />
+        ))}
       </div>
     </div>
   );
