@@ -70,7 +70,7 @@ export const ROUNDS: Round[] = [
     eyebrow: "Last Fold · 5 of 5",
     prompt: "Would You Like To Receive Alerts For INGIDA?",
     parts: ["Would You Like To Receive ", "Alerts", " For INGIDA?"],
-    labels: ["Yes", "No", "Yes,Please", "No,Thanks"],
+    labels: ["Yes", "No", "No,Thanks", "Yes,Please"],
     inside: ["SPEND", "EARN", "REDEEM"],
     reveal: () => ({ title: "", body: "" }),
   },
