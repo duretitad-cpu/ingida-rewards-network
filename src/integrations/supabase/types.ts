@@ -252,6 +252,21 @@ export type Database = {
         }
         Relationships: []
       }
+      quest_settings: {
+        Row: {
+          id: string
+          rewards_enabled: boolean
+        }
+        Insert: {
+          id?: string
+          rewards_enabled?: boolean
+        }
+        Update: {
+          id?: string
+          rewards_enabled?: boolean
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -359,6 +374,17 @@ export type Database = {
           _wants_alerts: boolean
         }
         Returns: boolean
+      }
+      submit_quest_signup: {
+        Args: { _answers: Json; _name: string; _phone: string }
+        Returns: {
+          already: boolean
+          code: string
+          description: string
+          image: string
+          item: string
+          rewards_enabled: boolean
+        }[]
       }
     }
     Enums: {
