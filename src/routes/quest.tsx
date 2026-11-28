@@ -1,13 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { questSchema } from "@/lib/quest-schema";
-import { questCopy } from "@/lib/quest-copy";
-import { getQuestMode } from "@/lib/quest-mode.functions";
-import { questCompletion } from "@/lib/quest-mode";
-import { Thanks } from "@/components/game/Thanks";
+import { formatEthiopianPhone } from "@/lib/phone";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,18 +11,15 @@ import { FortuneTeller, type Phase } from "@/components/game/FortuneTeller";
 import { Link } from "@tanstack/react-router";
 import { IngidaLogo } from "@/components/brand/ingida-logo";
 import { Reward, type MerchResult } from "@/components/game/Reward";
-import { ROUNDS as EN_ROUNDS, AM_ROUNDS, type Reveal } from "@/components/game/rounds";
-
-const modeOptions = queryOptions({ queryKey: ["quest-mode"], queryFn: () => getQuestMode(), staleTime: 0 });
+import { ROUNDS as EN_ROUNDS, AM_ROUNDS, CATEGORIES, type Reveal } from "@/components/game/rounds";
 
 export const Route = createFileRoute("/quest")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(modeOptions),
   head: () => ({
     meta: [
       { title: "Unfold Your Welcome — INGIDA Quest" },
-      { name: "description", content: "Play the INGIDA paper fortune game in English or Amharic and join our hospitality network." },
+      { name: "description", content: "Play the INGIDA paper fortune game, learn how rewards work and claim your merch." },
       { property: "og:title", content: "INGIDA — Unfold your welcome" },
-      { property: "og:description", content: "Unfold your welcome with INGIDA. Play in English or Amharic and stay connected." },
+      { property: "og:description", content: "A fast, fun paper game from INGIDA. Play, learn and win merch." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -36,13 +29,18 @@ export const Route = createFileRoute("/quest")({
   component: Index,
 });
 
-type Step = "play" | "form" | "done" | "bye";
+type Step = "intro" | "play" | "alerts" | "form" | "done" | "bye";
+
+const formSchema = z.object({
+  name: z.string().trim().min(1, "Please enter your name").max(100),
+  phone: z.string().trim()
+    .refine((value) => formatEthiopianPhone(value) !== null, "Use an Ethiopian number, e.g. +251 911 234 567")
+    .transform((value) => formatEthiopianPhone(value)!),
+});
 
 function Index() {
   const { lang } = Route.useSearch();
   const am = lang === "am";
-  const t = questCopy[am ? "am" : "en"];
-  const { data: rewardsEnabled } = useSuspenseQuery(modeOptions);
   const ROUNDS = am ? AM_ROUNDS : EN_ROUNDS;
   const [step, setStep] = useState<Step>("play");
   const [round, setRound] = useState(0);
@@ -50,19 +48,21 @@ function Index() {
   const [spinning, setSpinning] = useState(false);
   const [picked, setPicked] = useState<number | null>(null);
   const [reveal, setReveal] = useState<Reveal | null>(null);
+  const [score, setScore] = useState(0);
   const [iconIndex, setIconIndex] = useState(0);
   const [category, setCategory] = useState(0);
   const answers = useRef<Record<string, string>>({});
   const [result, setResult] = useState<MerchResult | null>(null);
-  const animationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const picking = useRef(false);
-  useEffect(() => () => { if (animationTimer.current) clearTimeout(animationTimer.current); }, []);
-  const go = (next: Step) => setStep(next);
+  const finished = useRef(false);
+  const alertTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (alertTimer.current) clearTimeout(alertTimer.current); }, []);
+  const go = (next: Step) => { if (alertTimer.current) { clearTimeout(alertTimer.current); alertTimer.current = null; } setStep(next); };
 
   const base = ROUNDS[round] ?? ROUNDS[0];
   if (!base) return null;
-  const catName = ROUNDS[0]?.labels[category] ?? "";
-  const r = { ...base, labels: base.labelsByCategory?.[category] ?? base.labels };
+  const [catIdx, setCatIdx] = [category, setCategory];
+  const catName = CATEGORIES[catIdx] ?? "It";
+  const r = { ...base, labels: base.labelsByCategory?.[catIdx] ?? base.labels };
 
   function pinch(times: number, done: () => void) {
     let n = 0;
@@ -70,53 +70,61 @@ function Index() {
       n++;
       setPhase(n % 2 ? "h" : "v");
       setIconIndex((i) => i + 1);
-      if (n < times) animationTimer.current = setTimeout(tick, 420);
-      else animationTimer.current = setTimeout(() => { setPhase("closed"); picking.current = false; done(); }, 420);
+      if (n < times) setTimeout(tick, 420);
+      else setTimeout(() => { setPhase("closed"); done(); }, 420);
     };
     tick();
   }
 
   function onPick(i: number) {
-    if (spinning || picking.current) return;
-    picking.current = true;
+    if (!r || spinning) return;
+    if (finished.current) {
+      // Final fold: the player picks one more fold, it opens, then alerts.
+      setPicked(i);
+      setSpinning(true);
+      pinch(3, () => { setSpinning(false); go("alerts"); });
+      return;
+    }
     setPicked(i);
     setSpinning(true);
     answers.current[r.key] = r.labels[i] ?? "";
     if (r.key === "alerts") {
+      // Yes Please / እሺ go straight to name + phone; the no options end politely.
       const yes = i === 0 || i === 2;
-      answers.current["wants_alerts"] = String(yes);
       pinch(2, () => { setSpinning(false); go(yes ? "form" : "bye"); });
       return;
     }
-    if (round === 0) setCategory(i);
+    if (round === 0) setCatIdx(i);
     pinch(2, () => {
       const rv = r.reveal(i);
+      if (rv.correct) setScore((s) => s + 1);
       setReveal(rv);
       setSpinning(false);
       setPicked(null);
       if (round + 1 < ROUNDS.length) setRound(round + 1);
+      else finished.current = true;
     });
   }
 
   return (
-    <main lang={am ? "am" : "en"} className="quest-page min-h-dvh bg-background text-foreground">
+    <main className="quest-page min-h-dvh bg-background text-foreground">
       <div className="mx-auto flex min-h-dvh max-w-md flex-col px-5 pb-4 pt-5">
         <header className="flex items-center justify-between">
-          <Link to="/" aria-label={t.home} className="text-primary">{am ? <img src="/ingidaama.png" alt="እንግዳ" className="h-7 w-auto" /> : <IngidaLogo className="h-7 w-auto" />}</Link>
+          <Link to="/" aria-label="INGIDA home" className="text-primary"><IngidaLogo className="h-7 w-auto" /></Link>
           <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">#MyingidaMoment</span>
         </header>
 
         {step === "play" && (
-          <section className="flex flex-1 flex-col gap-0 pt-2">
+          <section className="flex flex-col gap-0 pt-2">
             <div className="space-y-2">
               <p className="text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">{r.eyebrow}</p>
             </div>
             <div key={round} className="mb-1 mt-5 flex items-center justify-center text-center">
               <h2 className="font-serif text-xl font-normal leading-[1.12] text-primary sm:text-2xl">
-                {r.key === "lifestyle" && !am ? <><span className="block">Tell Us About Your Lifestyle.</span><span className="block text-balance">Where Do You Spend The Most?</span></> : r.parts ? <>{r.parts[0].replace("{cat}", catName)}<em className="italic text-gold">{r.parts[1]}</em>{r.parts[2].replace("{cat}", catName)}</> : r.prompt.replace("{cat}", catName)}
+                {r.key === "lifestyle" && !am ? <><span className="block">Tell Us About Your Lifestyle.</span><span className="block text-balance">Where Do You Spend The Most?</span></> : r.parts && !am ? <>{r.parts[0].replace("{cat}", catName)}<em className="italic text-gold">{r.parts[1]}</em>{r.parts[2].replace("{cat}", catName)}</> : r.prompt}
               </h2>
             </div>
-            <div><FortuneTeller am={am} labels={r.labels} inside={r.inside} inner={round > 0} phase={phase} iconIndex={iconIndex} disabled={spinning} picked={picked} onPick={onPick} /></div>
+            <div><FortuneTeller labels={r.labels} inside={r.inside} inner={round > 0} phase={phase} iconIndex={iconIndex} disabled={spinning} picked={picked} onPick={onPick} /></div>
             <div className="px-2 pt-3" aria-live="polite">
               {reveal ? (
                 <div className="text-center">
@@ -124,8 +132,9 @@ function Index() {
                   <p className="mx-auto mt-1 max-w-xs text-sm leading-snug text-muted-foreground">{reveal.body}</p>
                 </div>
               ) : null}
+              {finished.current && !spinning ? <p className="mt-3 text-center text-xs uppercase tracking-[0.25em] text-gold">Pick A Fold To Unfold Your Reward</p> : null}
             </div>
-            <div className="mt-auto flex gap-1 px-8 pt-5" aria-label={`${t.progress}: ${t.question} ${round + 1} ${t.of} ${ROUNDS.length}`}>
+            <div className="mt-4 flex gap-1 px-8" aria-label={`Progress: question ${round + 1} of ${ROUNDS.length}`}>
               {ROUNDS.map((_, i) => (
                 <span key={i} className={`h-[3px] flex-1 transition-colors duration-150 ${i <= round ? "bg-primary" : "bg-border"}`} />
               ))}
@@ -133,25 +142,36 @@ function Index() {
           </section>
         )}
 
-        {step === "form" && <SignupForm am={am} rewardsEnabled={rewardsEnabled} answers={answers.current} onDone={(res) => { setResult(res); go("done"); }} />}
-        {step === "done" && result && (questCompletion(result.rewardsEnabled ?? rewardsEnabled) === "thanks" ? <Thanks am={am} /> : <Reward am={am} result={result} />)}
-
-        {step === "bye" && (
-          <section className="flex flex-1 flex-col justify-center gap-6 py-8 text-center">
-            <h2 className="font-serif text-4xl font-normal leading-[0.95] text-primary">{t.bye}</h2>
-            <p className="text-muted-foreground">{t.changed}</p>
-            <Button size="lg" className="h-14 rounded-full" onClick={() => { answers.current["wants_alerts"] = "true"; go("form"); }}>{t.submit}</Button>
+        {step === "alerts" && (
+          <section className="flex flex-1 flex-col justify-center gap-6 py-8 text-center animate-in fade-in duration-500">
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Stay In The Loop</p>
+            <h2 className="font-serif text-4xl font-normal capitalize leading-[0.95] text-primary">Would You Like To Receive Alerts?</h2>
+            <p className="text-muted-foreground">INGIDA turns everyday spend into rewards across partners. Get launch alerts and a gift.</p>
+            <div className="grid gap-3">
+              <Button size="lg" className="h-14 rounded-full text-base" onClick={() => go("form")}>Yes, Send me Alerts</Button>
+              <Button size="lg" variant="ghost" className="rounded-full" onClick={() => go("bye")}>No Thanks</Button>
+            </div>
           </section>
         )}
 
-        <footer className="pt-3 text-center text-[11px] text-muted-foreground">{t.made} · ingida.com</footer>
+        {step === "form" && <SignupForm answers={{ ...answers.current, score: String(score) }} onDone={(res) => { setResult(res); go("done"); }} />}
+        {step === "done" && result && <Reward result={result} />}
+
+        {step === "bye" && (
+          <section className="flex flex-1 flex-col justify-center gap-6 py-8 text-center">
+            <h2 className="font-serif text-4xl font-normal capitalize leading-[0.95] text-primary">Thanks for playing.</h2>
+            <p className="text-muted-foreground">Changed your mind? Alerts come with free merch.</p>
+            <Button size="lg" className="h-14 rounded-full" onClick={() => go("form")}>Sign me up</Button>
+          </section>
+        )}
+
+        <footer className="pt-3 text-center text-[11px] text-muted-foreground">Made in Addis Ababa · ingida.com</footer>
       </div>
     </main>
   );
 }
 
-function SignupForm({ answers, onDone, am, rewardsEnabled }: { answers: Record<string, string>; onDone: (r: MerchResult) => void; am: boolean; rewardsEnabled: boolean }) {
-  const t = questCopy[am ? "am" : "en"];
+function SignupForm({ answers, onDone }: { answers: Record<string, string>; onDone: (r: MerchResult) => void }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -159,30 +179,29 @@ function SignupForm({ answers, onDone, am, rewardsEnabled }: { answers: Record<s
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    const parsed = questSchema.safeParse({ name, phone });
+    const parsed = formSchema.safeParse({ name, phone });
     if (!parsed.success) {
-      setErrors(Object.fromEntries(parsed.error.issues.map((i) => [String(i.path[0]), i.path[0] === "name" ? t.nameError : t.phoneError])));
+      setErrors(Object.fromEntries(parsed.error.issues.map((i) => [String(i.path[0]), i.message])));
       return;
     }
     setErrors({});
     setBusy(true);
 
     try {
-      const { data, error } = await supabase.rpc("submit_quest_signup", {
+      const { data, error } = await supabase.rpc("claim_quest_prize", {
         _name: parsed.data.name,
         _phone: parsed.data.phone,
         _answers: answers,
       });
 
       if (error) {
-        toast.error(t.saveError);
+        toast.error("We couldn't save your signup. Please check your number and try again.");
         return;
       }
       const row = Array.isArray(data) ? data[0] : data;
-      if (!row) { toast.error(t.saveError); return; }
-      onDone({ code: row.code, item: row.item, description: row.description, image: row.image || null, already: !!row.already, rewardsEnabled: row.rewards_enabled });
+      onDone({ code: row?.code ?? null, item: row?.item ?? null, description: row?.description ?? null, image: row?.image || null, already: !!row?.already });
     } catch {
-      toast.error(t.connectionError);
+      toast.error("We couldn't save your signup. Please check your connection and try again.");
     } finally {
       setBusy(false);
     }
@@ -191,23 +210,23 @@ function SignupForm({ answers, onDone, am, rewardsEnabled }: { answers: Record<s
   return (
     <form onSubmit={submit} className="flex flex-1 flex-col justify-center gap-5 py-8 animate-in fade-in duration-500">
       <div className="space-y-2 text-center">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">{t.last}</p>
-        <h2 className="font-serif text-3xl font-normal leading-tight text-primary">{t.signup}</h2>
+        <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Last fold</p>
+        <h2 className="font-serif text-3xl font-normal capitalize leading-[0.95] text-primary">Where should we send your alerts?</h2>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="name">{t.name}</Label>
+        <Label htmlFor="name">Full name</Label>
         <Input id="name" className="h-12 bg-card" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} autoComplete="name" required />
-        {errors["name"] && <p className="text-sm text-destructive">{errors["name"]}</p>}
+        {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="phone">{t.phone}</Label>
+        <Label htmlFor="phone">Phone number</Label>
         <Input id="phone" className="h-12 bg-card" type="tel" inputMode="tel" placeholder="+251 9…" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={30} autoComplete="tel" required />
-        {errors["phone"] && <p className="text-sm text-destructive">{errors["phone"]}</p>}
+        {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
       </div>
       <Button type="submit" size="lg" className="h-14 rounded-full text-base" disabled={busy}>
-        {busy ? t.saving : rewardsEnabled ? t.claim : t.submit}
+        {busy ? "Unfolding your code…" : "Reveal my merch code"}
       </Button>
-      {rewardsEnabled && <p className="text-center text-xs text-muted-foreground">{t.one}</p>}
+      <p className="text-center text-xs text-muted-foreground">One code per phone number.</p>
     </form>
   );
 }

@@ -1,5 +1,4 @@
 # Website refresh
-- [ ] Translate the entire Amharic Quest, add an inventory-managed no-rewards game, and review security warnings.
 - [x] Verify early-access requests save to the CRM on the preview and published Lovable site (real form submission and stored-row check).
 - [ ] Resolve early-access saving on www.ingida.com; the version served there differs from this project's working published site. Requires access to the project serving that domain; no domain changes requested.
 - [ ] Update Amharic wallet title and sizing; refresh bilingual Quest typography, folds, bottom progress and Ethiopian signup with CRM verification.

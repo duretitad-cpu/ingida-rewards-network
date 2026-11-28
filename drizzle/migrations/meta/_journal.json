@@ -78,13 +78,6 @@
       "when": 1795338028761,
       "tag": "0010_submit_early_access",
       "breakpoints": true
-    },
-    {
-      "idx": 11,
-      "version": "7",
-      "when": 1795415100380,
-      "tag": "0011_quest_reward_mode_and_access_hardening",
-      "breakpoints": true
     }
   ]
 }
